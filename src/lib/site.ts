@@ -20,12 +20,14 @@ export const STALE_AFTER_DAYS = 180;
 const DEFAULT_GA_ID = 'G-4343Y0SFZ5';
 
 /**
- * Analytics runs only in production builds, never on Cloudflare Pages preview builds
- * (CF_PAGES_BRANCH is set by the Pages build image). The default ID applies only to the
- * Pages production build of `main`, so local, CI and Lighthouse builds send nothing.
- * PUBLIC_GA_ID overrides it (for example after moving to Workers).
+ * The default ID applies only to deploy builds: `npm run build:prod` (DEVBOOK_ENV=production,
+ * the build command in wrangler.jsonc) or a Cloudflare Pages build of `main`. Local, CI and
+ * Lighthouse builds send nothing. Branch builds on Workers Builds (WORKERS_CI_BRANCH) or
+ * Pages (CF_PAGES_BRANCH) other than `main` are previews: noindex and no analytics.
+ * PUBLIC_GA_ID overrides the ID.
  */
-const PAGES_BRANCH = process.env.CF_PAGES_BRANCH;
-export const IS_PREVIEW = Boolean(PAGES_BRANCH && PAGES_BRANCH !== 'main');
-const configuredId = import.meta.env.PUBLIC_GA_ID || (PAGES_BRANCH === 'main' ? DEFAULT_GA_ID : undefined);
+const BRANCH = process.env.WORKERS_CI_BRANCH || process.env.CF_PAGES_BRANCH;
+export const IS_PREVIEW = Boolean(BRANCH && BRANCH !== 'main');
+const IS_DEPLOY = process.env.DEVBOOK_ENV === 'production' || process.env.CF_PAGES_BRANCH === 'main';
+const configuredId = import.meta.env.PUBLIC_GA_ID || (IS_DEPLOY ? DEFAULT_GA_ID : undefined);
 export const GA_ID: string | undefined = import.meta.env.PROD && !IS_PREVIEW ? configuredId : undefined;

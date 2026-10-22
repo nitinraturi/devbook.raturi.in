@@ -1,4 +1,4 @@
-# Cloudflare Pages headers (stacks/cloudflare.md). scripts/postbuild-csp.mjs completes the
+# Cloudflare static-assets headers (stacks/cloudflare.md). scripts/postbuild-csp.mjs completes the
 # CSP in dist/_headers: the script placeholder becomes SHA-256 hashes of every inline <script>
 # Starlight and Astro emit (no 'unsafe-inline' for scripts), and the GA placeholders become the Google
 # Analytics hosts only when GA is in the build. 'wasm-unsafe-eval' is required by Pagefind

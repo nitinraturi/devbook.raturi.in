@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",
+    "build:prod": "DEVBOOK_ENV=production npm run build",
     "preview": "node scripts/serve-dist.mjs",
     "typecheck": "astro check",
     "check:descriptions": "node scripts/check-descriptions.mjs",
@@ -13,7 +14,8 @@
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
     "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e"
+    "check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@astrojs/starlight": "0.42.6",
@@ -27,7 +29,8 @@
     "@playwright/test": "1.64.1",
     "sharp": "0.35.5",
     "starlight-links-validator": "0.27.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "wrangler": "4.152.0"
   },
   "engines": {
     "node": ">=22"

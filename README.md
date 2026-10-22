@@ -28,7 +28,8 @@ devbook.raturi.in/
 ├── AGENTS.md                 ← instructions for an AI agent working ON this repo
 ├── CLAUDE.md                 ← points to AGENTS.md
 ├── BUILD-PROMPT.md           ← the prompt the Starlight site was built from
-├── DEPLOY.md                 ← Cloudflare Pages setup, releases
+├── DEPLOY.md                 ← Cloudflare deploy, custom domain, releases
+├── wrangler.jsonc            ← Worker config (static assets only)
 ├── CHANGELOG.md
 ├── .github/                  ← copilot-instructions.md, workflows/ci.yml
 ├── docs/                     ← adr/ (site decisions), TODO.md (owner tasks, known gaps)
@@ -77,7 +78,7 @@ Full steps: `src/content/docs/start-here/adopt-in-a-project.md`.
 
 ## Building the site
 
-Astro + Starlight, static output, hosted on Cloudflare Pages.
+Astro + Starlight, static output, hosted on Cloudflare Workers static assets (`npm run deploy`).
 
 ```bash
 npm ci

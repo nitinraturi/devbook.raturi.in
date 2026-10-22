@@ -1,42 +1,34 @@
 # Deploying devbook.raturi.in
 
-The site is static (`dist/`) and hosted on **Cloudflare Pages** (ADR-0002).
+The site is static (`dist/`) and hosted on **Cloudflare Workers with static assets** (ADR-0002). Worker: `devbook-raturi-in`.
 
-## Cloudflare Pages (current)
+## Deploy
 
-1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git** → choose `nitinraturi/devbook.raturi.in`.
-2. Build settings:
-   - Framework preset: **Astro**
-   - Build command: `npm run build` (not `astro build`; the npm script also writes the CSP hashes)
-   - Build output directory: `dist`
-   - Production branch: `main`
-   - Node version comes from `.nvmrc` (24).
-3. Environment variables: none required. GA4 (`G-4343Y0SFZ5`, shared with raturi.in) switches on automatically for the production build of `main`. `PUBLIC_GA_ID` overrides it if ever needed; never set it on Preview.
-4. Save and deploy. Every pull request and branch gets a preview URL. Previews are `noindex` and never load analytics.
-5. **Custom domain:** project → **Custom domains** → **Set up a custom domain** → `devbook.raturi.in`. The raturi.in zone is already on Cloudflare, so Cloudflare creates the DNS record.
-6. After the first deploy, check:
-   - `curl -sI https://devbook.raturi.in/ | grep -i content-security-policy` shows the hashed policy.
-   - `/sitemap-index.xml`, `/robots.txt`, `/llms.txt` and a missing URL (custom 404) all respond as expected.
-   - "Last updated" dates differ between pages. If every page shows the same date, the build clone is shallow; see `docs/TODO.md`.
-7. **Search Console:** the raturi.in Domain property (DNS TXT) already covers the subdomain. Submit `https://devbook.raturi.in/sitemap-index.xml`, and do the same in Bing Webmaster Tools.
-
-## Alternative: Workers static assets
-
-This is the Cloudflare-recommended default for new projects, and what raturi.in and webtools.raturi.in use. Add `wrangler.jsonc`:
-
-```jsonc
-{
-  "name": "devbook-raturi-in",
-  "compatibility_date": "<deploy day, YYYY-MM-DD>",
-  "assets": {
-    "directory": "./dist",
-    "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
-  }
-}
+```bash
+npm run deploy        # = wrangler deploy; wrangler runs `npm run build:prod` first
 ```
 
-Deploy with `npm run build && npx wrangler deploy`. `_headers` works the same way. Move the custom domain from the Pages project to the Worker, and record the change in a new ADR.
+- `build:prod` sets `DEVBOOK_ENV=production`, which turns on GA4 (`G-4343Y0SFZ5`, shared with raturi.in). A plain `npm run build` has no analytics.
+- Never deploy with plain `astro build`: `npm run build` also applies the HTML fixes and writes the CSP hashes into `dist/_headers`.
+- First login: `npx wrangler login`.
+
+## Custom domain
+
+The Worker is live at `https://devbook-raturi-in.raturi002.workers.dev`. To serve `devbook.raturi.in`:
+
+1. If `devbook.raturi.in` is attached to a Pages project, remove it there first.
+2. In `wrangler.jsonc`, uncomment `"routes": [{ "pattern": "devbook.raturi.in", "custom_domain": true }]`, and set `"workers_dev": false` if the workers.dev URL should stop serving.
+3. Run `npm run deploy`. The raturi.in zone is on Cloudflare, so the DNS record is created automatically.
+
+## After deploying
+
+- `curl -sI https://devbook.raturi.in/ | grep -i content-security-policy` shows the hashed policy.
+- `/sitemap-index.xml`, `/robots.txt`, `/llms.txt` and a missing URL (custom 404) all respond as expected.
+- Search Console: the raturi.in Domain property (DNS TXT) already covers the subdomain. Submit `https://devbook.raturi.in/sitemap-index.xml`, and do the same in Bing Webmaster Tools.
+
+## Optional: deploy on push (Workers Builds)
+
+In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, with production branch `main` and deploy command `npx wrangler deploy`. Non-production branches upload preview versions; they build as previews (`noindex`, no analytics) because `WORKERS_CI_BRANCH` is not `main`.
 
 ## Releases
 
