@@ -1,0 +1,39 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+import { buildGraph } from '../lib/schema';
+import { GA_ID, IS_PREVIEW } from '../lib/site';
+
+const route = Astro.locals.starlightRoute;
+const isHome = route.id === '';
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const jsonLd = JSON.stringify(buildGraph(route, pageUrl, isHome)).replace(/</g, '\\u003c');
+
+// Consent Mode v2 per stacks/ga4-consent.md: denied by default where consent is required
+// (EEA, UK, CH), analytics-only elsewhere. A stored choice is applied before `config`.
+const CONSENT_REGIONS = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'];
+---
+
+<Default />
+{IS_PREVIEW && <meta name="robots" content="noindex, nofollow" />}
+<script type="application/ld+json" set:html={jsonLd} />
+{
+	GA_ID && (
+		<>
+			<script is:inline define:vars={{ GA_ID, CONSENT_REGIONS }}>
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				window.gtag = gtag;
+				var denied = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' };
+				gtag('consent', 'default', Object.assign({ analytics_storage: 'denied', region: CONSENT_REGIONS }, denied));
+				gtag('consent', 'default', Object.assign({ analytics_storage: 'granted' }, denied));
+				try {
+					var choice = localStorage.getItem('dvb-consent');
+					if (choice === 'granted' || choice === 'denied') gtag('consent', 'update', { analytics_storage: choice });
+				} catch (e) {}
+				gtag('js', new Date());
+				gtag('config', GA_ID);
+			</script>
+			<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+		</>
+	)
+}

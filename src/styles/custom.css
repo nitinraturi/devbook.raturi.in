@@ -1,1 +1,122 @@
-/* Theme overrides via Starlight CSS custom properties. */
+/*
+ * Devbook theme. Starlight is themed only through its CSS custom properties.
+ * Accent: one restrained blue. Contrast ratios are checked by
+ * scripts/check-contrast.mjs and recorded in docs/adr/0004-accent-colour-contrast.md.
+ * Fonts: Starlight's system stacks (no webfont).
+ */
+
+/* Dark theme (Starlight default). */
+:root {
+	--sl-color-accent-low: #0c2a5c;
+	--sl-color-accent: #4d8dff;
+	--sl-color-accent-high: #bcd4ff;
+}
+
+/* Light theme. */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #dbe7fe;
+	--sl-color-accent: #1d4ed8;
+	--sl-color-accent-high: #1e3a8a;
+}
+
+/* Home (splash) page: keep it plain and readable. */
+[data-has-hero] .hero {
+	padding-block: clamp(2rem, 6vw, 4rem) 1rem;
+}
+[data-has-hero] .hero h1 {
+	letter-spacing: -0.02em;
+}
+[data-has-hero] .hero,
+[data-has-hero] .sl-markdown-content {
+	max-width: 50rem;
+	margin-inline: auto;
+}
+
+/* Last-verified line under the page title. */
+.dvb-verified {
+	margin-top: 0.5rem;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-3);
+}
+
+/* Small page actions row (copy as Markdown). */
+.dvb-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin-top: 0.75rem;
+	font-size: var(--sl-text-sm);
+}
+.dvb-actions button,
+.dvb-consent button,
+.dvb-site-footer button {
+	font: inherit;
+	cursor: pointer;
+}
+.dvb-actions button {
+	padding: 0.25rem 0.625rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.375rem;
+	background: transparent;
+	color: var(--sl-color-gray-2);
+}
+.dvb-actions button:hover {
+	border-color: var(--sl-color-text-accent);
+	color: var(--sl-color-white);
+}
+
+/* Site footer line (author, privacy, consent). */
+.dvb-site-footer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.25rem;
+	justify-content: center;
+	margin-top: 2rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--sl-color-hairline);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-3);
+}
+.dvb-site-footer a {
+	color: var(--sl-color-gray-2);
+}
+.dvb-site-footer button {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--sl-color-gray-2);
+	text-decoration: underline;
+}
+
+/* Consent banner (only rendered when analytics is configured). */
+.dvb-consent {
+	position: fixed;
+	inset-inline: 1rem;
+	bottom: 1rem;
+	z-index: 100;
+	max-width: 36rem;
+	margin-inline: auto;
+	padding: 1rem 1.25rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.5rem;
+	background: var(--sl-color-bg-nav);
+	color: var(--sl-color-text);
+	font-size: var(--sl-text-sm);
+	box-shadow: var(--sl-shadow-lg);
+}
+.dvb-consent p {
+	margin: 0 0 0.75rem;
+}
+.dvb-consent .dvb-consent-actions {
+	display: flex;
+	gap: 0.75rem;
+}
+.dvb-consent .dvb-consent-actions button {
+	flex: 1;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--sl-color-text-accent);
+	border-radius: 0.375rem;
+	background: transparent;
+	color: var(--sl-color-white);
+	font-weight: 600;
+}

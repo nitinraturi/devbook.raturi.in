@@ -1,0 +1,26 @@
+# Cloudflare Pages headers (stacks/cloudflare.md). scripts/postbuild-csp.mjs completes the
+# CSP in dist/_headers: the script placeholder becomes SHA-256 hashes of every inline <script>
+# Starlight and Astro emit (no 'unsafe-inline' for scripts), and the GA placeholders become the Google
+# Analytics hosts only when GA is in the build. 'wasm-unsafe-eval' is required by Pagefind
+# search. Inline styles stay allowed (Starlight and Expressive Code use them).
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval' __SCRIPT_HASHES__ __GA_SCRIPT__; style-src 'self' 'unsafe-inline'; img-src 'self' data: __GA_IMG__; font-src 'self'; connect-src 'self' __GA_CONNECT__; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# Content-hashed files only.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+/pagefind/fragment/*
+  Cache-Control: public, max-age=31536000, immutable
+/pagefind/index/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*/index.md
+  Content-Type: text/markdown; charset=utf-8
+/index.md
+  Content-Type: text/markdown; charset=utf-8

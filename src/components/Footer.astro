@@ -1,0 +1,29 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { GA_ID, PERSON } from '../lib/site';
+---
+
+<Default />
+<div class="dvb-site-footer">
+	<span>Written by <a href={PERSON.url} rel="author">{PERSON.name}</a></span>
+	<a href="/privacy/">Privacy</a>
+	{GA_ID && <button type="button" data-consent-open>Cookie settings</button>}
+</div>
+{
+	GA_ID && (
+		<div class="dvb-consent" role="region" aria-label="Analytics consent" data-consent hidden>
+			<p>
+				May this site use Google Analytics cookies to count visits? No advertising, no personal data.
+				<a href="/privacy/">Privacy notice</a>.
+			</p>
+			<div class="dvb-consent-actions">
+				<button type="button" data-consent-choice="granted">Accept analytics</button>
+				<button type="button" data-consent-choice="denied">Decline</button>
+			</div>
+		</div>
+	)
+}
+
+<script>
+	import '../scripts/site';
+</script>

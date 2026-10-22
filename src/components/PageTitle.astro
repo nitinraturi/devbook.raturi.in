@@ -1,0 +1,31 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { Aside } from '@astrojs/starlight/components';
+import { STALE_AFTER_DAYS } from '../lib/site';
+
+const route = Astro.locals.starlightRoute;
+const { lastVerified } = route.entry.data as { lastVerified?: Date };
+const isStale = lastVerified ? Date.now() - lastVerified.getTime() > STALE_AFTER_DAYS * 864e5 : false;
+const verifiedIso = lastVerified?.toISOString().slice(0, 10);
+const verifiedLabel = lastVerified?.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+// Raw Markdown for the page is served at <page>/index.md (src/pages/[...slug]/index.md.ts).
+const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
+---
+
+<Default />
+{
+	lastVerified && (
+		<p class="dvb-verified">
+			Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
+		</p>
+	)
+}
+{
+	isStale && (
+		<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
+	)
+}
+<div class="dvb-actions">
+	<button type="button" data-copy-md={mdHref}>Copy page as Markdown</button>
+	<a href={mdHref}>View Markdown</a>
+</div>
