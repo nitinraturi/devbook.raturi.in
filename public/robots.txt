@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://devbook.raturi.in/sitemap-index.xml

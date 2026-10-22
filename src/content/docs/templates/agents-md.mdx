@@ -1,0 +1,23 @@
+---
+title: AGENTS.md
+description: Template for the root AGENTS.md file that tells Claude, Copilot and other coding agents the commands, conventions, never-do rules and devbook pages for a project.
+sidebar:
+  order: 1
+---
+
+import { Code } from '@astrojs/starlight/components';
+import agents from '../../../../templates/AGENTS.md?raw';
+import claude from '../../../../templates/CLAUDE.md?raw';
+import copilot from '../../../../templates/copilot-instructions.md?raw';
+
+`AGENTS.md` is the router for every AI agent in a project. Keep it short, list only the devbook pages the project uses, and add a line under "Known pitfalls" whenever an agent repeats a mistake.
+
+Copy to the project root as `AGENTS.md`:
+
+<Code code={agents} lang="md" title="AGENTS.md" />
+
+`CLAUDE.md` and Copilot's instruction file only point to `AGENTS.md`, so there is one source of truth:
+
+<Code code={claude} lang="md" title="CLAUDE.md" />
+
+<Code code={copilot} lang="md" title=".github/copilot-instructions.md" />

@@ -1,0 +1,13 @@
+---
+title: ADR
+description: Architecture decision record template - context, options, decision, consequences, and the required section when a project loosens a devbook rule.
+sidebar:
+  order: 4
+---
+
+import { Code } from '@astrojs/starlight/components';
+import tpl from '../../../../templates/adr.md?raw';
+
+One file per significant decision in `docs/adr/`, numbered `0001-short-title.md`. Never edit an accepted ADR's decision; supersede it with a new one.
+
+<Code code={tpl} lang="md" title="docs/adr/NNNN-title.md" />

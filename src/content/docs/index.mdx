@@ -1,0 +1,39 @@
+---
+title: Devbook
+description: A practical engineering playbook for building web apps, mobile apps and LLM features with AI coding assistants like Claude and Copilot, from spec to launch.
+template: splash
+hero:
+  tagline: The rules, templates and prompts for building real software with AI coding assistants. Spec first, small steps, verified output.
+  actions:
+    - text: Start here
+      link: /start-here/introduction/
+      icon: right-arrow
+    - text: The workflow
+      link: /workflow/llm-assisted-workflow/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## What this is
+
+Devbook is the set of standards I follow on every project, written so that both a person and an AI agent can follow them. Each page is a short list of rules with the reason behind them, not an essay.
+
+It has three layers. **Universal rules** apply to every project whatever the stack. **Stack profiles** add the specifics for a tool such as Astro, Cloudflare or Django. **Project docs** live in each project's own repo and hold only what is unique to it.
+
+<CardGrid>
+  <LinkCard title="Start here" description="How the devbook is organised and how to adopt it in a project." href="/start-here/introduction/" />
+  <LinkCard title="LLM-assisted workflow" description="Brief, spec, plan, small tasks, verify, review. The loop behind every change." href="/workflow/llm-assisted-workflow/" />
+  <LinkCard title="Security" description="Baseline rules, supply chain, LLM application risks and privacy." href="/security/security-baseline/" />
+  <LinkCard title="Web & content" description="Technical SEO, structured data, people-first content and evidence." href="/web/technical-seo/" />
+  <LinkCard title="Templates" description="AGENTS.md, project brief, technical spec, ADR and more." href="/templates/agents-md/" />
+  <LinkCard title="Prompts" description="Copy-paste prompts for planning, building, reviewing and auditing." href="/prompts/overview/" />
+</CardGrid>
+
+## How to read a rule
+
+- **MUST** / **MUST NOT**: required. Breaking it needs a written decision record in the project.
+- **SHOULD** / **SHOULD NOT**: the default. Deviate when you have a reason, and write the reason down.
+- **MAY**: optional.
+
+Pages about fast-changing tools show a "Last verified" date. Treat older dates as a prompt to check the vendor's current docs.

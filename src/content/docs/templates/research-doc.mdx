@@ -1,0 +1,13 @@
+---
+title: Research doc
+description: Template for a research doc that is the single source of a factual page - frontmatter, analysis, guidance, mistakes, risks, evidence summary and a review checklist.
+sidebar:
+  order: 7
+---
+
+import { Code } from '@astrojs/starlight/components';
+import tpl from '../../../../templates/research-doc.md?raw';
+
+For any page that makes factual claims. Adapt section 3 to the domain (for example movement analysis for exercises, specification for products). Rules: [evidence and citation](/web/evidence-and-citation/).
+
+<Code code={tpl} lang="md" title="docs/research/<type>/<slug>.md" />
