@@ -61,8 +61,8 @@ If this prompt conflicts with those pages, the pages win. If they are silent, pi
 - Each doc page shows a small "Copy page as Markdown" action only if it can be done without a new dependency; otherwise list it as a follow-up.
 
 # 5. SEO and crawl files
-- Starlight generates the sitemap when `site` is set; confirm it appears at `/sitemap-index.xml`.
-- `public/robots.txt`: allow all; `Sitemap: https://devbook.raturi.in/sitemap-index.xml`.
+- Starlight generates the sitemap when `site` is set; confirm it appears at `/sitemap-index.xml`. Also serve `/sitemap.xml` as a sitemap index pointing to the generated sitemap.
+- `public/robots.txt`: allow all; `Sitemap: https://devbook.raturi.in/sitemap.xml`.
 - Every page has a unique title and a description; the build warns if `description` is missing or outside 70–170 characters (write a tiny remark/rehype or content check script; do not edit page text, report offenders).
 - Canonical URLs are absolute with trailing slash (Starlight default when `site` is set; confirm).
 - Custom `404` with search and links to Start here and Workflow.

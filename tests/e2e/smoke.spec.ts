@@ -106,7 +106,14 @@ test('page Markdown is served and template pages include the template', async ({
 });
 
 test('crawl files exist', async ({ request }) => {
-	for (const path of ['/robots.txt', '/sitemap-index.xml', '/llms.txt', '/llms-full.txt', '/llms-small.txt']) {
+	for (const path of [
+		'/robots.txt',
+		'/sitemap.xml',
+		'/sitemap-index.xml',
+		'/llms.txt',
+		'/llms-full.txt',
+		'/llms-small.txt',
+	]) {
 		expect((await request.get(path)).status(), path).toBe(200);
 	}
 });

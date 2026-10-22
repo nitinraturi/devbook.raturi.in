@@ -23,8 +23,8 @@ The Worker is live at `https://devbook-raturi-in.raturi002.workers.dev`. To serv
 ## After deploying
 
 - `curl -sI https://devbook.raturi.in/ | grep -i content-security-policy` shows the hashed policy.
-- `/sitemap-index.xml`, `/robots.txt`, `/llms.txt` and a missing URL (custom 404) all respond as expected.
-- Search Console: the raturi.in Domain property (DNS TXT) already covers the subdomain. Submit `https://devbook.raturi.in/sitemap-index.xml`, and do the same in Bing Webmaster Tools.
+- `/sitemap.xml`, `/sitemap-index.xml`, `/robots.txt`, `/llms.txt` and a missing URL (custom 404) all respond as expected.
+- Search Console: the raturi.in Domain property (DNS TXT) already covers the subdomain. Submit `https://devbook.raturi.in/sitemap.xml`, and do the same in Bing Webmaster Tools.
 
 ## Optional: deploy on push (Workers Builds)
 
