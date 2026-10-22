@@ -2,7 +2,7 @@
 
 ## Owner
 - [ ] **Cloudflare Pages project:** create it and add the custom domain (`DEPLOY.md`).
-- [ ] **GA4 (optional):** set `PUBLIC_GA_ID` on Production only. In GA4, set data retention to **14 months**, the period `/privacy/` states. Or choose Cloudflare Web Analytics instead (ADR-0003) and update `/privacy/`.
+- [ ] **GA4:** the site uses the raturi.in property (`G-4343Y0SFZ5`). Confirm its data retention is **14 months**, the period `/privacy/` states (Admin → Data collection and modification → Data retention). Optionally add a hostname filter or comparison for `devbook.raturi.in` in reports.
 - [ ] **Person `sameAs`:** add profile URLs (GitHub, LinkedIn, …) in `src/lib/site.ts` → `PERSON.sameAs`.
 - [ ] **OG image:** review `public/og-default.png` (regenerate with `npm run og:image` after editing `scripts/generate-og.mjs`).
 - [ ] **Privacy notice:** review `/privacy/` (`src/content/docs/privacy.md`) against your own legal advice, including India's DPDP.

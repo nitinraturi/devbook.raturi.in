@@ -16,10 +16,16 @@ export const PERSON = {
 /** Pages older than this many days since `lastVerified` show a caution notice. */
 export const STALE_AFTER_DAYS = 180;
 
+/** GA4 measurement ID shared with raturi.in (one property; reports split by hostname). */
+const DEFAULT_GA_ID = 'G-4343Y0SFZ5';
+
 /**
- * Analytics runs only in production builds that have a measurement ID, and never on
- * Cloudflare Pages preview builds (CF_PAGES_BRANCH is set by the Pages build image).
+ * Analytics runs only in production builds, never on Cloudflare Pages preview builds
+ * (CF_PAGES_BRANCH is set by the Pages build image). The default ID applies only to the
+ * Pages production build of `main`, so local, CI and Lighthouse builds send nothing.
+ * PUBLIC_GA_ID overrides it (for example after moving to Workers).
  */
-export const IS_PREVIEW = Boolean(process.env.CF_PAGES_BRANCH && process.env.CF_PAGES_BRANCH !== 'main');
-export const GA_ID: string | undefined =
-	import.meta.env.PROD && !IS_PREVIEW && import.meta.env.PUBLIC_GA_ID ? import.meta.env.PUBLIC_GA_ID : undefined;
+const PAGES_BRANCH = process.env.CF_PAGES_BRANCH;
+export const IS_PREVIEW = Boolean(PAGES_BRANCH && PAGES_BRANCH !== 'main');
+const configuredId = import.meta.env.PUBLIC_GA_ID || (PAGES_BRANCH === 'main' ? DEFAULT_GA_ID : undefined);
+export const GA_ID: string | undefined = import.meta.env.PROD && !IS_PREVIEW ? configuredId : undefined;

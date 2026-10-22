@@ -11,8 +11,7 @@ The site is static (`dist/`) and hosted on **Cloudflare Pages** (ADR-0002).
    - Build output directory: `dist`
    - Production branch: `main`
    - Node version comes from `.nvmrc` (24).
-3. Environment variables, **Production only**:
-   - `PUBLIC_GA_ID` = your GA4 measurement ID (`G-…`). Optional. Leave it unset for no analytics. Never set it on Preview.
+3. Environment variables: none required. GA4 (`G-4343Y0SFZ5`, shared with raturi.in) switches on automatically for the production build of `main`. `PUBLIC_GA_ID` overrides it if ever needed; never set it on Preview.
 4. Save and deploy. Every pull request and branch gets a preview URL. Previews are `noindex` and never load analytics.
 5. **Custom domain:** project → **Custom domains** → **Set up a custom domain** → `devbook.raturi.in`. The raturi.in zone is already on Cloudflare, so Cloudflare creates the DNS record.
 6. After the first deploy, check:
