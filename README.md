@@ -27,10 +27,18 @@ devbook.raturi.in/
 ├── README.md                 ← you are here
 ├── AGENTS.md                 ← instructions for an AI agent working ON this repo
 ├── CLAUDE.md                 ← points to AGENTS.md
-├── BUILD-PROMPT.md           ← one prompt that scaffolds the Starlight site
+├── BUILD-PROMPT.md           ← the prompt the Starlight site was built from
+├── DEPLOY.md                 ← Cloudflare Pages setup, releases
 ├── CHANGELOG.md
-├── .github/copilot-instructions.md
+├── .github/                  ← copilot-instructions.md, workflows/ci.yml
+├── docs/                     ← adr/ (site decisions), TODO.md (owner tasks, known gaps)
+├── astro.config.mjs          ← Starlight config: sidebar, plugins, overrides
+├── public/                   ← _headers (CSP), robots.txt, favicon, OG image
+├── scripts/                  ← post-build CSP + HTML fixes, checks, local server
+├── tests/e2e/                ← Playwright smoke + axe
 ├── templates/                ← raw files copied INTO projects (AGENTS.md, brief, spec, ADR…)
+├── src/components/           ← Starlight overrides: Head (JSON-LD, GA), PageTitle, Footer
+├── src/lib/                  ← site constants, JSON-LD graph
 └── src/content/docs/         ← every guide; each file becomes a page on the site
     ├── index.mdx             ← home page
     ├── start-here/           ← how to use the devbook, adopt it in a project
@@ -69,7 +77,16 @@ Full steps: `src/content/docs/start-here/adopt-in-a-project.md`.
 
 ## Building the site
 
-Paste `BUILD-PROMPT.md` into Claude Code (or similar) at the repo root. It scaffolds Starlight around the existing content without rewriting it.
+Astro + Starlight, static output, hosted on Cloudflare Pages.
+
+```bash
+npm ci
+npm run dev          # local preview
+npm run check        # typecheck, descriptions, contrast, build, Playwright + axe
+npm run lhci         # Lighthouse budgets
+```
+
+Every page also has its source served as Markdown at `<page>/index.md`. `/llms.txt`, `/llms-full.txt` and `/llms-small.txt` are generated at build time. Deployment: `DEPLOY.md`. Site decisions: `docs/adr/`.
 
 ## Ownership
 

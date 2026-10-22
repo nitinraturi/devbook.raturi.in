@@ -5,10 +5,11 @@ You are editing the devbook itself: a public guide and a versioned standard that
 ## Commands
 
 ```bash
-npm install
+npm ci
 npm run dev          # local preview
-npm run build        # must pass before any PR
-npm run check        # astro check + link validation
+npm run build        # astro build + HTML fixes + CSP hashes; must pass before any PR
+npm run check        # typecheck, descriptions, contrast, build (link validation), Playwright + axe
+npm run lhci         # Lighthouse budgets (CI runs this too)
 ```
 
 ## Where things go
