@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Actions pinned to commit SHAs (security/supply-chain).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history for Starlight "Last updated" dates
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Titles and descriptions
+        run: npm run check:descriptions
+
+      - name: Accent contrast
+        run: npm run contrast
+
+      - name: Build (links validator, CSP hashes)
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests + axe
+        run: npm run test:e2e
+
+      - name: Lighthouse CI (mobile budgets)
+        run: npm run lhci
+
+      # Production dependencies, failing on critical. Known high advisories with no fix
+      # (braces via starlight-llms-txt, build-time only; @lhci/cli dev tree) are tracked
+      # in docs/TODO.md. Restore --audit-level=high once they are resolved.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reports
+          path: |
+            playwright-report
+            .lighthouseci
+          retention-days: 14
+          if-no-files-found: ignore
