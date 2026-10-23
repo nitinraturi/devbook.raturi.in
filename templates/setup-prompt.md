@@ -22,7 +22,9 @@ Method: submodule
 - If the command fails or there is no network, stop and tell me.
 
 3. Choose the instruction files
-- Always: workflow, engineering, security.
+- Always (mandatory): core, security, testing.
+- performance, for any app, site or service (skip for libraries and scripts).
+- api-data, if it has a backend, API or database.
 - design, if the project has any user interface.
 - seo and content, if it is a public website, docs site or blog.
 - mobile, if it is an iOS, Android, React Native or Flutter app.

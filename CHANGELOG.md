@@ -2,6 +2,26 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-10-23: Mandatory core and new instructions
+
+### Added
+- `instructions/testing.md` (mandatory): what to test, test levels, deterministic tests, test data and CI gates.
+- `instructions/performance.md`: budgets, Core Web Vitals, front-end loading, back-end efficiency, caching and reliability.
+- `instructions/api-data.md`: API contracts, errors, pagination, idempotency, webhooks, data modelling, migrations, backups and retention.
+- A documentation and decisions section in core (README, ADRs, API docs), and security-event logging in security.
+- A license page on the site.
+
+### Changed
+- `workflow.md` and `engineering.md` are merged into `instructions/core.md`. Old URLs redirect to it with a 301.
+- Core, security and testing are mandatory for every project. The other files are loaded when they apply.
+- Core Web Vitals moved from `seo.md` to `performance.md`.
+
+### Upgrade
+- In your `AGENTS.md`, replace the `workflow.md` and `engineering.md` lines with `core.md` and `testing.md`. Add `performance.md` and `api-data.md` where they apply, or re-run the setup prompt.
+
+### Removed
+- The changelog link on the site. This file stays in the repository.
+
 ## 2026-10-23: License and setup page
 
 ### Added

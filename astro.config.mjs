@@ -49,7 +49,7 @@ export default defineConfig({
 				}),
 			],
 			sidebar: [
-				{ label: 'Start', items: [{ label: 'Home', link: '/' }, 'start-here/setup', 'start-here/contact'] },
+				{ label: 'Start', items: [{ label: 'Home', link: '/' }, 'start-here/setup', 'start-here/contact', 'license'] },
 				group('Instructions', 'instructions'),
 				group('Stack notes', 'stacks'),
 			],

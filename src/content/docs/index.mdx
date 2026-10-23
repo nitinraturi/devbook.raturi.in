@@ -3,13 +3,13 @@ title: Devbook
 description: A few short instruction files that make Claude and Copilot build like a senior engineer. Add them to any project with one setup prompt.
 template: splash
 hero:
-  tagline: A few short instruction files that make Claude and Copilot build like a senior engineer. They cover workflow, engineering, security, design, SEO and content. Add them to any project with one prompt.
+  tagline: A few short instruction files that make Claude and Copilot build like a senior engineer. Core, security and testing are mandatory; performance, APIs and data, design, SEO and content are added as needed. Add them to any project with one prompt.
   actions:
     - text: Copy the setup prompt
       link: '#setup'
       icon: right-arrow
     - text: Read the instructions
-      link: /instructions/workflow/
+      link: /instructions/core/
       variant: minimal
 ---
 
@@ -67,11 +67,13 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     </div>
   </div>
   <CardGrid>
-    <LinkCard title="Workflow" description="Understand first, stay current, make small verified changes and report honestly." href="/instructions/workflow/" />
-    <LinkCard title="Engineering" description="Design principles, code quality, testing, performance and reliability." href="/instructions/engineering/" />
-    <LinkCard title="Security" description="Secure defaults, auth, headers, secrets, dependencies, privacy and LLM features." href="/instructions/security/" />
+    <LinkCard title="Core (mandatory)" description="Work like a senior engineer: understand first, stay current, design principles, code, docs, git and done." href="/instructions/core/" />
+    <LinkCard title="Security (mandatory)" description="Secure defaults, auth, headers, secrets, dependencies, privacy and LLM features." href="/instructions/security/" />
+    <LinkCard title="Testing (mandatory)" description="What to test, test levels, deterministic tests, test data and CI gates." href="/instructions/testing/" />
+    <LinkCard title="Performance and reliability" description="Budgets, Core Web Vitals, efficient back ends, caching, timeouts and monitoring." href="/instructions/performance/" />
+    <LinkCard title="APIs and data" description="API contracts, errors, pagination, idempotency, migrations and backups." href="/instructions/api-data/" />
     <LinkCard title="Design" description="Design tokens, components, motion and WCAG 2.2 AA accessibility." href="/instructions/design/" />
-    <LinkCard title="SEO" description="Crawlable pages, metadata, structured data, Core Web Vitals and launch checks." href="/instructions/seo/" />
+    <LinkCard title="SEO" description="Crawlable pages, metadata, site structure, structured data and launch checks." href="/instructions/seo/" />
     <LinkCard title="Content" description="Voice, structure, facts, trust and AI editorial policy for pages and blogs." href="/instructions/content/" />
     <LinkCard title="Mobile (optional)" description="Extra rules for iOS, Android, React Native and Flutter apps." href="/instructions/mobile/" />
     <LinkCard title="Stack notes" description="Short notes for Astro, Starlight, Cloudflare, TypeScript, Django, GA4 and three.js." href="/stacks/astro/" />

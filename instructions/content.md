@@ -2,7 +2,7 @@
 title: Content and writing
 description: Writing policy for site copy, docs and blogs - people-first content, plain voice, verified facts, citations, honesty and the AI editorial policy.
 sidebar:
-  order: 6
+  order: 8
 ---
 
 Applies to site copy, docs, blog posts, UI text and release notes.

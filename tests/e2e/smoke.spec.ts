@@ -1,19 +1,22 @@
 import AxeBuilder from '@axe-core/playwright';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 
 // Home, setup, every instruction file, one stack note, plus privacy.
 const PAGES = [
 	'/',
 	'/start-here/setup/',
-	'/instructions/workflow/',
-	'/instructions/engineering/',
+	'/instructions/core/',
 	'/instructions/security/',
+	'/instructions/testing/',
+	'/instructions/performance/',
+	'/instructions/api-data/',
 	'/instructions/design/',
 	'/instructions/seo/',
 	'/instructions/content/',
 	'/instructions/mobile/',
 	'/stacks/astro/',
+	'/license/',
 	'/privacy/',
 ];
 
@@ -38,7 +41,7 @@ test('homepage shows the complete setup prompt and AGENTS.md template', async ({
 test('every @ path in the AGENTS.md template exists in the repo', async () => {
 	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
 	const paths = [...agents.matchAll(/^@\.devbook\/(\S+)$/gm)].map((m) => m[1]!).filter((p) => !p.includes('<'));
-	expect(paths.length).toBeGreaterThanOrEqual(7);
+	expect(paths.length).toBeGreaterThanOrEqual(9);
 	for (const p of paths) await expect(readFile(new URL(`../../${p}`, import.meta.url), 'utf8')).resolves.toBeTruthy();
 });
 
@@ -102,7 +105,7 @@ test('search returns results under the production CSP', async ({ page, isMobile 
 
 test('theme toggle switches to light and persists', async ({ page, isMobile }) => {
 	test.skip(isMobile, 'Theme select lives in the mobile menu; covered on desktop.');
-	await page.goto('/instructions/workflow/');
+	await page.goto('/instructions/core/');
 	await page.locator('starlight-theme-select select').first().selectOption('light');
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 	await page.reload();
@@ -116,6 +119,23 @@ test('unknown URL serves the custom 404', async ({ page }) => {
 	await expect(page.locator('h1')).toHaveText('Page not found');
 	await expect(page.getByRole('link', { name: 'Set up Devbook' }).first()).toBeVisible();
 	expect(await axe(page)).toEqual([]);
+});
+
+test('every instruction file is listed in the AGENTS.md template and on the homepage', async ({ page }) => {
+	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
+	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
+	await page.goto('/');
+	for (const f of files) {
+		expect(agents).toContain(`@.devbook/instructions/${f}`);
+		await expect(page.locator(`a[href="/instructions/${f.replace(/\.md$/, '')}/"]`).first()).toBeAttached();
+	}
+});
+
+test('license page shows the full LICENSE text', async ({ page }) => {
+	const license = (await readFile(new URL('../../LICENSE', import.meta.url), 'utf8')).trim();
+	await page.goto('/license/');
+	expect(await codeText(page, 'LICENSE')).toBe(license);
+	await expect(page.locator('footer a[href="/license/"], .dvb-site-footer a[href="/license/"]').first()).toBeAttached();
 });
 
 test('setup page method tabs switch between submodule and copy', async ({ page }) => {
@@ -134,7 +154,7 @@ test('page Markdown is served and setup includes the templates', async ({ reques
 	expect(res.headers()['content-type']).toContain('text/markdown');
 	const md = await res.text();
 	expect(md).toMatch(/^# Setup\n/);
-	expect(md).toContain('@.devbook/instructions/workflow.md');
+	expect(md).toContain('@.devbook/instructions/core.md');
 	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
 	const copyCommand = prompt.match(/^\s*(rm -rf \.devbook .+)$/m)?.[1];
 	expect(copyCommand).toBeTruthy();

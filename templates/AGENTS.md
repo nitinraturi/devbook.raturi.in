@@ -12,10 +12,12 @@
 ## Devbook
 Read and follow every file below before your first change in a session. Paths are relative to the repository root.
 
-@.devbook/instructions/workflow.md
-@.devbook/instructions/engineering.md
+@.devbook/instructions/core.md
 @.devbook/instructions/security.md
+@.devbook/instructions/testing.md
 <!-- Keep only the lines that apply, and delete the rest: -->
+@.devbook/instructions/performance.md
+@.devbook/instructions/api-data.md
 @.devbook/instructions/design.md
 @.devbook/instructions/seo.md
 @.devbook/instructions/content.md

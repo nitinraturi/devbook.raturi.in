@@ -13,16 +13,16 @@ npm run lhci     # Lighthouse budgets
 
 ## Layout
 
-- `instructions/*.md`: the product. Always-on rules (workflow, engineering, security, design, seo, content) plus optional `mobile`. They are rendered on the site through the symlink `src/content/docs/instructions`.
+- `instructions/*.md`: the product. Mandatory `core`, `security` and `testing`, plus conditional `performance`, `api-data`, `design`, `seo`, `content` and `mobile`. They are rendered on the site through the symlink `src/content/docs/instructions`.
 - `stacks/*.md`: short notes for one technology each, also rendered through a symlink.
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md` and `copilot-instructions.md`. Pages import them with `?raw`; never copy template text into a page.
-- `src/content/docs/`: the homepage, `start-here/setup.mdx`, contact and privacy pages only.
+- `src/content/docs/`: the homepage, `start-here/setup.mdx`, contact, license and privacy pages only.
 
 ## Writing rules
 
 1. One imperative rule per bullet. No preamble, no examples unless the rule is unclear without one.
 2. Add a rule only if a capable model would otherwise get it wrong. Remove rules that models follow by default.
-3. Keep each instruction file under about 4 KB. A typical website should load under about 20 KB in total.
+3. Keep each instruction file under about 4 KB. The mandatory set stays under about 12 KB and a typical website under about 25 KB.
 4. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
 5. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
 6. Frontmatter: a `title`, a 120–160 character `description` and `sidebar.order`. No H1 in the body; the title is the heading.

@@ -42,7 +42,7 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
 <Steps>
 
-1. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply: workflow, engineering and security always; design for any UI; seo and content for public sites; mobile for apps; plus one stack note for each technology you use.
+1. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply. Core, security and testing are mandatory. Add performance for any app or site, api-data for a backend or database, design for any UI, seo and content for public sites, and mobile for apps. Then add one stack note for each technology you use.
 
    <Code code={agentsTemplate} lang="md" title="AGENTS.md" />
 
@@ -72,7 +72,7 @@ Hosted agents only see a submodule's files if their checkout includes submodules
 
 ## Cost
 
-Each instruction file is 1.5 to 3.7 KB. A typical website (workflow, engineering, security, design, SEO and content) loads about 18 KB, around 5,000 tokens. A backend service that uses only the first three loads about 10 KB.
+Each instruction file is 1.4 to 5 KB. The mandatory set (core, security, testing) is about 11 KB, around 3,000 tokens. A typical public website adds performance, design, SEO and content, for about 22 KB in total (around 6,000 tokens). An API service adds performance and api-data, for about 16 KB.
 
 ## Update, clone or remove
 
@@ -96,8 +96,8 @@ To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then 
 </TabItem>
 </Tabs>
 
-Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. The [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) lists what changed.
+Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change.
 
 ## License
 
-Devbook is [MIT-0](https://github.com/nitinraturi/devbook.raturi.in/blob/main/LICENSE). You can copy and change the files in any project without keeping a notice.
+Devbook is [MIT-0](/license/). You can copy and change the files in any project without keeping a notice.

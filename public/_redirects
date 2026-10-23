@@ -5,11 +5,11 @@
 /start-here/baseline-rules/ /start-here/setup/ 301
 /start-here/versions/ /start-here/setup/ 301
 /start-here/doc-set-for-a-project/ /start-here/setup/ 301
-/workflow/* /instructions/workflow/ 301
-/engineering/* /instructions/engineering/ 301
+/workflow/* /instructions/core/ 301
+/engineering/* /instructions/core/ 301
 /security/* /instructions/security/ 301
 /quality/accessibility/ /instructions/design/ 301
-/quality/* /instructions/engineering/ 301
+/quality/* /instructions/core/ 301
 /web/ui-and-design-systems/ /instructions/design/ 301
 /web/content-standards/ /instructions/content/ 301
 /web/evidence-and-citation/ /instructions/content/ 301
@@ -17,8 +17,12 @@
 /platforms/mobile/ /instructions/mobile/ 301
 /platforms/* / 301
 /stacks/css-tokens/ /instructions/design/ 301
-/stacks/testing-tooling/ /instructions/engineering/ 301
+/stacks/testing-tooling/ /instructions/testing/ 301
 /llm-features/* /instructions/security/ 301
 /templates/* /start-here/setup/ 301
 /prompts/* / 301
-/checklists/* /instructions/workflow/ 301
+/checklists/* /instructions/core/ 301
+
+# Instruction files merged on 2026-10-23.
+/instructions/workflow/ /instructions/core/ 301
+/instructions/engineering/ /instructions/core/ 301

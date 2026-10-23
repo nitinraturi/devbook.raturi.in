@@ -2,10 +2,10 @@
 title: Mobile apps
 description: Extra rules for native, React Native and Flutter apps - platform conventions, accessibility settings, offline behaviour, permissions, secure storage and releases.
 sidebar:
-  order: 7
+  order: 9
 ---
 
-Use with the engineering, security and design instructions.
+Use with the core, security, testing, performance and design instructions.
 
 - Follow Apple's Human Interface Guidelines and Google's Material guidance for navigation, gestures and system controls.
 - Support dynamic text size, dark mode and screen readers (VoiceOver, TalkBack). Every control has an accessible label.

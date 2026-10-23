@@ -4,11 +4,13 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 
 | File | Covers | Load when |
 |---|---|---|
-| `instructions/workflow.md` | understand first, stay current, small verified changes, honest reports | always |
-| `instructions/engineering.md` | design principles, code, testing, performance, reliability | always |
-| `instructions/security.md` | secure defaults, auth, headers, secrets, dependencies, privacy, LLM features | always |
+| `instructions/core.md` | understand first, stay current, design principles, code, docs and decisions, git, done | always (mandatory) |
+| `instructions/security.md` | secure defaults, auth, headers, secrets, dependencies, privacy, LLM features | always (mandatory) |
+| `instructions/testing.md` | what to test, test levels, deterministic tests, CI gates | always (mandatory) |
+| `instructions/performance.md` | budgets, Core Web Vitals, back-end efficiency, caching, reliability | any app, site or service |
+| `instructions/api-data.md` | API contracts, errors, pagination, migrations, backups | backend, API or database |
 | `instructions/design.md` | tokens, components, motion, WCAG 2.2 AA | the project has a UI |
-| `instructions/seo.md` | crawlable pages, metadata, structured data, Core Web Vitals | public website |
+| `instructions/seo.md` | crawlable pages, metadata, site structure, structured data | public website |
 | `instructions/content.md` | voice, structure, facts, trust, AI editorial policy | public website or blog |
 | `instructions/mobile.md` | mobile-app rules | mobile app |
 | `stacks/*.md` | Astro, Starlight, Cloudflare, TypeScript, Django, GA4, three.js | you use that technology |

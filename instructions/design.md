@@ -2,7 +2,7 @@
 title: Design
 description: UI, design-token, layout, motion and WCAG 2.2 AA accessibility rules an assistant follows when building any interface.
 sidebar:
-  order: 4
+  order: 6
 ---
 
 The project's look (brand, colours, fonts, components) lives in its own docs, for example `docs/design-system.md`. These rules apply to every design.

@@ -2,7 +2,7 @@
 title: Security
 description: Security, secrets, dependency and privacy rules an assistant follows for every feature, from authentication to headers, uploads and LLM calls.
 sidebar:
-  order: 3
+  order: 2
 ---
 
 ## Defaults
@@ -13,6 +13,7 @@ sidebar:
 - Encode output for its context and keep framework auto-escaping on. Raw-HTML escape hatches need review; sanitise rich text with an allowlist.
 - Server-side fetches of user-supplied URLs use an allowlist and block internal addresses.
 - Write a short threat model for features touching accounts, payments, personal data, uploads, admin or LLM tools.
+- Log security events (sign-in, failed sign-in, permission and role changes, admin actions, data exports) with who, what and when, without secrets.
 
 ## Auth and sessions
 - Use the framework's or a proven provider's auth. Never write custom password hashing or session crypto.
@@ -31,7 +32,7 @@ sidebar:
 - Commit `.env.example` with names only. Use separate, least-privilege credentials per environment. Rotate anything exposed.
 
 ## Dependencies
-- Ask before adding one. Confirm it exists under that exact name, is maintained, its repository matches the package, and its licence is allowed.
+- Before adding one, confirm it exists under that exact name, is maintained, its repository matches the package, and its licence is allowed.
 - Commit lockfiles; install from the lockfile in CI. Audit dependencies in CI and fix high or critical issues.
 - Pin third-party CI actions to commit SHAs. Load front-end libraries from your own bundle, not a CDN.
 
