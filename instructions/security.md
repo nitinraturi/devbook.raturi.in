@@ -5,6 +5,8 @@ sidebar:
   order: 2
 ---
 
+Covers the OWASP Top 10 risks. For anything not listed, follow the OWASP Cheat Sheet Series.
+
 ## Defaults
 - Deny by default. Every route and endpoint declares who may access it. Check permissions on the server per object, not only per route.
 - Never trust the client: IDs, roles, prices and hidden fields are re-checked on the server.
@@ -16,8 +18,9 @@ sidebar:
 - Log security events (sign-in, failed sign-in, permission and role changes, admin actions, data exports) with who, what and when, without secrets.
 
 ## Auth and sessions
-- Use the framework's or a proven provider's auth. Never write custom password hashing or session crypto.
-- Session cookies are `Secure`, `HttpOnly` and `SameSite=Lax` or `Strict`. Rotate on login and privilege change; expire idle sessions.
+- Use the framework's or a proven provider's auth. Never write custom password hashing or session crypto. Offer passkeys (WebAuthn) where practical.
+- Passwords (NIST SP 800-63B): at least 8 characters (15 when the password is the only factor), allow at least 64 characters and paste, block known-breached passwords, and use no composition rules or forced periodic changes. Hash with Argon2id (scrypt if unavailable). Use bcrypt only in legacy systems, handle its 72-byte input limit, and plan a migration.
+- Session cookies are `Secure`, `HttpOnly` and `SameSite=Lax` or `Strict`, with the `__Host-` prefix where possible. Rotate on login and privilege change; expire idle sessions.
 - Rate-limit login, sign-up and reset. Never reveal whether an account exists. Offer MFA, at least for admins.
 - Every cookie-authenticated, state-changing request has CSRF protection.
 

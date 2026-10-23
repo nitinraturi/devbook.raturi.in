@@ -2,6 +2,19 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-10-23: Structure, naming, SEO and design refresh
+
+### Added
+- Core: **Project structure** (framework layout first, feature folders, no catch-all utils, shallow nesting) and **Naming** (per-language conventions, domain words, booleans, units, branches).
+- Security: NIST SP 800-63B password rules, passkeys, `__Host-` cookies, and an OWASP Top 10 baseline.
+- Performance: lazy iframes, back/forward cache eligibility, Brotli and HTTP/2 or HTTP/3.
+- Mobile: store target-SDK requirements, and edge-to-edge layouts with safe areas.
+
+### Changed
+- SEO rewritten against Google Search Central. It now covers crawlable links, `robots.txt` versus `noindex`, mobile-first parity, pagination canonicals, `hreflang`, snippet controls, site names and favicons, image and video SEO, the current Search Gallery features (no FAQ or HowTo rich results for most sites), spam policies and launch checks.
+- Design rewritten around WCAG 2.2, the Apple HIG, Material 3 and Nielsen's heuristics. It now covers hierarchy, spacing scale, container queries, modern type (`clamp`, `text-wrap`), OKLCH semantic colour, dark mode, component states, forms (`autocomplete`, validation timing), motion and the new WCAG 2.2 criteria.
+- Content aligned with Google's helpful-content guidance: Who/How/Why, E-E-A-T, YMYL reviewers, disclosures, and no fake freshness.
+
 ## 2026-10-23: Mandatory core and new instructions
 
 ### Added

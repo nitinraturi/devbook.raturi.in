@@ -22,9 +22,9 @@ npm run lhci     # Lighthouse budgets
 
 1. One imperative rule per bullet. No preamble, no examples unless the rule is unclear without one.
 2. Add a rule only if a capable model would otherwise get it wrong. Remove rules that models follow by default.
-3. Keep each instruction file under about 4 KB. The mandatory set stays under about 12 KB and a typical website under about 25 KB.
+3. Keep each instruction file under about 8 KB. The mandatory set stays under about 15 KB and a typical website under about 35 KB. Every rule must earn its tokens.
 4. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
-5. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
+5. Base rules on primary sources (official docs, standards, recognised guidelines) and name them in the file's intro. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
 6. Frontmatter: a `title`, a 120–160 character `description` and `sidebar.order`. No H1 in the body; the title is the heading.
 7. Stack-agnostic instructions name no framework. Framework details go in `stacks/`.
 
