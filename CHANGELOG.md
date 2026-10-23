@@ -2,6 +2,11 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-10-23: Copy method
+
+### Added
+- A second way to add Devbook: download plain files into `.devbook/` with one `curl | tar` command, or as a ZIP, and commit them. This needs no submodule and works offline and in cloud agents. Set `Method: copy` in the setup prompt. The setup page shows both methods.
+
 ## 2026-10-23: Minimal redesign
 
 ### Changed

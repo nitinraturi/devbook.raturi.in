@@ -26,12 +26,12 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     <a class="dvb-home-text-link" href="/start-here/setup/">Manual setup and how loading works <span aria-hidden="true">→</span></a>
   </div>
 
-  <p class="dvb-quick-start-intro">Open your project in Claude Code or VS Code Copilot agent mode, with file editing and terminal access turned on. Paste this prompt. The assistant adds Devbook as a git submodule at <code>.devbook/</code>, picks the files your project needs and connects them. It does not commit anything.</p>
+  <p class="dvb-quick-start-intro">Open your project in Claude Code or VS Code Copilot agent mode, with file editing and terminal access turned on. Paste this prompt. The assistant adds Devbook at <code>.devbook/</code>, either as a git submodule (the default) or as copied files (change <code>Method</code> to <code>copy</code>). It then picks the files your project needs and connects them. It does not commit anything.</p>
   <Code code={setupPrompt} lang="text" title="Paste into Claude or Copilot" />
   <div class="dvb-quick-start-notes">
     <p><strong>1. Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</p>
-    <p><strong>2. Commit.</strong> Commit those files along with <code>.gitmodules</code> and <code>.devbook</code>. Then start a new chat so the instructions load.</p>
-    <p><strong>3. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update, run <code>git submodule update --remote .devbook</code>.</p>
+    <p><strong>2. Commit.</strong> Commit those files along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</p>
+    <p><strong>3. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update a submodule, run <code>git submodule update --remote .devbook</code>. For a copy, run the download command again.</p>
   </div>
 </section>
 

@@ -17,11 +17,11 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 
 Paste [`templates/setup-prompt.md`](templates/setup-prompt.md) into Claude Code or Copilot agent mode inside your project. The prompt walks the assistant through these steps:
 
-1. Add this repository as a submodule at `.devbook/`, tracking `main`.
+1. Add Devbook at `.devbook/`. The default is a submodule that tracks `main`. Set `Method: copy` to download plain files you commit instead.
 2. Create or merge a root `AGENTS.md`. It has your project section, then `@.devbook/...` lines for the files that apply.
 3. Create a `CLAUDE.md` containing `@AGENTS.md`, and a `.github/copilot-instructions.md` that tells Copilot to read the files `AGENTS.md` lists.
 
-To update, run `git submodule update --remote .devbook`. Project rules in `AGENTS.md` override Devbook. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps, how the instructions load and their limits.
+To update a submodule, run `git submodule update --remote .devbook`. For a copy, rerun the download command on the setup page. Project rules in `AGENTS.md` override Devbook. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps, how the instructions load and their limits.
 
 ## Develop the site
 

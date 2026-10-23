@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-import { Code, Steps, Aside } from '@astrojs/starlight/components';
+import { Code, Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 import agentsTemplate from '../../../../templates/AGENTS.md?raw';
 import copilotTemplate from '../../../../templates/copilot-instructions.md?raw';
 
@@ -15,11 +15,26 @@ The [setup prompt](/#setup) does all of this for you. The steps below show the s
 
 <Steps>
 
-1. Add Devbook as a submodule that follows `main`:
+1. Add Devbook to `.devbook/` in one of two ways. Both give the same paths, so the rest of the setup is identical.
+
+   <Tabs syncKey="method">
+   <TabItem label="Submodule">
+   Follows `main`. You update with one git command, and every update shows up as a reviewable change.
 
    ```sh
    git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
    ```
+   </TabItem>
+   <TabItem label="Copy">
+   Downloads plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
+
+   ```sh
+   rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates
+   ```
+
+   Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders into `.devbook/`.
+   </TabItem>
+   </Tabs>
 
 2. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply: workflow, engineering and security always; design for any UI; seo and content for public sites; mobile for apps; plus one stack note for each technology you use.
 
@@ -35,7 +50,7 @@ The [setup prompt](/#setup) does all of this for you. The steps below show the s
 
    <Code code={copilotTemplate} lang="md" title=".github/copilot-instructions.md" />
 
-5. Commit `.gitmodules`, `.devbook`, `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`, then start a new chat.
+5. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`, then start a new chat.
 
 </Steps>
 
@@ -45,8 +60,8 @@ The [setup prompt](/#setup) does all of this for you. The steps below show the s
 - **GitHub Copilot** (VS Code, the coding agent and the CLI) reads `AGENTS.md` and `.github/copilot-instructions.md` automatically. It does not inline `@` lines. The sentence in `copilot-instructions.md` tells it to read those files, and it normally does. Still, this is an instruction, not a guarantee.
 - **Other agents** that support `AGENTS.md` (such as Codex, Cursor and Gemini CLI) get the same file list.
 
-<Aside type="caution" title="Cloud agents need the submodule">
-Hosted agents only see `.devbook/` if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`.
+<Aside type="caution" title="Cloud agents and submodules">
+Hosted agents only see a submodule's files if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`. You can also switch to the Copy method, whose files are in the repository itself.
 </Aside>
 
 ## Cost
@@ -55,6 +70,9 @@ Each instruction file is 1.5 to 3.7 KB. A typical website (workflow, engineering
 
 ## Update, clone or remove
 
+<Tabs syncKey="method">
+<TabItem label="Submodule">
+
 ```sh
 git submodule update --remote .devbook       # pull the latest Devbook, then commit the change
 git clone --recurse-submodules <your-repo>   # clone a project that uses Devbook
@@ -62,4 +80,14 @@ git submodule update --init                  # fetch .devbook in an existing clo
 git rm .devbook                              # remove; then delete the @ lines from AGENTS.md
 ```
 
-Devbook has no version pins. Git still records which Devbook commit your project uses, so an update is a normal reviewable change. The [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) lists what changed.
+</TabItem>
+<TabItem label="Copy">
+
+Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/` and the `@` lines from `AGENTS.md`.
+
+To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then run the submodule command.
+
+</TabItem>
+</Tabs>
+
+Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. The [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) lists what changed.
