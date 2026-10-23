@@ -6,6 +6,10 @@ import { GA_ID, PERSON } from '../lib/site';
 <Default />
 <div class="dvb-site-footer">
 	<span>Written by <a href={PERSON.url} rel="author">{PERSON.name}</a></span>
+	<a href="/start-here/contact/">Contact</a>
+	<a href="https://www.linkedin.com/in/nitinraturi/" rel="me noopener noreferrer">LinkedIn</a>
+	<a href="https://x.com/raturitechmedia" rel="me noopener noreferrer">X</a>
+	<a href={`mailto:${PERSON.contactEmail}`}>Email</a>
 	<a href="/privacy/">Privacy</a>
 	{GA_ID && <button type="button" data-consent-open>Cookie settings</button>}
 </div>

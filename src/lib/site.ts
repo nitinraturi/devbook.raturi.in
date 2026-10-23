@@ -9,8 +9,12 @@ export const PERSON = {
 	id: 'https://raturi.in/#person',
 	name: 'Nitin Raturi',
 	url: 'https://raturi.in/',
-	// TODO(owner): add profile URLs (GitHub, LinkedIn, …) for `sameAs`.
-	sameAs: [] as string[],
+	contactEmail: 'develop@raturi.in',
+	sameAs: [
+		'https://www.linkedin.com/in/nitinraturi/',
+		'https://x.com/raturitechmedia',
+		'https://github.com/nitinraturi',
+	] as string[],
 };
 
 /** Pages older than this many days since `lastVerified` show a caution notice. */
