@@ -1,7 +1,10 @@
 # Pages removed in the minimal redesign (2026-10-23). Specific rules come before splats.
+# Never add a splat that matches a live section (/start-here/, /instructions/, /stacks/).
 /start-here/introduction/ / 301
 /start-here/adopt-in-a-project/ /start-here/setup/ 301
-/start-here/* /start-here/setup/ 301
+/start-here/baseline-rules/ /start-here/setup/ 301
+/start-here/versions/ /start-here/setup/ 301
+/start-here/doc-set-for-a-project/ /start-here/setup/ 301
 /workflow/* /instructions/workflow/ 301
 /engineering/* /instructions/engineering/ 301
 /security/* /instructions/security/ 301
