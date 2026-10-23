@@ -34,3 +34,7 @@ npm run check
 ```
 
 Contributor rules are in [`AGENTS.md`](AGENTS.md), deployment in [`DEPLOY.md`](DEPLOY.md) and changes in [`CHANGELOG.md`](CHANGELOG.md).
+
+## License
+
+[MIT No Attribution (MIT-0)](LICENSE). Copy, change and redistribute the instructions in any project, commercial or not, without keeping a notice.

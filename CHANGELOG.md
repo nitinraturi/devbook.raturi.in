@@ -2,6 +2,14 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-10-23: License and setup page
+
+### Added
+- The MIT No Attribution (MIT-0) license. You can copy the instructions into any project without keeping a notice.
+
+### Changed
+- The setup page starts with a clear choice between Submodule and Copy, shown as styled tabs.
+
 ## 2026-10-23: Copy method
 
 ### Added

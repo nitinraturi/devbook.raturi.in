@@ -118,6 +118,16 @@ test('unknown URL serves the custom 404', async ({ page }) => {
 	expect(await axe(page)).toEqual([]);
 });
 
+test('setup page method tabs switch between submodule and copy', async ({ page }) => {
+	await page.goto('/start-here/setup/');
+	const copyTab = page.getByRole('tab', { name: 'Copy (plain files)' }).first();
+	await expect(copyTab).toBeVisible();
+	await copyTab.click();
+	await expect(page.getByText('codeload.github.com').first()).toBeVisible();
+	await expect(page.getByRole('tab', { name: 'Copy (plain files)' }).last()).toHaveAttribute('aria-selected', 'true');
+	expect(await axe(page)).toEqual([]);
+});
+
 test('page Markdown is served and setup includes the templates', async ({ request }) => {
 	const res = await request.get('/start-here/setup/index.md');
 	expect(res.status()).toBe(200);

@@ -11,46 +11,52 @@ import copilotTemplate from '../../../../templates/copilot-instructions.md?raw';
 
 The [setup prompt](/#setup) does all of this for you. The steps below show the same setup done by hand.
 
-## Manual setup
+## 1. Choose how to add Devbook
+
+Both methods put the files in `.devbook/`, so the rest of the setup is the same. Pick a tab.
+
+<Tabs syncKey="method">
+<TabItem label="Submodule (tracks updates)">
+
+Follows `main`. You update with one git command, and every update shows up as a reviewable change.
+
+```sh
+git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
+```
+
+</TabItem>
+<TabItem label="Copy (plain files)">
+
+Downloads plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
+
+```sh
+rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates
+```
+
+Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders into `.devbook/`.
+
+</TabItem>
+</Tabs>
+
+## 2. Connect your assistants
 
 <Steps>
 
-1. Add Devbook to `.devbook/` in one of two ways. Both give the same paths, so the rest of the setup is identical.
-
-   <Tabs syncKey="method">
-   <TabItem label="Submodule">
-   Follows `main`. You update with one git command, and every update shows up as a reviewable change.
-
-   ```sh
-   git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
-   ```
-   </TabItem>
-   <TabItem label="Copy">
-   Downloads plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
-
-   ```sh
-   rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates
-   ```
-
-   Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders into `.devbook/`.
-   </TabItem>
-   </Tabs>
-
-2. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply: workflow, engineering and security always; design for any UI; seo and content for public sites; mobile for apps; plus one stack note for each technology you use.
+1. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply: workflow, engineering and security always; design for any UI; seo and content for public sites; mobile for apps; plus one stack note for each technology you use.
 
    <Code code={agentsTemplate} lang="md" title="AGENTS.md" />
 
-3. Create `CLAUDE.md` containing one line:
+2. Create `CLAUDE.md` containing one line:
 
    ```md
    @AGENTS.md
    ```
 
-4. Create `.github/copilot-instructions.md`:
+3. Create `.github/copilot-instructions.md`:
 
    <Code code={copilotTemplate} lang="md" title=".github/copilot-instructions.md" />
 
-5. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`, then start a new chat.
+4. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`, then start a new chat.
 
 </Steps>
 
@@ -71,7 +77,7 @@ Each instruction file is 1.5 to 3.7 KB. A typical website (workflow, engineering
 ## Update, clone or remove
 
 <Tabs syncKey="method">
-<TabItem label="Submodule">
+<TabItem label="Submodule (tracks updates)">
 
 ```sh
 git submodule update --remote .devbook       # pull the latest Devbook, then commit the change
@@ -81,7 +87,7 @@ git rm .devbook                              # remove; then delete the @ lines f
 ```
 
 </TabItem>
-<TabItem label="Copy">
+<TabItem label="Copy (plain files)">
 
 Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/` and the `@` lines from `AGENTS.md`.
 
@@ -91,3 +97,7 @@ To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then 
 </Tabs>
 
 Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. The [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) lists what changed.
+
+## License
+
+Devbook is [MIT-0](https://github.com/nitinraturi/devbook.raturi.in/blob/main/LICENSE). You can copy and change the files in any project without keeping a notice.
