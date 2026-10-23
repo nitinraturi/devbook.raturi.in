@@ -30,15 +30,9 @@ The Worker is live at `https://devbook-raturi-in.raturi002.workers.dev`. To serv
 
 In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, with production branch `main` and deploy command `npx wrangler deploy`. Non-production branches upload preview versions; they build as previews (`noindex`, no analytics) because `WORKERS_CI_BRANCH` is not `main`.
 
-## Releases
+## Updates
 
-The devbook is a versioned standard (README → Versioning).
-
-1. Add a `CHANGELOG.md` entry and bump `version` in `package.json`.
-2. Merge to `main` with CI green.
-3. Tag the release: `git tag v1.0.0 && git push --tags`.
-
-Projects pin a tag and upgrade by deliberate PR.
+Devbook is not versioned. Projects track `main` through a git submodule and pull changes with `git submodule update --remote .devbook`. Every change to `instructions/` or `stacks/` gets a dated entry in `CHANGELOG.md`, so projects can see what changed.
 
 ## Local checks
 

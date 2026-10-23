@@ -1,7 +1,6 @@
 {
   "name": "devbook.raturi.in",
   "type": "module",
-  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -11,11 +10,10 @@
     "typecheck": "astro check",
     "check:descriptions": "node scripts/check-descriptions.mjs",
     "contrast": "node scripts/check-contrast.mjs",
-    "check:rules": "node scripts/check-rules.mjs",
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
     "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run check:rules && npm run build && npm run test:e2e",
+    "check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e",
     "deploy": "wrangler deploy"
   },
   "dependencies": {

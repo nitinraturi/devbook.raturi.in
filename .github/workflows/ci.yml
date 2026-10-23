@@ -39,9 +39,6 @@ jobs:
       - name: Accent contrast
         run: npm run contrast
 
-      - name: Baseline rule packs and sync tool
-        run: npm run check:rules
-
       - name: Build (links validator, CSP hashes)
         run: npm run build
 

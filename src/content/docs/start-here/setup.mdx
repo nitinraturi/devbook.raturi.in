@@ -1,0 +1,65 @@
+---
+title: Setup
+description: Add Devbook to a project by hand, see how Claude and Copilot load the instructions and their limits, and learn how to update or remove it.
+sidebar:
+  order: 1
+---
+
+import { Code, Steps, Aside } from '@astrojs/starlight/components';
+import agentsTemplate from '../../../../templates/AGENTS.md?raw';
+import copilotTemplate from '../../../../templates/copilot-instructions.md?raw';
+
+The [setup prompt](/#setup) does all of this for you. The steps below show the same setup done by hand.
+
+## Manual setup
+
+<Steps>
+
+1. Add Devbook as a submodule that follows `main`:
+
+   ```sh
+   git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
+   ```
+
+2. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply: workflow, engineering and security always; design for any UI; seo and content for public sites; mobile for apps; plus one stack note for each technology you use.
+
+   <Code code={agentsTemplate} lang="md" title="AGENTS.md" />
+
+3. Create `CLAUDE.md` containing one line:
+
+   ```md
+   @AGENTS.md
+   ```
+
+4. Create `.github/copilot-instructions.md`:
+
+   <Code code={copilotTemplate} lang="md" title=".github/copilot-instructions.md" />
+
+5. Commit `.gitmodules`, `.devbook`, `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`, then start a new chat.
+
+</Steps>
+
+## How the instructions load
+
+- **Claude Code** reads `CLAUDE.md`, follows `@AGENTS.md`, then follows each `@.devbook/...` line. The full text is in context at the start of every session. Write the `@` paths as plain text: an `@` path inside backticks is not imported.
+- **GitHub Copilot** (VS Code, the coding agent and the CLI) reads `AGENTS.md` and `.github/copilot-instructions.md` automatically. It does not inline `@` lines. The sentence in `copilot-instructions.md` tells it to read those files, and it normally does. Still, this is an instruction, not a guarantee.
+- **Other agents** that support `AGENTS.md` (such as Codex, Cursor and Gemini CLI) get the same file list.
+
+<Aside type="caution" title="Cloud agents need the submodule">
+Hosted agents only see `.devbook/` if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`.
+</Aside>
+
+## Cost
+
+Each instruction file is 1.5 to 3.7 KB. A typical website (workflow, engineering, security, design, SEO and content) loads about 18 KB, around 5,000 tokens. A backend service that uses only the first three loads about 10 KB.
+
+## Update, clone or remove
+
+```sh
+git submodule update --remote .devbook       # pull the latest Devbook, then commit the change
+git clone --recurse-submodules <your-repo>   # clone a project that uses Devbook
+git submodule update --init                  # fetch .devbook in an existing clone
+git rm .devbook                              # remove; then delete the @ lines from AGENTS.md
+```
+
+Devbook has no version pins. Git still records which Devbook commit your project uses, so an update is a normal reviewable change. The [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) lists what changed.

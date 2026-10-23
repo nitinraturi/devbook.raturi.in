@@ -2,54 +2,44 @@ import AxeBuilder from '@axe-core/playwright';
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 
-// Home, one page per sidebar group, plus privacy.
+// Home, setup, every instruction file, one stack note, plus privacy.
 const PAGES = [
 	'/',
-	'/start-here/introduction/',
-	'/start-here/adopt-in-a-project/',
-	'/start-here/baseline-rules/',
-	'/workflow/llm-assisted-workflow/',
-	'/engineering/design-principles/',
-	'/security/security-baseline/',
-	'/quality/accessibility/',
-	'/web/technical-seo/',
-	'/llm-features/llm-evals/',
-	'/platforms/mobile/',
+	'/start-here/setup/',
+	'/instructions/workflow/',
+	'/instructions/engineering/',
+	'/instructions/security/',
+	'/instructions/design/',
+	'/instructions/seo/',
+	'/instructions/content/',
+	'/instructions/mobile/',
 	'/stacks/astro/',
-	'/templates/adr/',
-	'/prompts/overview/',
-	'/checklists/pre-commit/',
 	'/privacy/',
 ];
 
-test('homepage and adoption guide share the complete onboarding prompt', async ({ page, request }) => {
-	const prompt = (await readFile(new URL('../../templates/adopt-devbook.md', import.meta.url), 'utf8')).trim();
-	for (const path of ['/', '/start-here/adopt-in-a-project/']) {
-		await page.goto(path);
-		const code = page.locator('.expressive-code').filter({ hasText: 'Paste into Claude or Copilot' });
-		await expect(code).toHaveCount(1);
-		await expect(code.getByRole('button', { name: 'Copy to clipboard' })).toBeAttached();
-		const lines = await code.locator('.ec-line .code').allTextContents();
-		expect(lines.map((line) => line.replace(/\n/g, '')).join('\n').trim()).toBe(prompt);
-		expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
-	}
-	const response = await request.get('/start-here/adopt-in-a-project/index.md');
-	expect(response.status()).toBe(200);
-	expect(await response.text()).toContain(prompt);
+const codeText = async (page: Page, title: string) => {
+	const code = page.locator('.expressive-code').filter({ hasText: title }).first();
+	await expect(code).toBeAttached();
+	const lines = await code.locator('.ec-line .code').allTextContents();
+	return lines.map((line) => line.replace(/\n/g, '')).join('\n').trim();
+};
+
+test('homepage shows the complete setup prompt and AGENTS.md template', async ({ page, request }) => {
+	const prompt = (await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8')).trim();
+	const agents = (await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8')).trim();
+	await page.goto('/');
+	await expect(page.locator('.expressive-code').filter({ hasText: 'Paste into Claude or Copilot' }).getByRole('button', { name: 'Copy to clipboard' })).toBeAttached();
+	expect(await codeText(page, 'Paste into Claude or Copilot')).toBe(prompt);
+	expect(await codeText(page, 'AGENTS.md (template)')).toBe(agents);
+	expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
+	expect(await (await request.get('/index.md')).text()).toContain(prompt);
 });
 
-test('baseline rules page shows every rule pack and the CI workflow', async ({ page }) => {
-	await page.goto('/start-here/baseline-rules/');
-	for (const profile of ['core', 'web', 'mobile', 'llm-features']) {
-		const pack = (await readFile(new URL(`../../rules/${profile}.md`, import.meta.url), 'utf8')).trim();
-		await page.getByRole('tab', { name: profile, exact: true }).click();
-		const code = page.locator('.expressive-code').filter({ hasText: `rules/${profile}.md` });
-		await expect(code).toBeVisible();
-		const lines = await code.locator('.ec-line .code').allTextContents();
-		expect(lines.map((line) => line.replace(/\n/g, '')).join('\n').trim()).toBe(pack);
-	}
-	await expect(page.locator('.expressive-code').filter({ hasText: 'devbook-sync.mjs --check' }).first()).toBeVisible();
-	expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
+test('every @ path in the AGENTS.md template exists in the repo', async () => {
+	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
+	const paths = [...agents.matchAll(/^@\.devbook\/(\S+)$/gm)].map((m) => m[1]!).filter((p) => !p.includes('<'));
+	expect(paths.length).toBeGreaterThanOrEqual(7);
+	for (const p of paths) await expect(readFile(new URL(`../../${p}`, import.meta.url), 'utf8')).resolves.toBeTruthy();
 });
 
 /** Collects CSP violations and uncaught errors so a strict CSP cannot silently break the page. */
@@ -89,7 +79,7 @@ for (const path of PAGES) {
 
 test('dark theme passes axe', async ({ page }) => {
 	await page.emulateMedia({ colorScheme: 'dark' });
-	await page.goto('/security/security-baseline/');
+	await page.goto('/instructions/security/');
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 	expect(await axe(page)).toEqual([]);
 });
@@ -101,18 +91,18 @@ test('stack pages show the last-verified date', async ({ page }) => {
 
 test('search returns results under the production CSP', async ({ page, isMobile }) => {
 	const errors = watchErrors(page);
-	await page.goto('/start-here/introduction/');
+	await page.goto('/start-here/setup/');
 	if (isMobile) await page.getByRole('button', { name: 'Search' }).click();
 	else await page.locator('site-search button').first().click();
 	const dialog = page.locator('dialog[open]');
-	await dialog.locator('input.pagefind-ui__search-input').fill('lockfile');
+	await dialog.locator('input.pagefind-ui__search-input').fill('submodule');
 	await expect(dialog.locator('.pagefind-ui__result').first()).toBeVisible({ timeout: 10_000 });
 	expect(errors).toEqual([]);
 });
 
 test('theme toggle switches to light and persists', async ({ page, isMobile }) => {
 	test.skip(isMobile, 'Theme select lives in the mobile menu; covered on desktop.');
-	await page.goto('/workflow/llm-assisted-workflow/');
+	await page.goto('/instructions/workflow/');
 	await page.locator('starlight-theme-select select').first().selectOption('light');
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 	await page.reload();
@@ -124,17 +114,17 @@ test('unknown URL serves the custom 404', async ({ page }) => {
 	const res = await page.goto('/no-such-page/');
 	expect(res?.status()).toBe(404);
 	await expect(page.locator('h1')).toHaveText('Page not found');
-	await expect(page.getByRole('link', { name: 'Start here' }).first()).toBeVisible();
+	await expect(page.getByRole('link', { name: 'Set up Devbook' }).first()).toBeVisible();
 	expect(await axe(page)).toEqual([]);
 });
 
-test('page Markdown is served and template pages include the template', async ({ request }) => {
-	const res = await request.get('/templates/adr/index.md');
+test('page Markdown is served and setup includes the templates', async ({ request }) => {
+	const res = await request.get('/start-here/setup/index.md');
 	expect(res.status()).toBe(200);
 	expect(res.headers()['content-type']).toContain('text/markdown');
 	const md = await res.text();
-	expect(md).toMatch(/^# ADR\n/);
-	expect(md).toContain('# ADR-NNNN');
+	expect(md).toMatch(/^# Setup\n/);
+	expect(md).toContain('@.devbook/instructions/workflow.md');
 	expect(md).not.toContain('import ');
 });
 

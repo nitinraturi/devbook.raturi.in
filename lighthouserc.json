@@ -5,9 +5,9 @@
       "startServerReadyPattern": "Serving dist",
       "url": [
         "http://127.0.0.1:4324/",
-        "http://127.0.0.1:4324/workflow/llm-assisted-workflow/",
-        "http://127.0.0.1:4324/security/security-baseline/",
-        "http://127.0.0.1:4324/templates/agents-md/"
+        "http://127.0.0.1:4324/start-here/setup/",
+        "http://127.0.0.1:4324/instructions/security/",
+        "http://127.0.0.1:4324/stacks/astro/"
       ],
       "numberOfRuns": 3,
       "settings": { "formFactor": "mobile", "screenEmulation": { "mobile": true, "width": 412, "height": 823, "deviceScaleFactor": 1.75 } }

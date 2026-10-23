@@ -1,59 +1,36 @@
-# AGENTS.md — working on devbook.raturi.in
+# AGENTS.md: working on devbook.raturi.in
 
-You are editing the devbook itself: a public guide and a versioned standard that other projects pin. Treat every change as a change to a rulebook.
+Devbook is a small set of instruction files that other projects load into Claude and Copilot through a git submodule at `.devbook/`. Every word ships into every session of every project, so keep it short, correct and current.
 
 ## Commands
 
 ```bash
 npm ci
-npm run dev          # local preview
-npm run build        # astro build + HTML fixes + CSP hashes; must pass before any PR
-npm run check        # typecheck, descriptions, contrast, rule packs, build (link validation), Playwright + axe
-npm run lhci         # Lighthouse budgets (CI runs this too)
+npm run dev      # local preview
+npm run check    # typecheck, descriptions, contrast, build (link validation), Playwright + axe
+npm run lhci     # Lighthouse budgets
 ```
 
-## Where things go
+## Layout
 
-- Guides: `src/content/docs/<section>/<slug>.md`. One topic per page.
-- Raw templates copied into projects: `templates/*.md`. The matching site page under `src/content/docs/templates/` imports them with `?raw`; never duplicate template text in two places.
-- Mandatory baseline rule packs: `rules/<profile>.md`, installed into projects by `bin/devbook-sync.mjs`. Each pack stays at 150 lines or fewer and links its source pages in a `Detail` section. When you change a rule on a guide page that a pack covers, update the pack in the same change. `npm run check:rules` validates packs and the sync tool.
-- Prompts: `src/content/docs/prompts/`.
-- Checklists: `src/content/docs/checklists/`.
-
-## Page format (every guide)
-
-```markdown
----
-title: <Name, ≤ 60 chars>
-description: <120–160 chars: what the reader gets>
-lastVerified: YYYY-MM-DD      # only on time-sensitive pages
-sidebar:
-  order: <n>
----
-
-<1–2 sentence purpose>
-
-## Rules
-- **MUST** / **SHOULD** / **MUST NOT** statements, one per line.
-
-## Why            (short, only where the reason is not obvious)
-## Examples       (good / bad, short)
-## Checklist      (copyable)
-```
+- `instructions/*.md`: the product. Always-on rules (workflow, engineering, security, design, seo, content) plus optional `mobile`. They are rendered on the site through the symlink `src/content/docs/instructions`.
+- `stacks/*.md`: short notes for one technology each, also rendered through a symlink.
+- `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md` and `copilot-instructions.md`. Pages import them with `?raw`; never copy template text into a page.
+- `src/content/docs/`: the homepage, `start-here/setup.mdx`, contact and privacy pages only.
 
 ## Writing rules
 
-1. Rules are terse and testable. "MUST pin dependencies with a lockfile", not "it is a good idea to think about dependencies".
-2. Stack-agnostic pages name no framework. Framework specifics go in `stacks/`.
-3. Never invent facts, standards, version numbers, statistics or quotes. If something cannot be verified, write "verify before relying on this" or leave it out.
-4. Any statement about a vendor's current product, policy or version gets a `lastVerified` date and a link to the official source.
-5. Plain English, active voice, short sentences. No hype words (ultimate, game-changer, seamless, revolutionary).
-6. Do not copy text from other sites. Paraphrase; quotes under 15 words with a link.
+1. One imperative rule per bullet. No preamble, no examples unless the rule is unclear without one.
+2. Add a rule only if a capable model would otherwise get it wrong. Remove rules that models follow by default.
+3. Keep each instruction file under about 4 KB. A typical website should load under about 20 KB in total.
+4. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
+5. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
+6. Frontmatter: a `title`, a 120–160 character `description` and `sidebar.order`. No H1 in the body; the title is the heading.
+7. Stack-agnostic instructions name no framework. Framework details go in `stacks/`.
 
 ## Before you finish
 
-- [ ] `npm run build` passes, no broken links.
-- [ ] New page has title, description and a sidebar order.
-- [ ] Cross-links use relative site paths (`/security/security-baseline/`).
-- [ ] Add user-facing changes to the root `CHANGELOG.md` under `[Unreleased]`; keep it the single source of release notes.
-- [ ] For a release, move the completed notes into a dated version section set `package.json` `version` to match, and tag the commit with the matching `vX.Y.Z`.
+- [ ] `npm run check` passes.
+- [ ] If you renamed or added a file, update `templates/AGENTS.md`, `templates/setup-prompt.md` and the homepage cards.
+- [ ] If you removed a URL, add a 301 to `public/_redirects`.
+- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/` or `templates/`.

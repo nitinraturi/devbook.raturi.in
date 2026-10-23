@@ -1,12 +1,23 @@
 # Changelog
 
-All notable changes to the devbook. `CHANGELOG.md` is the canonical release history; the site links here instead of keeping a duplicate. Versions follow semantic versioning (see README).
+Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
-## [Unreleased]
+## 2026-10-23: Minimal redesign
 
-No unreleased changes.
+### Changed
+- Devbook is now seven short instruction files in `instructions/`: workflow, engineering, security, design, seo and content, which are always on, plus an optional mobile file. It also has seven short stack notes in `stacks/`. A typical website loads about 18 KB.
+- Projects add Devbook as a submodule at `.devbook/` that tracks `main`. The root `AGENTS.md` lists the files with `@.devbook/...` lines. `CLAUDE.md` imports `@AGENTS.md`, and `.github/copilot-instructions.md` points Copilot to the same list.
+- A new setup prompt (`templates/setup-prompt.md`) handles setup for new and existing projects. The site now has a homepage, a setup page and one page per instruction file and stack note.
+- There are no versions or tags anymore. This changelog is dated.
 
-## [1.0.0] — 2026-10-23
+### Removed
+- The 60+ guide pages, templates, prompt library and checklists. Their essentials are in the instruction files. Old URLs redirect with a 301.
+- The rule packs (`rules/`), the sync tool (`bin/devbook-sync.mjs`), `devbook.json` and the drift check workflow.
+- LLM-feature guides beyond the short "LLM features" section in `security.md`.
+
+The history below is from the earlier, versioned design.
+
+## 2026-10-23: v1.0.0 (versioned design, superseded)
 
 ### Added
 - Mandatory baseline rule packs in `rules/` (`core` always, plus `web`, `mobile` and `llm-features`). They are distilled from the design principles, coding standards, security, testing, definition-of-done, accessibility, performance, mobile and LLM guides.

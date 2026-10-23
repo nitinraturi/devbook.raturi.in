@@ -1,68 +1,60 @@
 ---
 title: Devbook
-description: A practical engineering playbook for building web apps, mobile apps and LLM features with AI coding assistants like Claude and Copilot, from spec to launch.
+description: A few short instruction files that make Claude and Copilot build like a senior engineer. Add them to any project with one setup prompt.
 template: splash
 hero:
-  tagline: A practical engineering playbook for building software with AI coding assistants. Pin the rules, give agents the right context, and verify every change.
+  tagline: A few short instruction files that make Claude and Copilot build like a senior engineer. They cover workflow, engineering, security, design, SEO and content. Add them to any project with one prompt.
   actions:
-    - text: Adopt it in a project
-      link: /start-here/adopt-in-a-project/
+    - text: Copy the setup prompt
+      link: '#setup'
       icon: right-arrow
-    - text: Explore the workflow
-      link: /workflow/llm-assisted-workflow/
+    - text: Read the instructions
+      link: /instructions/workflow/
       variant: minimal
 ---
 
 import { CardGrid, Code, LinkCard } from '@astrojs/starlight/components';
-import adoptPrompt from '../../../templates/adopt-devbook.md?raw';
+import setupPrompt from '../../../templates/setup-prompt.md?raw';
+import agentsTemplate from '../../../templates/AGENTS.md?raw';
 
-<section class="dvb-home-intro" aria-label="About Devbook">
-  <p class="dvb-home-eyebrow">A field guide for people and coding agents</p>
-  <p>Devbook turns repeatable engineering decisions into short, testable rules. Adopt the baseline once, then point each project and its agents to only the guidance they need.</p>
-</section>
-
-<section class="dvb-quick-start" id="quick-start" aria-labelledby="quick-start-title">
+<section class="dvb-quick-start" id="setup" aria-labelledby="setup-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">One prompt. Your assistant handles setup.</p>
-      <h2 id="quick-start-title">Adopt Devbook now</h2>
+      <p class="dvb-home-eyebrow">New or existing project · about a minute</p>
+      <h2 id="setup-title">Set up with one prompt</h2>
     </div>
-    <a class="dvb-home-text-link" href="/start-here/adopt-in-a-project/">Read the complete setup guide <span aria-hidden="true">→</span></a>
+    <a class="dvb-home-text-link" href="/start-here/setup/">Manual setup and how loading works <span aria-hidden="true">→</span></a>
   </div>
 
-  <p class="dvb-quick-start-intro">Open your project in Claude or Copilot with file-editing and terminal tools enabled, then paste this prompt. Your assistant pins Devbook, installs the mandatory baseline rules, connects its instructions, and drafts missing docs from your codebase. No manual file copying required.</p>
-  <Code
-    code={adoptPrompt}
-    lang="text"
-    title="Paste into Claude or Copilot"
-  />
+  <p class="dvb-quick-start-intro">Open your project in Claude Code or VS Code Copilot agent mode, with file editing and terminal access turned on. Paste this prompt. The assistant adds Devbook as a git submodule at <code>.devbook/</code>, picks the files your project needs and connects them. It does not commit anything.</p>
+  <Code code={setupPrompt} lang="text" title="Paste into Claude or Copilot" />
   <div class="dvb-quick-start-notes">
-    <p><strong>1. Paste the prompt.</strong> The assistant inspects your project and adds or reuses Devbook pinned to <code>v1.0.0</code>. Already have a submodule? It checks that first.</p>
-    <p><strong>2. Review the setup.</strong> Design principles, coding standards, security and done criteria load in every Claude and Copilot session, and a CI check catches drift. Existing docs are kept; unknowns stay as questions.</p>
-    <p><strong>3. Start a new chat.</strong> After reviewing the changes, open a fresh chat and ask for your next task. Your existing stack and hosting stay unchanged.</p>
+    <p><strong>1. Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</p>
+    <p><strong>2. Commit.</strong> Commit those files along with <code>.gitmodules</code> and <code>.devbook</code>. Then start a new chat so the instructions load.</p>
+    <p><strong>3. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update, run <code>git submodule update --remote .devbook</code>.</p>
   </div>
-  <p class="dvb-home-reading-path"><strong>Want the background first?</strong> <a href="/start-here/introduction/">Read the introduction</a> for how Devbook is organised, or go straight to the <a href="/start-here/adopt-in-a-project/">step-by-step adoption guide</a>.</p>
 </section>
 
-<section class="dvb-home-layers" aria-labelledby="layers-title">
+<section class="dvb-home-layers" aria-labelledby="result-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">A simple model that scales</p>
-      <h2 id="layers-title">Use the guidance that fits</h2>
+      <p class="dvb-home-eyebrow">What the prompt creates</p>
+      <h2 id="result-title">One AGENTS.md that every assistant reads</h2>
     </div>
   </div>
+  <Code code={agentsTemplate} lang="md" title="AGENTS.md (template)" />
   <div class="dvb-home-layer-grid">
     <article>
-      <h3>Mandatory baseline</h3>
-      <p>Core, web, mobile and LLM rule packs that every session loads and CI keeps in sync.</p>
+      <h3>Claude Code</h3>
+      <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads the <code>@</code> imports into every session.</p>
     </article>
     <article>
-      <h3>Stack profiles</h3>
-      <p>Add tool-specific guidance for your stack, such as Astro, Cloudflare, or Django.</p>
+      <h3>GitHub Copilot</h3>
+      <p>Copilot reads <code>AGENTS.md</code> on its own. <code>copilot-instructions.md</code> tells it to read each Devbook file listed there.</p>
     </article>
     <article>
-      <h3>Project docs</h3>
-      <p>Keep your product decisions, design system, and domain rules in the project repo.</p>
+      <h3>Your rules</h3>
+      <p>Put project facts and rules in the Project section. Your rules override Devbook where they say so.</p>
     </article>
   </div>
 </section>
@@ -70,20 +62,18 @@ import adoptPrompt from '../../../templates/adopt-devbook.md?raw';
 <section class="dvb-home-modules" aria-labelledby="modules-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">Find your next step</p>
-      <h2 id="modules-title">Explore the playbook</h2>
+      <p class="dvb-home-eyebrow">Short enough to load every time</p>
+      <h2 id="modules-title">The instructions</h2>
     </div>
   </div>
   <CardGrid>
-    <LinkCard title="Start here" description="How the devbook is organised and how to adopt it in a project." href="/start-here/introduction/" />
-    <LinkCard title="Mandatory baseline rules" description="Design principles, coding standards, security and done criteria that load in every session." href="/start-here/baseline-rules/" />
-    <LinkCard title="LLM-assisted workflow" description="Brief, spec, plan, small tasks, verify, review. The loop behind every change." href="/workflow/llm-assisted-workflow/" />
-    <LinkCard title="Security" description="Baseline rules, supply chain, LLM application risks and privacy." href="/security/security-baseline/" />
-    <LinkCard title="Web & content" description="Technical SEO, structured data, people-first content and evidence." href="/web/technical-seo/" />
-    <LinkCard title="Templates" description="AGENTS.md, project brief, technical spec, ADR and more." href="/templates/agents-md/" />
-    <LinkCard title="Prompts" description="Copy-paste prompts for planning, building, reviewing and auditing." href="/prompts/overview/" />
-    <LinkCard title="Versions & changelog" description="See the current release, versioning policy and complete release history." href="/start-here/versions/" />
+    <LinkCard title="Workflow" description="Understand first, stay current, make small verified changes and report honestly." href="/instructions/workflow/" />
+    <LinkCard title="Engineering" description="Design principles, code quality, testing, performance and reliability." href="/instructions/engineering/" />
+    <LinkCard title="Security" description="Secure defaults, auth, headers, secrets, dependencies, privacy and LLM features." href="/instructions/security/" />
+    <LinkCard title="Design" description="Design tokens, components, motion and WCAG 2.2 AA accessibility." href="/instructions/design/" />
+    <LinkCard title="SEO" description="Crawlable pages, metadata, structured data, Core Web Vitals and launch checks." href="/instructions/seo/" />
+    <LinkCard title="Content" description="Voice, structure, facts, trust and AI editorial policy for pages and blogs." href="/instructions/content/" />
+    <LinkCard title="Mobile (optional)" description="Extra rules for iOS, Android, React Native and Flutter apps." href="/instructions/mobile/" />
+    <LinkCard title="Stack notes" description="Short notes for Astro, Starlight, Cloudflare, TypeScript, Django, GA4 and three.js." href="/stacks/astro/" />
   </CardGrid>
 </section>
-
-<p class="dvb-home-rule-note">Rules use <strong>MUST</strong> for requirements, <strong>SHOULD</strong> for defaults, and <strong>MAY</strong> for optional guidance. Check the linked source when a fast-changing tool page has an older “Last verified” date.</p>
