@@ -3,37 +3,87 @@ title: Devbook
 description: A practical engineering playbook for building web apps, mobile apps and LLM features with AI coding assistants like Claude and Copilot, from spec to launch.
 template: splash
 hero:
-  tagline: The rules, templates and prompts for building real software with AI coding assistants. Spec first, small steps, verified output.
+  tagline: A practical engineering playbook for building software with AI coding assistants. Pin the rules, give agents the right context, and verify every change.
   actions:
-    - text: Start here
-      link: /start-here/introduction/
+    - text: Adopt it in a project
+      link: /start-here/adopt-in-a-project/
       icon: right-arrow
-    - text: The workflow
+    - text: Explore the workflow
       link: /workflow/llm-assisted-workflow/
       variant: minimal
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CardGrid, Code, LinkCard } from '@astrojs/starlight/components';
+import adoptPrompt from '../../../templates/adopt-devbook.md?raw';
 
-## What this is
+<section class="dvb-home-intro" aria-label="About Devbook">
+  <p class="dvb-home-eyebrow">A field guide for people and coding agents</p>
+  <p>Devbook turns repeatable engineering decisions into short, testable rules. Adopt the baseline once, then point each project and its agents to only the guidance they need.</p>
+</section>
 
-Devbook is the set of standards I follow on every project, written so that both a person and an AI agent can follow them. Each page is a short list of rules with the reason behind them, not an essay.
+<section class="dvb-quick-start" id="quick-start" aria-labelledby="quick-start-title">
+  <div class="dvb-home-section-heading">
+    <div>
+      <p class="dvb-home-eyebrow">One prompt. Your assistant handles setup.</p>
+      <h2 id="quick-start-title">Adopt Devbook now</h2>
+    </div>
+    <a class="dvb-home-text-link" href="/start-here/adopt-in-a-project/">Read the complete setup guide <span aria-hidden="true">→</span></a>
+  </div>
 
-It has three layers. **Universal rules** apply to every project whatever the stack. **Stack profiles** add the specifics for a tool such as Astro, Cloudflare or Django. **Project docs** live in each project's own repo and hold only what is unique to it.
+  <p class="dvb-quick-start-intro">Open your project in Claude or Copilot with file-editing and terminal tools enabled, then paste this prompt. Your assistant pins Devbook, installs the mandatory baseline rules, connects its instructions, and drafts missing docs from your codebase. No manual file copying required.</p>
+  <Code
+    code={adoptPrompt}
+    lang="text"
+    title="Paste into Claude or Copilot"
+  />
+  <div class="dvb-quick-start-notes">
+    <p><strong>1. Paste the prompt.</strong> The assistant inspects your project and adds or reuses Devbook pinned to <code>v1.0.0</code>. Already have a submodule? It checks that first.</p>
+    <p><strong>2. Review the setup.</strong> Design principles, coding standards, security and done criteria load in every Claude and Copilot session, and a CI check catches drift. Existing docs are kept; unknowns stay as questions.</p>
+    <p><strong>3. Start a new chat.</strong> After reviewing the changes, open a fresh chat and ask for your next task. Your existing stack and hosting stay unchanged.</p>
+  </div>
+  <p class="dvb-home-reading-path"><strong>Want the background first?</strong> <a href="/start-here/introduction/">Read the introduction</a> for how Devbook is organised, or go straight to the <a href="/start-here/adopt-in-a-project/">step-by-step adoption guide</a>.</p>
+</section>
 
-<CardGrid>
-  <LinkCard title="Start here" description="How the devbook is organised and how to adopt it in a project." href="/start-here/introduction/" />
-  <LinkCard title="LLM-assisted workflow" description="Brief, spec, plan, small tasks, verify, review. The loop behind every change." href="/workflow/llm-assisted-workflow/" />
-  <LinkCard title="Security" description="Baseline rules, supply chain, LLM application risks and privacy." href="/security/security-baseline/" />
-  <LinkCard title="Web & content" description="Technical SEO, structured data, people-first content and evidence." href="/web/technical-seo/" />
-  <LinkCard title="Templates" description="AGENTS.md, project brief, technical spec, ADR and more." href="/templates/agents-md/" />
-  <LinkCard title="Prompts" description="Copy-paste prompts for planning, building, reviewing and auditing." href="/prompts/overview/" />
-</CardGrid>
+<section class="dvb-home-layers" aria-labelledby="layers-title">
+  <div class="dvb-home-section-heading">
+    <div>
+      <p class="dvb-home-eyebrow">A simple model that scales</p>
+      <h2 id="layers-title">Use the guidance that fits</h2>
+    </div>
+  </div>
+  <div class="dvb-home-layer-grid">
+    <article>
+      <h3>Mandatory baseline</h3>
+      <p>Core, web, mobile and LLM rule packs that every session loads and CI keeps in sync.</p>
+    </article>
+    <article>
+      <h3>Stack profiles</h3>
+      <p>Add tool-specific guidance for your stack, such as Astro, Cloudflare, or Django.</p>
+    </article>
+    <article>
+      <h3>Project docs</h3>
+      <p>Keep your product decisions, design system, and domain rules in the project repo.</p>
+    </article>
+  </div>
+</section>
 
-## How to read a rule
+<section class="dvb-home-modules" aria-labelledby="modules-title">
+  <div class="dvb-home-section-heading">
+    <div>
+      <p class="dvb-home-eyebrow">Find your next step</p>
+      <h2 id="modules-title">Explore the playbook</h2>
+    </div>
+  </div>
+  <CardGrid>
+    <LinkCard title="Start here" description="How the devbook is organised and how to adopt it in a project." href="/start-here/introduction/" />
+    <LinkCard title="Mandatory baseline rules" description="Design principles, coding standards, security and done criteria that load in every session." href="/start-here/baseline-rules/" />
+    <LinkCard title="LLM-assisted workflow" description="Brief, spec, plan, small tasks, verify, review. The loop behind every change." href="/workflow/llm-assisted-workflow/" />
+    <LinkCard title="Security" description="Baseline rules, supply chain, LLM application risks and privacy." href="/security/security-baseline/" />
+    <LinkCard title="Web & content" description="Technical SEO, structured data, people-first content and evidence." href="/web/technical-seo/" />
+    <LinkCard title="Templates" description="AGENTS.md, project brief, technical spec, ADR and more." href="/templates/agents-md/" />
+    <LinkCard title="Prompts" description="Copy-paste prompts for planning, building, reviewing and auditing." href="/prompts/overview/" />
+    <LinkCard title="Versions & changelog" description="See the current release, versioning policy and complete release history." href="/start-here/versions/" />
+  </CardGrid>
+</section>
 
-- **MUST** / **MUST NOT**: required. Breaking it needs a written decision record in the project.
-- **SHOULD** / **SHOULD NOT**: the default. Deviate when you have a reason, and write the reason down.
-- **MAY**: optional.
-
-Pages about fast-changing tools show a "Last verified" date. Treat older dates as a prompt to check the vendor's current docs.
+<p class="dvb-home-rule-note">Rules use <strong>MUST</strong> for requirements, <strong>SHOULD</strong> for defaults, and <strong>MAY</strong> for optional guidance. Check the linked source when a fast-changing tool page has an older “Last verified” date.</p>

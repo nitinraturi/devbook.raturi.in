@@ -37,7 +37,9 @@ devbook.raturi.in/
 ├── public/                   ← _headers (CSP), robots.txt, favicon, OG image
 ├── scripts/                  ← post-build CSP + HTML fixes, checks, local server
 ├── tests/e2e/                ← Playwright smoke + axe
-├── templates/                ← raw files copied INTO projects (AGENTS.md, brief, spec, ADR…)
+├── templates/                ← raw files copied INTO projects (AGENTS.md, brief, spec, ADR, CI check…)
+├── rules/                    ← mandatory baseline rule packs (core, web, mobile, llm-features)
+├── bin/devbook-sync.mjs      ← installs rule packs into a project; --check for CI
 ├── src/components/           ← Starlight overrides: Head (JSON-LD, GA), PageTitle, Footer
 ├── src/lib/                  ← site constants, JSON-LD graph
 └── src/content/docs/         ← every guide; each file becomes a page on the site
@@ -58,15 +60,27 @@ devbook.raturi.in/
 
 ## Using it in a project
 
+Open the project in Claude or Copilot with file-editing and terminal tools enabled, then paste the [onboarding prompt](./templates/adopt-devbook.md). The assistant pins Devbook, installs the mandatory baseline rules for the project type, creates or merges the agent entry files, adds a CI drift check, and drafts missing project docs from codebase evidence. Review its changes and open questions, then start a new chat.
+
+Existing project docs and hosting are preserved. A new project needs your brief first; unknown product decisions are not inferred from code. Adding a submodule alone does not configure either assistant.
+
+For manual setup:
+
 ```bash
 # in the project repo
-git submodule add https://github.com/<you>/devbook.raturi.in docs/devbook
+git submodule add https://github.com/nitinraturi/devbook.raturi.in docs/devbook
 cd docs/devbook && git checkout v1.0.0 && cd ../..
 cp docs/devbook/templates/AGENTS.md ./AGENTS.md   # then fill it in
 cp docs/devbook/templates/CLAUDE.md ./CLAUDE.md
+node docs/devbook/bin/devbook-sync.mjs --profiles web   # core is always added
+cp docs/devbook/templates/devbook-check.yml .github/workflows/devbook.yml
 ```
 
-Full steps: `src/content/docs/start-here/adopt-in-a-project.md`.
+### Mandatory baseline rules
+
+`rules/*.md` holds short rule packs distilled from the guides: `core` (always), `web`, `mobile` and `llm-features`. `bin/devbook-sync.mjs` copies the chosen packs into each project's always-loaded instruction files (`.claude/rules/`, `.github/instructions/`). `--check` fails project CI when they are missing, edited or stale. See [Mandatory baseline rules](./src/content/docs/start-here/baseline-rules.mdx).
+
+Full steps: [Adopt it in a project](./src/content/docs/start-here/adopt-in-a-project.mdx).
 
 ## Versioning
 
@@ -74,7 +88,9 @@ Full steps: `src/content/docs/start-here/adopt-in-a-project.md`.
 - **Major:** a rule changes in a way that can fail an existing project's checks.
 - **Minor:** new rule, page, stack profile or template.
 - **Patch:** wording, links, typos, re-verification dates.
-- Every release gets a `CHANGELOG.md` entry. Projects upgrade by deliberate PR.
+- `CHANGELOG.md` at the repository root is the canonical version history. Add user-facing changes under `[Unreleased]` as they land; do not duplicate release notes in site pages.
+- For a release, move the completed notes into a dated version heading, choose the semantic version, set `package.json` `version` to match (the sync tool stamps it into generated rule files), and create the matching `vX.Y.Z` tag on that commit. Update the homepage install snippet and version-history page to the latest published tag.
+- Projects pin an exact release tag and upgrade by deliberate PR.
 
 ## Building the site
 

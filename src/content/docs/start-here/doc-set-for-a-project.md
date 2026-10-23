@@ -2,7 +2,7 @@
 title: Docs every project needs
 description: The minimum set of documents to write before asking an AI agent to build anything, which ones are conditional, and when each one gets updated.
 sidebar:
-  order: 3
+  order: 4
 ---
 
 An agent can only follow decisions that are written down. These documents are the minimum before the first line of code.

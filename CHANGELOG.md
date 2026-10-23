@@ -1,10 +1,18 @@
 # Changelog
 
-All notable changes to the devbook. Versions follow semantic versioning (see README).
+All notable changes to the devbook. `CHANGELOG.md` is the canonical release history; the site links here instead of keeping a duplicate. Versions follow semantic versioning (see README).
 
-## [1.0.0] — 2026-10-22
+## [Unreleased]
+
+No unreleased changes.
+
+## [1.0.0] — 2026-10-23
 
 ### Added
+- Mandatory baseline rule packs in `rules/` (`core` always, plus `web`, `mobile` and `llm-features`). They are distilled from the design principles, coding standards, security, testing, definition-of-done, accessibility, performance, mobile and LLM guides.
+- `bin/devbook-sync.mjs` installs the packs into `.claude/rules/` and `.github/instructions/` so Claude and Copilot load them every session, records profiles in `devbook.json`, and fails CI with `--check` on missing, edited or stale rules. Includes the `templates/devbook-check.yml` workflow and a new "Mandatory baseline rules" page.
+- An agent-first onboarding prompt shared by the homepage and adoption guide. Claude or Copilot can pin Devbook, merge agent entry files and draft missing project context from codebase evidence while preserving existing docs and hosting. `CLAUDE.md` imports `@AGENTS.md`.
+- Homepage with a copyable onboarding prompt, version-history link and module links.
 - Universal guides: workflow, engineering, security, quality, web/SEO/content, LLM features, platforms.
 - Stack profiles: Astro, Starlight, TypeScript, CSS tokens, Cloudflare hosting, GA4 + consent, test tooling, three.js, Django.
 - Templates: AGENTS.md, CLAUDE.md, Copilot instructions, project README, master build prompt, project brief, technical spec, ADR, research doc, sources registry, page build procedure.

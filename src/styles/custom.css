@@ -19,17 +19,170 @@
 	--sl-color-accent-high: #1e3a8a;
 }
 
-/* Home (splash) page: keep it plain and readable. */
+/* Home (splash) page. */
 [data-has-hero] .hero {
-	padding-block: clamp(2rem, 6vw, 4rem) 1rem;
+	max-width: 70rem;
+	margin: clamp(1.5rem, 5vw, 3.5rem) auto 2.5rem;
+	padding: clamp(2.5rem, 7vw, 5rem) clamp(1.25rem, 5vw, 4rem);
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 1.5rem;
+	background:
+		radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--sl-color-accent-low) 75%, transparent), transparent 65%),
+		var(--sl-color-bg-nav);
 }
 [data-has-hero] .hero h1 {
 	letter-spacing: -0.02em;
+	font-size: clamp(2.75rem, 7vw, 5rem);
+	line-height: 1.05;
 }
 [data-has-hero] .hero,
 [data-has-hero] .sl-markdown-content {
-	max-width: 50rem;
+	max-width: 70rem;
 	margin-inline: auto;
+}
+[data-has-hero] .sl-markdown-content {
+	padding-inline: clamp(1rem, 3vw, 2rem);
+}
+.dvb-home-intro {
+	max-width: 52rem;
+	margin: 0 auto clamp(3rem, 7vw, 5rem);
+	text-align: center;
+}
+.dvb-home-intro > p:last-child {
+	margin: 0;
+	font-size: clamp(1.125rem, 2vw, 1.35rem);
+	line-height: 1.7;
+	color: var(--sl-color-gray-2);
+}
+.dvb-home-eyebrow {
+	margin: 0 0 0.5rem;
+	color: var(--sl-color-text-accent);
+	font-size: var(--sl-text-xs);
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.dvb-home-section-heading {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+.dvb-home-section-heading h2 {
+	margin: 0;
+	font-size: clamp(1.6rem, 3vw, 2.1rem);
+	letter-spacing: -0.025em;
+}
+.dvb-home-text-link {
+	font-size: var(--sl-text-sm);
+	font-weight: 650;
+}
+.dvb-quick-start {
+	margin: 0 auto clamp(3rem, 7vw, 5rem);
+	padding: clamp(1.25rem, 4vw, 2.5rem);
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 1.25rem;
+	background:
+		linear-gradient(135deg, color-mix(in srgb, var(--sl-color-accent-low) 65%, transparent), transparent 55%),
+		var(--sl-color-bg-nav);
+}
+.dvb-quick-start-intro {
+	margin: 0 0 1rem;
+	color: var(--sl-color-gray-2);
+	line-height: 1.7;
+}
+.dvb-quick-start pre {
+	max-height: 30rem;
+	margin: 0;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 0.875rem;
+}
+.dvb-quick-start-notes {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+	margin-top: 1rem;
+}
+.dvb-quick-start-notes p {
+	margin: 0;
+	padding: 1rem;
+	border: 1px solid var(--sl-color-hairline);
+	border-radius: 0.75rem;
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-sm);
+	line-height: 1.65;
+}
+.dvb-quick-start-notes strong {
+	color: var(--sl-color-text);
+}
+.dvb-quick-start-notes a {
+	font-weight: 600;
+}
+.dvb-home-reading-path {
+	margin: 1.25rem 0 0;
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-sm);
+	line-height: 1.7;
+}
+.dvb-home-reading-path strong {
+	color: var(--sl-color-text);
+}
+.dvb-home-layer-grid h3 {
+	margin: 1rem 0 0.5rem;
+	font-size: 1.1rem;
+}
+.dvb-home-layer-grid p {
+	margin: 0;
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-sm);
+	line-height: 1.65;
+}
+.dvb-home-layers {
+	margin-bottom: clamp(3rem, 7vw, 5rem);
+}
+.dvb-home-layer-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+}
+.dvb-home-layer-grid article {
+	padding: 1.25rem;
+	border-top: 2px solid var(--sl-color-accent);
+	border-radius: 0.25rem 0.25rem 0.875rem 0.875rem;
+	background: var(--sl-color-bg-nav);
+}
+.dvb-home-layer-grid h3 {
+	margin-top: 0;
+}
+.dvb-home-modules {
+	margin-bottom: 2.5rem;
+}
+.dvb-home-rule-note {
+	max-width: 52rem;
+	margin: 2rem auto 0;
+	padding: 1rem 1.25rem;
+	border-left: 3px solid var(--sl-color-accent);
+	background: var(--sl-color-bg-nav);
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-sm);
+	line-height: 1.7;
+}
+@media (max-width: 50rem) {
+	.dvb-home-layer-grid,
+	.dvb-quick-start-notes {
+		grid-template-columns: 1fr;
+	}
+	.dvb-home-section-heading {
+		align-items: start;
+	}
+}
+@media (max-width: 35rem) {
+	[data-has-hero] .hero {
+		margin-block: 1rem 2rem;
+		border-radius: 1rem;
+	}
 }
 
 /* Last-verified line under the page title. */

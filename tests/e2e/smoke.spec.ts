@@ -1,10 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
+import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 
 // Home, one page per sidebar group, plus privacy.
 const PAGES = [
 	'/',
 	'/start-here/introduction/',
+	'/start-here/adopt-in-a-project/',
+	'/start-here/baseline-rules/',
 	'/workflow/llm-assisted-workflow/',
 	'/engineering/design-principles/',
 	'/security/security-baseline/',
@@ -18,6 +21,36 @@ const PAGES = [
 	'/checklists/pre-commit/',
 	'/privacy/',
 ];
+
+test('homepage and adoption guide share the complete onboarding prompt', async ({ page, request }) => {
+	const prompt = (await readFile(new URL('../../templates/adopt-devbook.md', import.meta.url), 'utf8')).trim();
+	for (const path of ['/', '/start-here/adopt-in-a-project/']) {
+		await page.goto(path);
+		const code = page.locator('.expressive-code').filter({ hasText: 'Paste into Claude or Copilot' });
+		await expect(code).toHaveCount(1);
+		await expect(code.getByRole('button', { name: 'Copy to clipboard' })).toBeAttached();
+		const lines = await code.locator('.ec-line .code').allTextContents();
+		expect(lines.map((line) => line.replace(/\n/g, '')).join('\n').trim()).toBe(prompt);
+		expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
+	}
+	const response = await request.get('/start-here/adopt-in-a-project/index.md');
+	expect(response.status()).toBe(200);
+	expect(await response.text()).toContain(prompt);
+});
+
+test('baseline rules page shows every rule pack and the CI workflow', async ({ page }) => {
+	await page.goto('/start-here/baseline-rules/');
+	for (const profile of ['core', 'web', 'mobile', 'llm-features']) {
+		const pack = (await readFile(new URL(`../../rules/${profile}.md`, import.meta.url), 'utf8')).trim();
+		await page.getByRole('tab', { name: profile, exact: true }).click();
+		const code = page.locator('.expressive-code').filter({ hasText: `rules/${profile}.md` });
+		await expect(code).toBeVisible();
+		const lines = await code.locator('.ec-line .code').allTextContents();
+		expect(lines.map((line) => line.replace(/\n/g, '')).join('\n').trim()).toBe(pack);
+	}
+	await expect(page.locator('.expressive-code').filter({ hasText: 'devbook-sync.mjs --check' }).first()).toBeVisible();
+	expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
+});
 
 /** Collects CSP violations and uncaught errors so a strict CSP cannot silently break the page. */
 function watchErrors(page: Page) {

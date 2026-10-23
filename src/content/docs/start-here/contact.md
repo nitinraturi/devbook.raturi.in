@@ -2,7 +2,7 @@
 title: Contact
 description: Contact Nitin Raturi by email, LinkedIn or X, with a simple format for a useful message.
 sidebar:
-  order: 4
+  order: 6
 ---
 
 ## Get in touch

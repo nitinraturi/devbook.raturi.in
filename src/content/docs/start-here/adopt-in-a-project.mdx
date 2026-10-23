@@ -1,0 +1,108 @@
+---
+title: Adopt it in a project
+description: Paste one onboarding prompt into Claude or Copilot to pin Devbook, connect agent instructions, and draft project docs from your existing codebase.
+sidebar:
+  order: 2
+---
+
+import { Code } from '@astrojs/starlight/components';
+import adoptPrompt from '../../../../templates/adopt-devbook.md?raw';
+
+## Start with one prompt
+
+Open your project folder in Claude or Copilot with file-editing and terminal tools enabled. Copy the prompt below into its chat. You do not need to add the submodule or copy instruction files yourself: the assistant performs those steps and drafts the missing project context.
+
+<Code code={adoptPrompt} lang="text" title="Paste into Claude or Copilot" />
+
+Review the assistant's changes and answer any open questions, then start a new chat so the tool loads the new instruction files. You can now ask for your next feature or fix. The [mandatory baseline rules](/start-here/baseline-rules/) are loaded in every session, and CI catches drift. Instructions still cannot force compliance, so keep reviewing changes and running checks.
+
+## What the assistant sets up
+
+| File or folder | Purpose |
+|---|---|
+| `docs/devbook/` | A read-only checkout pinned to `v1.0.0`, not the moving `main` branch |
+| `devbook.json` | The baseline profiles this project uses: always `core`, plus `web`, `mobile` or `llm-features` as needed |
+| `.claude/rules/devbook-*.md`, `.github/instructions/devbook-*.instructions.md` | Generated [baseline rules](/start-here/baseline-rules/) that Claude and Copilot load automatically |
+| `.github/workflows/devbook.yml` | CI check that fails if the baseline rules go missing, are edited or are stale |
+| Root `AGENTS.md` | Project rules, baseline pointer, stack pages, verified commands and project context |
+| Root `CLAUDE.md` | Claude entry point that imports `AGENTS.md` with `@AGENTS.md` |
+| `.github/copilot-instructions.md` | Copilot entry point that routes to `AGENTS.md` |
+| Project brief, technical spec and docs index | Missing context drafted from evidence, or links to existing equivalents |
+
+**Already added the submodule?** Use the same prompt. It checks what is present and reuses a matching pin rather than overwriting it. Existing instructions and docs are merged carefully; conflicting rules need your decision.
+
+**Existing app:** the assistant inspects code and configuration, links claims to source files, and leaves unknown business requirements as open questions. Draft documentation is not treated as an approved product specification.
+
+**New project:** the assistant asks for your purpose, users, scope and intended stack first. It cannot discover those decisions in an empty repository.
+
+**Cloudflare Pages:** keep your existing hosting. The assistant records the actual build command, output directory and settings it can verify; it does not migrate to Workers, deploy, or change infrastructure.
+
+## Is a submodule required?
+
+A submodule is the default because it gives both assistants local rules with an explicit, reviewable version pin. The prompt handles it for you. Adding it alone does **not** create agent entry files or generate project docs.
+
+If your workflow cannot use submodules, a read-only copy of a tagged release at `docs/devbook/` with a `VERSION` file is an alternative. This still requires the same agent entry files and the baseline sync. Do not rely solely on website links: the assistant may not have browsing access. The prompt asks before changing installation methods.
+
+## Rules
+
+- A project **MUST** pin an exact devbook tag (for example `v1.2.0`), never track `main`.
+- A project **MUST** have an `AGENTS.md` at its root built from the [template](/templates/agents-md/). `CLAUDE.md` and `.github/copilot-instructions.md` only point to it.
+- A project **MUST** install the [mandatory baseline](/start-here/baseline-rules/) with `devbook-sync.mjs` and run its `--check` in CI.
+- `AGENTS.md` **MUST** list only the extra devbook stack pages the project uses, not the whole devbook. Irrelevant context makes agents worse.
+- Project docs **MUST NOT** copy devbook text. The generated baseline files are the only exception. Link to everything else, and write down only what differs or is unique.
+- Upgrading the devbook version **MUST** be its own pull request with a changelog entry in the project.
+- A rule a project discovers that would apply elsewhere **SHOULD** be proposed back to the devbook, then removed from the project docs once released.
+
+## Manual setup (optional)
+
+Prefer doing the setup yourself? Run these commands from the root of an existing Git project. They leave existing files in place; merge instructions and fill in project context rather than replacing your current docs.
+
+```bash
+# 1. Add the devbook as a pinned submodule
+git submodule add https://github.com/nitinraturi/devbook.raturi.in docs/devbook
+git -C docs/devbook checkout v1.0.0
+
+# 2. Copy the agent files and fill them in
+cp -n docs/devbook/templates/AGENTS.md ./AGENTS.md
+cp -n docs/devbook/templates/CLAUDE.md ./CLAUDE.md
+mkdir -p .github && cp -n docs/devbook/templates/copilot-instructions.md .github/
+
+# 3. Install the mandatory baseline and its CI check (core is always added;
+#    list the profiles that match the product: web, mobile, llm-features)
+node docs/devbook/bin/devbook-sync.mjs --profiles web
+mkdir -p .github/workflows && cp -n docs/devbook/templates/devbook-check.yml .github/workflows/devbook.yml
+
+# 4. Start the project docs
+mkdir -p docs/adr
+cp -n docs/devbook/templates/project-brief.md docs/project-brief.md
+cp -n docs/devbook/templates/technical-spec.md docs/technical-spec.md
+cp -n docs/devbook/templates/project-readme.md docs/README.md
+```
+
+These are templates, not ready-to-use project instructions. Replace placeholders with verified project details, set the version to `v1.0.0`, choose the profiles that match the product, and list any stack pages that apply. Review the diff and commit the completed setup, including `.gitmodules`, the submodule pin and the generated rule files. The onboarding prompt above can complete this work for you.
+
+Clone with submodules: `git clone --recurse-submodules <repo>`. In CI, enable submodule checkout.
+
+## Typical project `docs/` layout
+
+```
+docs/
+├── README.md              # how to use these docs, file map, pipeline
+├── CHANGELOG.md
+├── devbook/               # pinned devbook (read-only)
+├── adr/                   # decisions, including any loosened rule
+├── project-brief.md       # problem, users, scope, success measures
+├── technical-spec.md      # architecture, data, interfaces, acceptance criteria
+├── design-system.md       # tokens, components (if UI)
+├── domain-rules.md        # content and safety rules specific to the domain
+└── …                      # anything unique: research docs, motion specs, taxonomies
+```
+
+## Upgrading
+
+1. Read the devbook `CHANGELOG.md` between your version and the new one.
+2. Bump the submodule, re-run `node docs/devbook/bin/devbook-sync.mjs`, run the project's checks and fix what fails.
+3. Update `AGENTS.md` if pages were added, renamed or split.
+4. Record the upgrade in the project changelog.
+
+A **major** devbook version means some rule changed in a way that can fail existing checks. Read those entries carefully.

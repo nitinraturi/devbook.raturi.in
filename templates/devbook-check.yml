@@ -1,0 +1,23 @@
+# Fails the pull request when Devbook's mandatory baseline rules are missing,
+# hand-edited, or stale against the pinned docs/devbook submodule.
+# Copy to .github/workflows/devbook.yml and add it to the required status checks of main.
+name: devbook
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  baseline-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: Check Devbook baseline rules
+        run: node docs/devbook/bin/devbook-sync.mjs --check

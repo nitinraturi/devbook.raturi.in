@@ -16,7 +16,7 @@ Copy to the project root as `AGENTS.md`:
 
 <Code code={agents} lang="md" title="AGENTS.md" />
 
-`CLAUDE.md` and Copilot's instruction file only point to `AGENTS.md`, so there is one source of truth:
+`CLAUDE.md` imports `AGENTS.md`, and Copilot's instruction file points to it, so there is one source of project rules. The [mandatory baseline rules](/start-here/baseline-rules/) are generated separately by `devbook-sync.mjs`:
 
 <Code code={claude} lang="md" title="CLAUDE.md" />
 

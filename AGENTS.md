@@ -8,7 +8,7 @@ You are editing the devbook itself: a public guide and a versioned standard that
 npm ci
 npm run dev          # local preview
 npm run build        # astro build + HTML fixes + CSP hashes; must pass before any PR
-npm run check        # typecheck, descriptions, contrast, build (link validation), Playwright + axe
+npm run check        # typecheck, descriptions, contrast, rule packs, build (link validation), Playwright + axe
 npm run lhci         # Lighthouse budgets (CI runs this too)
 ```
 
@@ -16,6 +16,7 @@ npm run lhci         # Lighthouse budgets (CI runs this too)
 
 - Guides: `src/content/docs/<section>/<slug>.md`. One topic per page.
 - Raw templates copied into projects: `templates/*.md`. The matching site page under `src/content/docs/templates/` imports them with `?raw`; never duplicate template text in two places.
+- Mandatory baseline rule packs: `rules/<profile>.md`, installed into projects by `bin/devbook-sync.mjs`. Each pack stays at 150 lines or fewer and links its source pages in a `Detail` section. When you change a rule on a guide page that a pack covers, update the pack in the same change. `npm run check:rules` validates packs and the sync tool.
 - Prompts: `src/content/docs/prompts/`.
 - Checklists: `src/content/docs/checklists/`.
 
@@ -54,4 +55,5 @@ sidebar:
 - [ ] `npm run build` passes, no broken links.
 - [ ] New page has title, description and a sidebar order.
 - [ ] Cross-links use relative site paths (`/security/security-baseline/`).
-- [ ] `CHANGELOG.md` updated with the version bump type (major/minor/patch) and why.
+- [ ] Add user-facing changes to the root `CHANGELOG.md` under `[Unreleased]`; keep it the single source of release notes.
+- [ ] For a release, move the completed notes into a dated version section set `package.json` `version` to match, and tag the commit with the matching `vX.Y.Z`.
