@@ -44,12 +44,23 @@ export default defineConfig({
 				starlightLlmsTxt({
 					projectName: 'Devbook',
 					details:
-						'Devbook is a small set of instruction files for AI coding assistants. Projects add it as a git submodule at .devbook and import the files from AGENTS.md. Instructions apply to every project; stack notes add tool specifics; project rules in AGENTS.md override both.',
+						'Devbook is a small set of instruction files for AI coding assistants. Projects add it at .devbook, as a git submodule or copied files, and import the files from AGENTS.md. Core, security and testing are mandatory; other instructions load when they apply; stack notes add tool specifics; project rules in AGENTS.md override both.',
 					exclude: ['404', 'privacy'],
 				}),
 			],
 			sidebar: [
-				{ label: 'Start', items: [{ label: 'Home', link: '/' }, 'start-here/setup', 'start-here/contact', 'license'] },
+				{
+					label: 'Start',
+					items: [
+						{ label: 'Home', link: '/' },
+						'start-here/how-it-works',
+						'start-here/setup',
+						'start-here/using-devbook',
+						'start-here/writing-instructions',
+						'start-here/contact',
+						'license',
+					],
+				},
 				group('Instructions', 'instructions'),
 				group('Stack notes', 'stacks'),
 			],

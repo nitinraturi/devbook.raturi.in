@@ -4,8 +4,9 @@
 // - GFM task lists render as disabled, unlabelled checkboxes. They are decorative (the
 //   list item text carries the meaning), so hide them from assistive tech instead of
 //   exposing an unlabelled form control (axe "label", critical).
-// - Code blocks scroll horizontally; give each <pre> tabindex="0" so keyboard users can
-//   scroll them (axe "scrollable-region-focusable", serious).
+// - Code blocks and Markdown tables (Starlight renders tables as scrollable blocks) scroll
+//   horizontally on narrow screens; give each <pre> and <table> tabindex="0" so keyboard users
+//   can scroll them (axe "scrollable-region-focusable", serious).
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -26,10 +27,11 @@ for (const file of await htmlFiles(dist)) {
 	const html = await readFile(file, 'utf8');
 	const next = html
 		.replace(/<input type="checkbox" disabled(="")?>/g, '<input type="checkbox" disabled aria-hidden="true" tabindex="-1">')
-		.replace(/<pre data-language="([\w-]*)">/g, '<pre data-language="$1" tabindex="0">');
+		.replace(/<pre data-language="([\w-]*)">/g, '<pre data-language="$1" tabindex="0">')
+		.replace(/<table>/g, '<table tabindex="0">');
 	if (next !== html) {
 		changed++;
 		await writeFile(file, next);
 	}
 }
-console.log(`HTML: task-list checkboxes and code-block focus fixed in ${changed} page(s)`);
+console.log(`HTML: task-list checkboxes, code-block and table focus fixed in ${changed} page(s)`);

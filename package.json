@@ -2,7 +2,7 @@
   "name": "devbook.raturi.in",
   "type": "module",
   "private": true,
-  "license": "MIT-0",
+  "license": "(MIT-0 AND CC-BY-4.0)",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",

@@ -2,6 +2,88 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-10-24: Guides for every reader, and instructions rewritten for adherence
+
+### Added
+- **How Devbook works**: terms (context window, token, `@` import, submodule), what gets added to a project, how Claude, Copilot and other assistants load the files, which rule wins, when to load each file, size and token cost per project type, and what Devbook can't do.
+- **Use Devbook day to day**: what to expect from the assistant, how to ask for work, adding your own rules and overrides, adding or removing files, feature docs, checking it works, updates, troubleshooting and common questions.
+- **Writing instructions**: the research-backed guide to writing agent files, prompts and system prompts that models follow. Devbook's own files follow it.
+
+### Changed
+- Every instruction and stack note was rewritten to follow the writing guide:
+  - each rule is concrete, and non-obvious rules carry a short reason
+  - every "never" comes with what to do instead
+  - each rule lives in one file; repeated validation, pagination, indexing, rate-limit, caching, deploy, migration and env-var rules were merged
+  - every instruction names its sources and says when to load it
+  
+  Core no longer names specific frameworks. The rules themselves are unchanged unless listed here.
+- Performance links to the REST API and database instructions for pagination and indexes. Request-size caps moved to security, and animation rules stay in design.
+- The setup page links to the new guides instead of repeating the loading details and cost table.
+
+## 2026-10-24: REST API instruction
+
+### Changed
+- `instructions/api-data.md` was rewritten as **REST APIs**. It is based on RFC 9110, RFC 9457, RFC 3339, RFC 9745 and RFC 8594, OpenAPI, Google AIP, the Microsoft Azure and Zalando guidelines, Stripe's API, the OWASP API Security Top 10 (2023) and Standard Webhooks. It now covers:
+  - design first, resource modelling and custom actions
+  - URL rules, method semantics and status codes
+  - long-running operations and bulk endpoints
+  - payload formats, nulls, extensible enums and mass-assignment protection
+  - problem-details errors with stable codes
+  - cursor pagination, filtering and sorting
+  - `Idempotency-Key`, ETag and `If-Match`, and caching
+  - breaking-change rules, versioning schemes, and `Deprecation` and `Sunset` headers
+  - object-, property- and function-level authorisation, consumption limits and SSRF
+  - signed, deduplicated webhooks
+  
+  Where the big guidelines differ (field casing, versioning scheme, custom-action style), it asks you to pick one option and record it. The URL is unchanged.
+
+## 2026-10-24: Feature docs instruction
+
+### Added
+- `instructions/feature-docs.md`: one short `FEATURE.md` per complex feature with its purpose, a map of files, data and tests, rules with stable IDs in EARS form, flow and states, decisions, and what is out of scope. Agents read it before the code and update it in the same change. It is created only when a feature has rules, states, permissions, money, personal data, integrations or code across several modules. Based on Anthropic's context-engineering guidance, GitHub Spec Kit, Kiro specs and EARS.
+- `templates/FEATURE.md`: the starting template. It is read only when a feature doc is created.
+- The `AGENTS.md` template has a **Features** line that indexes feature docs.
+
+### Upgrade
+- Copy method: rerun the download command to get `templates/FEATURE.md`. Then add `@.devbook/instructions/feature-docs.md` and a `Features` line to your `AGENTS.md` if your features have business rules.
+
+## 2026-10-24: Database instruction
+
+### Added
+- `instructions/database.md`: designing tables and models. It covers modelling before tables, normalisation, naming, primary keys and UUIDv7, column types (time zones, money, text, enums, JSON), constraints and nulls, foreign keys and delete rules, polymorphic references, indexes, history and soft delete, concurrency, multi-tenancy, privacy, safe migrations and backups. Sources: PostgreSQL docs and wiki, *Use The Index, Luke*, *SQL Antipatterns*, *Designing Data-Intensive Applications*, RFC 9562 and OWASP.
+
+### Changed
+- `instructions/api-data.md` now covers APIs only. Its data modelling, migration and backup rules moved to `database.md`. The URL is unchanged.
+
+### Upgrade
+- If your project has a relational database, add `@.devbook/instructions/database.md` to your `AGENTS.md` next to `api-data.md`. Otherwise it loses the migration and backup rules.
+
+## 2026-10-24: Licensing instruction
+
+### Added
+- `instructions/licensing.md`: choosing and changing the project licence (a human decides), SPDX identifiers and expressions, mixed-licence repositories, dependency and asset licence allowlists, copyleft triggers, CI licence scanning, notices and attribution, trademarks, and copied or generated code.
+
+### Upgrade
+- Add `@.devbook/instructions/licensing.md` to your `AGENTS.md` if the project is published or distributed, or ships third-party code, fonts, images or data.
+
+## 2026-10-24: CC BY 4.0 for the guide text
+
+### Changed
+- `instructions/` and `stacks/` are now licensed under CC BY 4.0. You can reuse and change them with credit. Keeping `.devbook/` with its `LICENSE-CC-BY-4.0` file counts as credit. `templates/` and the site code stay MIT-0.
+
+### Upgrade
+- Copy method: rerun the download command from the setup page. It now also fetches `LICENSE-CC-BY-4.0`. Submodules get the file automatically.
+
+## 2026-10-24: Distinctive design
+
+### Added
+- Design: a **Direction** section. Before the first screen, the agent writes a design direction (audience, tone, an outside reference, type pairing, palette, one signature element) and gets approval. It also lists the generic template patterns to avoid.
+- Design: a **Craft** section based on Dieter Rams, the Swiss grid tradition, Edward Tufte and *Refactoring UI*. It covers grid rhythm, density, borders, optical alignment, radius and elevation scales, icons and imagery, typographic detail, and squint, greyscale and removal tests.
+
+### Changed
+- Design: tinted neutrals, a sparing accent, dark mode tuned on its own, display type that may jump the scale, and at most one expressive motion moment per page.
+- Design: merged or dropped rules that models already follow. The axe check now lives only in `testing.md`.
+
 ## 2026-10-23: Structure, naming, SEO and design refresh
 
 ### Added

@@ -17,17 +17,22 @@ Method: submodule
   git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
   If it exists, run: git submodule update --init --remote .devbook
 - Copy: from the repository root, run:
-  rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates
+  rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0
   Don't edit the copied files. Put project rules in AGENTS.md instead.
 - If the command fails or there is no network, stop and tell me.
 
 3. Choose the instruction files
 - Always (mandatory): core, security, testing.
 - performance, for any app, site or service (skip for libraries and scripts).
-- api-data, if it has a backend, API or database.
+- api-data, if it has a backend or API.
+- database, if it stores data in a relational database.
 - design, if the project has any user interface.
 - seo and content, if it is a public website, docs site or blog.
 - mobile, if it is an iOS, Android, React Native or Flutter app.
+- licensing, if the project is published or distributed, or ships third-party
+  code, fonts, images or data.
+- feature-docs, if it is an app or service whose features have business rules,
+  states or permissions.
 - A stack note from .devbook/stacks/ for each technology the project
   actually uses. Skip the ones it doesn't use.
 
