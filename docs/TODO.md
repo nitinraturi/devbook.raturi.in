@@ -17,5 +17,5 @@
 ## Known gaps / upstream
 - **`npm audit`:** `braces` (via `micromatch` ← `starlight-llms-txt`) has a high advisory with no fixed release. It is build-time only, on patterns we control. `@lhci/cli` has dev-only advisories. CI audits production deps at `critical`; restore `high` when fixed.
 - **Starlight search button:** its accessible name "Search" does not include the visible ⌘K hint (axe `label-content-name-mismatch`). That element is excluded in the smoke tests. Check whether a newer Starlight release fixes it.
-- **Visual regression screenshots** (`stacks/testing-tooling.md`: about 400 px and 1280 px, light and dark) are not set up yet. Add them in a dedicated PR with committed baselines.
+- **Visual regression screenshots** (about 400 px and 1280 px, light and dark) are not set up yet. Add them in a dedicated PR with committed baselines.
 - **Unit tests:** there is no unit-testable logic beyond scripts, so Vitest is not added. Add it when a `src/lib` module grows logic worth testing.

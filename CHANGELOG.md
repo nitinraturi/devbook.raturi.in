@@ -2,6 +2,21 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-10-24: Ready for public use
+
+### Added
+- A PowerShell copy command for Windows, on the setup page and in the setup prompt.
+- Day-to-day guide: review updates like a dependency upgrade, monorepo setup, and troubleshooting for Windows and for assistants that pick up Devbook's own contributor rules.
+- A test that the setup prompt names every instruction file.
+
+### Changed
+- Devbook's own `AGENTS.md` now says it applies only to changing Devbook. Projects that embed Devbook may load it when an assistant reads `.devbook/` files, and should ignore it.
+- The guides on the site are CC BY 4.0, like the instructions and stack notes.
+- Instruction, stack and template files are never renamed or deleted, because projects import them by path.
+
+### Removed
+- `BUILD-PROMPT.md`, an outdated scaffolding prompt that referred to pages that no longer exist.
+
 ## 2026-10-24: Guides for every reader, and instructions rewritten for adherence
 
 ### Added

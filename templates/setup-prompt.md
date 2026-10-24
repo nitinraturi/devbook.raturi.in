@@ -18,6 +18,8 @@ Method: submodule
   If it exists, run: git submodule update --init --remote .devbook
 - Copy: from the repository root, run:
   rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0
+  On Windows PowerShell, use the PowerShell command from
+  https://devbook.raturi.in/start-here/setup/ instead.
   Don't edit the copied files. Put project rules in AGENTS.md instead.
 - If the command fails or there is no network, stop and tell me.
 

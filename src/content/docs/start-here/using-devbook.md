@@ -66,12 +66,16 @@ The answer should name the files in your `AGENTS.md` and mention running checks 
 
 Then read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md). Some entries have an **Upgrade** section, for example when a file is added or split and you need a new `@` line.
 
+Review each update's diff before you commit it. These files steer your assistant, so treat an update like a dependency upgrade: read what changed, and pin the submodule to the old commit if something doesn't suit your project yet.
+
 ## Troubleshooting
 
 | Problem | Fix |
 |---|---|
 | The assistant ignores the rules | Start a new chat; rules load at the start. Check that `CLAUDE.md` contains `@AGENTS.md` and that every `@` path exists. |
 | An `@` line isn't loaded | Write it as plain text. An `@` path inside backticks or a code block is not imported. |
+| The setup command fails on Windows | Use the PowerShell command on the [setup page](/start-here/setup/#1-choose-how-to-add-devbook), or download the ZIP. |
+| The assistant mentions `npm run check` or Devbook's contributor rules | It opened `.devbook/AGENTS.md`, which is for changing Devbook itself. Tell it to follow your root `AGENTS.md`; that file says the same. |
 | A cloud agent says `.devbook/` is empty | Its checkout skips submodules. Add `git submodule update --init` to its setup steps, or switch to the copy method. |
 | Copilot skips some files | Copilot doesn't expand `@` lines. Check that `.github/copilot-instructions.md` tells it to read the files listed in `AGENTS.md`. |
 | Two rules conflict | Your Project section wins where it says so. Write the exception there with its reason. |
@@ -82,6 +86,8 @@ Then read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/
 **Does Devbook change my code?** Only the setup prompt writes files, and only `.devbook/`, `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`. It doesn't commit.
 
 **Can I use it in an existing project?** Yes. The setup prompt merges into your existing agent files and lists any conflicts for you to decide.
+
+**Does it work in a monorepo?** Yes. Add Devbook and the Devbook lines once, in the root `AGENTS.md`. Put package-specific facts, such as that package's commands, in a short `AGENTS.md` inside the package; assistants use the nearest one for files there.
 
 **Do I need both Claude and Copilot?** No. Use any assistant that reads `AGENTS.md` or `CLAUDE.md`.
 

@@ -141,6 +141,12 @@ test('every instruction file is listed in the AGENTS.md template and on the home
 	}
 });
 
+test('the setup prompt names every instruction file', async () => {
+	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
+	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
+	for (const f of files) expect(prompt).toMatch(new RegExp(`\\b${f.replace(/\.md$/, '')}\\b`));
+});
+
 test('license page shows the full LICENSE text', async ({ page }) => {
 	const license = (await readFile(new URL('../../LICENSE', import.meta.url), 'utf8')).trim();
 	await page.goto('/license/');

@@ -35,6 +35,12 @@ Downloads plain files that you commit. It works offline afterwards, needs no sub
 rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0
 ```
 
+On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
+
+```powershell
+Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0; Remove-Item devbook.tar.gz
+```
+
 Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`.
 
 </TabItem>
@@ -96,7 +102,7 @@ To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then 
 </TabItem>
 </Tabs>
 
-Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change.
+Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade.
 
 ## License
 

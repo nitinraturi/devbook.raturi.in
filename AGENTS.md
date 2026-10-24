@@ -1,5 +1,7 @@
 # AGENTS.md: working on devbook.raturi.in
 
+These rules are only for changing the Devbook repository itself. If you are working in another project that includes Devbook at `.devbook/`, ignore this file and follow that project's root `AGENTS.md`.
+
 Devbook is a small set of instruction files that other projects load into Claude and Copilot through a git submodule at `.devbook/`. Every word ships into every session of every project, so keep it short, correct and current.
 
 ## Commands
@@ -41,5 +43,6 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 - [ ] Changed instruction text passes the review checklist in `src/content/docs/start-here/writing-instructions.md`.
 - [ ] If you renamed or added a file, update `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
-- [ ] `instructions/` and `stacks/` are CC BY 4.0; `templates/` and code are MIT-0. Never move text between them without updating `/license/`.
+- [ ] Never rename or delete a file in `instructions/`, `stacks/` or `templates/`, because projects import them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
+- [ ] `instructions/`, `stacks/` and the `start-here/` guides are CC BY 4.0; `templates/` and code are MIT-0. Never move text between them without updating `/license/`.
 - [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/` or `templates/`.
