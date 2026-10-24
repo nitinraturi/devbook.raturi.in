@@ -3,7 +3,7 @@ title: Devbook
 description: A few short instruction files that make Claude and Copilot build like a senior engineer. Add them to any project with one setup prompt.
 template: splash
 hero:
-  tagline: A few short instruction files that make Claude and Copilot build like a senior engineer. Core, security and testing are mandatory; performance, APIs and data, design, SEO and content are added as needed. Add them to any project with one prompt.
+  tagline: A few short instruction files that make Claude and Copilot build like a senior engineer. Core, security and testing are mandatory; performance, APIs, databases, design, SEO, content, licensing and feature docs are added as needed. Add them to any project with one prompt.
   actions:
     - text: Copy the setup prompt
       link: '#setup'
@@ -23,7 +23,7 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
       <p class="dvb-home-eyebrow">New or existing project · about a minute</p>
       <h2 id="setup-title">Set up with one prompt</h2>
     </div>
-    <a class="dvb-home-text-link" href="/start-here/setup/">Manual setup and how loading works <span aria-hidden="true">→</span></a>
+    <a class="dvb-home-text-link" href="/start-here/how-it-works/">New to this? How Devbook works <span aria-hidden="true">→</span></a>
   </div>
 
   <p class="dvb-quick-start-intro">Open your project in Claude Code or VS Code Copilot agent mode, with file editing and terminal access turned on. Paste this prompt. The assistant adds Devbook at <code>.devbook/</code>, either as a git submodule (the default) or as copied files (change <code>Method</code> to <code>copy</code>). It then picks the files your project needs and connects them. It does not commit anything.</p>
@@ -31,7 +31,8 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
   <div class="dvb-quick-start-notes">
     <p><strong>1. Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</p>
     <p><strong>2. Commit.</strong> Commit those files along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</p>
-    <p><strong>3. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update a submodule, run <code>git submodule update --remote .devbook</code>. For a copy, run the download command again.</p>
+    <p><strong>3. Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</p>
+    <p><strong>4. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update a submodule, run <code>git submodule update --remote .devbook</code>. For a copy, run the download command again.</p>
   </div>
 </section>
 
@@ -71,11 +72,14 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     <LinkCard title="Security (mandatory)" description="Secure defaults, auth, headers, secrets, dependencies, privacy and LLM features." href="/instructions/security/" />
     <LinkCard title="Testing (mandatory)" description="What to test, test levels, deterministic tests, test data and CI gates." href="/instructions/testing/" />
     <LinkCard title="Performance and reliability" description="Budgets, Core Web Vitals, efficient back ends, caching, timeouts and monitoring." href="/instructions/performance/" />
-    <LinkCard title="APIs and data" description="API contracts, errors, pagination, idempotency, migrations and backups." href="/instructions/api-data/" />
-    <LinkCard title="Design" description="Modern UI: hierarchy, layout, type, colour, components, forms, motion and WCAG 2.2 AA." href="/instructions/design/" />
+    <LinkCard title="REST APIs" description="HTTP standards and top-company guidelines: resources, methods, errors, pagination, versioning, security and webhooks." href="/instructions/api-data/" />
+    <LinkCard title="Databases" description="Tables and models that stay correct: keys, types, constraints, relationships, indexes, migrations and backups." href="/instructions/database/" />
+    <LinkCard title="Design" description="Distinctive UI: design direction, craft, hierarchy, layout, type, colour, components, forms, motion and WCAG 2.2 AA." href="/instructions/design/" />
     <LinkCard title="SEO" description="Google Search Central guidance: crawling, indexing, titles, links, structured data and spam policies." href="/instructions/seo/" />
     <LinkCard title="Content" description="People-first writing, verified facts, E-E-A-T trust signals and an AI editorial policy." href="/instructions/content/" />
     <LinkCard title="Mobile (optional)" description="Extra rules for iOS, Android, React Native and Flutter apps." href="/instructions/mobile/" />
+    <LinkCard title="Licensing" description="Choosing a licence, SPDX identifiers, dependency and asset licences, notices and attribution." href="/instructions/licensing/" />
+    <LinkCard title="Feature docs" description="One short file per complex feature with its rules, flow and file map, so agents read less code." href="/instructions/feature-docs/" />
     <LinkCard title="Stack notes" description="Short notes for Astro, Starlight, Cloudflare, TypeScript, Django, GA4 and three.js." href="/stacks/astro/" />
   </CardGrid>
 </section>

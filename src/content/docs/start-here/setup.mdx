@@ -2,14 +2,16 @@
 title: Setup
 description: Add Devbook to a project by hand, see how Claude and Copilot load the instructions and their limits, and learn how to update or remove it.
 sidebar:
-  order: 1
+  order: 2
 ---
 
 import { Code, Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 import agentsTemplate from '../../../../templates/AGENTS.md?raw';
 import copilotTemplate from '../../../../templates/copilot-instructions.md?raw';
 
-The [setup prompt](/#setup) does all of this for you. The steps below show the same setup done by hand.
+The [setup prompt](/#setup) does all of this for you. The steps below show the same setup done by hand. New to instruction files? Read [How Devbook works](/start-here/how-it-works/) first.
+
+**You need:** a git repository, and an assistant that reads `AGENTS.md` or `CLAUDE.md`, such as Claude Code or GitHub Copilot in agent mode, with file editing and terminal access turned on.
 
 ## 1. Choose how to add Devbook
 
@@ -30,10 +32,16 @@ git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devb
 Downloads plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates
+rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0
 ```
 
-Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders into `.devbook/`.
+On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
+
+```powershell
+Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0; Remove-Item devbook.tar.gz
+```
+
+Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`.
 
 </TabItem>
 </Tabs>
@@ -42,7 +50,7 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
 <Steps>
 
-1. Create `AGENTS.md` at the repository root. Fill in the Project section. In the Devbook section, keep only the lines that apply. Core, security and testing are mandatory. Add performance for any app or site, api-data for a backend or database, design for any UI, seo and content for public sites, and mobile for apps. Then add one stack note for each technology you use.
+1. Create `AGENTS.md` at the repository root and fill in the Project section with your real commands, layout and rules. In the Devbook section, keep only the lines that apply: core, security and testing always, then the others from [the table of when to load each file](/start-here/how-it-works/#mandatory-and-optional-files), plus one stack note for each technology you use.
 
    <Code code={agentsTemplate} lang="md" title="AGENTS.md" />
 
@@ -62,17 +70,15 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
 ## How the instructions load
 
-- **Claude Code** reads `CLAUDE.md`, follows `@AGENTS.md`, then follows each `@.devbook/...` line. The full text is in context at the start of every session. Write the `@` paths as plain text: an `@` path inside backticks is not imported.
-- **GitHub Copilot** (VS Code, the coding agent and the CLI) reads `AGENTS.md` and `.github/copilot-instructions.md` automatically. It does not inline `@` lines. The sentence in `copilot-instructions.md` tells it to read those files, and it normally does. Still, this is an instruction, not a guarantee.
-- **Other agents** that support `AGENTS.md` (such as Codex, Cursor and Gemini CLI) get the same file list.
+Claude Code expands the `@` lines; Copilot and other assistants read `AGENTS.md` and open the listed files. Write `@` paths as plain text, because an `@` path inside backticks is not imported. [How Devbook works](/start-here/how-it-works/#how-each-assistant-loads-the-rules) explains each assistant and which rule wins.
 
 <Aside type="caution" title="Cloud agents and submodules">
 Hosted agents only see a submodule's files if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`. You can also switch to the Copy method, whose files are in the repository itself.
 </Aside>
 
-## Cost
+## Check it works
 
-Each instruction file is 1.5 to 7.5 KB. The mandatory set (core, security and testing) is about 14 KB, around 3,500 tokens. A typical public website adds performance, design, SEO and content, for about 33 KB in total (around 8,500 tokens). An API service adds performance and api-data, for about 19 KB. That is a small share of a modern context window, and it loads once per session.
+Start a new chat and ask which Devbook files the assistant is following. [Use Devbook day to day](/start-here/using-devbook/#check-that-its-working) has the exact question and what to do if the answer is wrong. Sizes and token costs for each project type are in [How Devbook works](/start-here/how-it-works/#what-it-costs).
 
 ## Update, clone or remove
 
@@ -96,8 +102,8 @@ To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then 
 </TabItem>
 </Tabs>
 
-Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change.
+Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade.
 
 ## License
 
-Devbook is [MIT-0](/license/). You can copy and change the files in any project without keeping a notice.
+The instruction files and stack notes are [CC BY 4.0](/license/): keep `.devbook/` with its `LICENSE-CC-BY-4.0` file and that counts as credit. The templates are MIT-0 and need no notice.

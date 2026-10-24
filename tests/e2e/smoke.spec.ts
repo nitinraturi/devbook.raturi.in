@@ -2,26 +2,36 @@ import AxeBuilder from '@axe-core/playwright';
 import { readFile, readdir } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 
-// Home, setup, every instruction file, one stack note, plus privacy.
+// Home, the start-here guides, every instruction file, one stack note, plus privacy.
 const PAGES = [
 	'/',
+	'/start-here/how-it-works/',
 	'/start-here/setup/',
+	'/start-here/using-devbook/',
+	'/start-here/writing-instructions/',
 	'/instructions/core/',
 	'/instructions/security/',
 	'/instructions/testing/',
 	'/instructions/performance/',
 	'/instructions/api-data/',
+	'/instructions/database/',
 	'/instructions/design/',
 	'/instructions/seo/',
 	'/instructions/content/',
 	'/instructions/mobile/',
+	'/instructions/licensing/',
+	'/instructions/feature-docs/',
 	'/stacks/astro/',
 	'/license/',
 	'/privacy/',
 ];
 
 const codeText = async (page: Page, title: string) => {
-	const code = page.locator('.expressive-code').filter({ hasText: title }).first();
+	// Match the block's title exactly: a substring match also hits code that merely mentions it.
+	const code = page
+		.locator('.expressive-code')
+		.filter({ has: page.locator('figcaption .title').getByText(title, { exact: true }) })
+		.first();
 	await expect(code).toBeAttached();
 	const lines = await code.locator('.ec-line .code').allTextContents();
 	return lines.map((line) => line.replace(/\n/g, '')).join('\n').trim();
@@ -131,10 +141,17 @@ test('every instruction file is listed in the AGENTS.md template and on the home
 	}
 });
 
+test('the setup prompt names every instruction file', async () => {
+	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
+	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
+	for (const f of files) expect(prompt).toMatch(new RegExp(`\\b${f.replace(/\.md$/, '')}\\b`));
+});
+
 test('license page shows the full LICENSE text', async ({ page }) => {
 	const license = (await readFile(new URL('../../LICENSE', import.meta.url), 'utf8')).trim();
 	await page.goto('/license/');
 	expect(await codeText(page, 'LICENSE')).toBe(license);
+	await expect(page.locator('a[href="https://creativecommons.org/licenses/by/4.0/"]').first()).toBeAttached();
 	await expect(page.locator('footer a[href="/license/"], .dvb-site-footer a[href="/license/"]').first()).toBeAttached();
 });
 
