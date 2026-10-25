@@ -1,24 +1,41 @@
 ---
 title: License
-description: Devbook is licensed under MIT No Attribution (MIT-0). Copy, change and use the instructions in any project, commercial or not, without a notice.
+description: Devbook's instruction and stack text is licensed under CC BY 4.0, so reuse it with credit. Templates and site code are MIT-0, with no notice needed.
 ---
 
 import { Code } from '@astrojs/starlight/components';
 import licenseText from '../../../LICENSE?raw';
 
-Devbook's instruction files, stack notes, templates and site code are licensed under the **MIT No Attribution License** (SPDX: `MIT-0`).
+Devbook uses two licenses: one for the guide text and one for everything else.
 
-## What this means
+| Material | License | Credit needed |
+|---|---|---|
+| Instruction files (`instructions/`), stack notes (`stacks/`) and the guides on this site (How Devbook works, Use Devbook day to day, Writing instructions) | [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) (SPDX: `CC-BY-4.0`) | Yes |
+| Templates (`templates/`) and the site's code | MIT No Attribution (SPDX: `MIT-0`) | No |
 
-- **You can:** copy, change, merge, publish, distribute, sublicense and sell the material, in personal or commercial projects.
-- **You don't need to:** keep a copyright notice, credit Devbook or include this license in projects that copy the files, whether by submodule or by copy.
+## Guide text: CC BY 4.0
+
+- **You can:** copy, change, translate and redistribute the instructions, stack notes and guides, in personal or commercial projects.
+- **You must:** give credit, link to the license and say if you changed the text.
 - **No warranty:** the material is provided as is. Review instructions before relying on them, especially for security, legal or compliance decisions.
 
-## Why MIT-0
+### How to give credit
 
-Projects load these files into their own repositories and agent context, word for word. A license that required attribution would make every project carry an extra notice. MIT-0 removes that friction and is still a recognised open-source license.
+Using Devbook as intended already counts as credit. If you load it through the submodule or the copy command, keep `.devbook/` with its `LICENSE-CC-BY-4.0` file. That is enough, even if you edit the files there.
 
-## Full text
+When you reuse the text anywhere else, such as a blog post, a course or your own guide, add a line like this:
+
+```text
+Based on Devbook by Nitin Raturi (https://devbook.raturi.in), licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes were made.
+```
+
+Leave out "Changes were made." if you copied the text unchanged.
+
+The full legal code is in the [LICENSE-CC-BY-4.0 file on GitHub](https://github.com/nitinraturi/devbook.raturi.in/blob/main/LICENSE-CC-BY-4.0).
+
+## Templates and code: MIT-0
+
+Projects paste the templates into their own `AGENTS.md`, `CLAUDE.md` and Copilot files, so those files need no notice. The same applies to the site's code: you can copy, change and sell it without credit.
 
 <Code code={licenseText} lang="text" title="LICENSE" />
 

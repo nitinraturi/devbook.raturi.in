@@ -32,7 +32,7 @@ In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, wi
 
 ## Updates
 
-Devbook is not versioned. Projects track `main` through a git submodule and pull changes with `git submodule update --remote .devbook`. Every change to `instructions/` or `stacks/` gets a dated entry in `CHANGELOG.md`, so projects can see what changed.
+Devbook is not versioned. Projects track `main`, either through a git submodule (`git submodule update --remote .devbook`) or by rerunning the copy command. A push to `main` reaches every project on its next update, so merge only reviewed changes, and merge before deploying the site when the setup commands change. Every change to `instructions/` or `stacks/` gets a dated entry in `CHANGELOG.md`, so projects can see what changed.
 
 ## Local checks
 
