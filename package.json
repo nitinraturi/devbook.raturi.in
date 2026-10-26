@@ -1,38 +1,38 @@
 {
-  "name": "devbook.raturi.in",
-  "type": "module",
-  "private": true,
-  "license": "(MIT-0 AND CC-BY-4.0)",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",
-    "build:prod": "DEVBOOK_ENV=production npm run build",
-    "preview": "node scripts/serve-dist.mjs",
-    "typecheck": "astro check",
-    "check:descriptions": "node scripts/check-descriptions.mjs",
-    "contrast": "node scripts/check-contrast.mjs",
-    "test:e2e": "playwright test",
-    "lhci": "lhci autorun",
-    "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e",
-    "deploy": "wrangler deploy"
-  },
-  "dependencies": {
-    "@astrojs/starlight": "0.42.6",
-    "astro": "7.4.2",
-    "starlight-llms-txt": "0.12.0"
-  },
-  "devDependencies": {
-    "@astrojs/check": "0.9.12",
-    "@axe-core/playwright": "4.14.0",
-    "@lhci/cli": "0.15.1",
-    "@playwright/test": "1.64.1",
-    "sharp": "0.35.5",
-    "starlight-links-validator": "0.27.0",
-    "typescript": "6.0.3",
-    "wrangler": "4.152.0"
-  },
-  "engines": {
-    "node": ">=22"
-  }
+	"name": "devbook.raturi.in",
+	"type": "module",
+	"private": true,
+	"license": "(MIT-0 AND CC-BY-4.0)",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",
+		"build:prod": "DEVBOOK_ENV=production npm run build",
+		"preview": "node scripts/serve-dist.mjs",
+		"typecheck": "astro check",
+		"check:descriptions": "node scripts/check-descriptions.mjs",
+		"contrast": "node scripts/check-contrast.mjs",
+		"test:e2e": "playwright test",
+		"lhci": "lhci autorun",
+		"og:image": "node scripts/generate-og.mjs",
+		"check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e",
+		"deploy": "wrangler deploy"
+	},
+	"dependencies": {
+		"@astrojs/starlight": "0.42.6",
+		"astro": "7.4.2",
+		"starlight-llms-txt": "0.12.0"
+	},
+	"devDependencies": {
+		"@astrojs/check": "0.9.12",
+		"@axe-core/playwright": "4.14.0",
+		"@lhci/cli": "0.15.1",
+		"@playwright/test": "1.64.1",
+		"sharp": "0.35.5",
+		"starlight-links-validator": "0.27.0",
+		"typescript": "6.0.3",
+		"wrangler": "4.152.0"
+	},
+	"engines": {
+		"node": ">=22"
+	}
 }

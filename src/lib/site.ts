@@ -10,11 +10,7 @@ export const PERSON = {
 	name: 'Nitin Raturi',
 	url: 'https://raturi.in/',
 	contactEmail: 'develop@raturi.in',
-	sameAs: [
-		'https://www.linkedin.com/in/nitinraturi/',
-		'https://x.com/raturitechmedia',
-		'https://github.com/nitinraturi',
-	] as string[],
+	sameAs: ['https://www.linkedin.com/in/nitinraturi/', 'https://x.com/raturitechmedia', 'https://github.com/nitinraturi'] as string[],
 };
 
 /** Pages older than this many days since `lastVerified` show a caution notice. */

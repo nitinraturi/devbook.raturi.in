@@ -34,14 +34,19 @@ const codeText = async (page: Page, title: string) => {
 		.first();
 	await expect(code).toBeAttached();
 	const lines = await code.locator('.ec-line .code').allTextContents();
-	return lines.map((line) => line.replace(/\n/g, '')).join('\n').trim();
+	return lines
+		.map((line) => line.replace(/\n/g, ''))
+		.join('\n')
+		.trim();
 };
 
 test('homepage shows the complete setup prompt and AGENTS.md template', async ({ page, request }) => {
 	const prompt = (await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8')).trim();
 	const agents = (await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8')).trim();
 	await page.goto('/');
-	await expect(page.locator('.expressive-code').filter({ hasText: 'Paste into Claude or Copilot' }).getByRole('button', { name: 'Copy to clipboard' })).toBeAttached();
+	await expect(
+		page.locator('.expressive-code').filter({ hasText: 'Paste into Claude or Copilot' }).getByRole('button', { name: 'Copy to clipboard' }),
+	).toBeAttached();
 	expect(await codeText(page, 'Paste into Claude or Copilot')).toBe(prompt);
 	expect(await codeText(page, 'AGENTS.md (template)')).toBe(agents);
 	expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
@@ -68,8 +73,7 @@ function watchErrors(page: Page) {
 async function axe(page: Page) {
 	// Starlight's search button is named "Search" while also showing a ⌘K hint; that one
 	// element is excluded from label-content-name-mismatch only (upstream, see docs/TODO.md).
-	const a = await
-		new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).disableRules(['label-content-name-mismatch']).analyze();
+	const a = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).disableRules(['label-content-name-mismatch']).analyze();
 	const b = await new AxeBuilder({ page }).withRules(['label-content-name-mismatch']).exclude('site-search > button[data-open-modal]').analyze();
 	const violations = [...a.violations, ...b.violations];
 	return violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.help}`);
@@ -180,14 +184,7 @@ test('page Markdown is served and setup includes the templates', async ({ reques
 });
 
 test('crawl files exist', async ({ request }) => {
-	for (const path of [
-		'/robots.txt',
-		'/sitemap.xml',
-		'/sitemap-index.xml',
-		'/llms.txt',
-		'/llms-full.txt',
-		'/llms-small.txt',
-	]) {
+	for (const path of ['/robots.txt', '/sitemap.xml', '/sitemap-index.xml', '/llms.txt', '/llms-full.txt', '/llms-small.txt']) {
 		expect((await request.get(path)).status(), path).toBe(200);
 	}
 });

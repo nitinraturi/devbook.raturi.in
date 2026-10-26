@@ -17,5 +17,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <text x="96" y="560" font-family="Helvetica, Arial, sans-serif" font-size="30" fill="#bcd4ff">devbook.raturi.in</text>
 </svg>`;
 
-await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(new URL('../public/og-default.png', import.meta.url).pathname);
+await sharp(Buffer.from(svg))
+	.png({ compressionLevel: 9 })
+	.toFile(new URL('../public/og-default.png', import.meta.url).pathname);
 console.log('wrote public/og-default.png');

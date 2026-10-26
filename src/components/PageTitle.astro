@@ -13,19 +13,15 @@ const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
 ---
 
 <Default />
-{
-	lastVerified && (
-		<p class="dvb-verified">
-			Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
-		</p>
-	)
-}
-{
-	isStale && (
-		<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
-	)
-}
+{lastVerified && (
+	<p class="dvb-verified">
+		Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
+	</p>
+)}
+{isStale && <Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>}
 <div class="dvb-actions">
-	<button type="button" data-copy-md={mdHref}>Copy page as Markdown</button>
+	<button type="button" data-copy-md={mdHref}>
+		Copy page as Markdown
+	</button>
 	<a href={mdHref}>View Markdown</a>
 </div>

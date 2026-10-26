@@ -6,16 +6,16 @@
 	// Build fresh on every `wrangler deploy` (local or Workers Builds) so a deploy never
 	// ships a stale dist/. build:prod enables production-only features (analytics).
 	"build": {
-		"command": "npm run build:prod"
+		"command": "npm run build:prod",
 	},
 	"assets": {
 		"directory": "./dist",
 		// /page → /page/ (matches trailingSlash: 'always'); /page/ serves page/index.html.
 		"html_handling": "auto-trailing-slash",
 		// Unknown paths get dist/404.html with a 404 status.
-		"not_found_handling": "404-page"
+		"not_found_handling": "404-page",
 	},
 	"routes": [{ "pattern": "devbook.raturi.in", "custom_domain": true }],
 	"workers_dev": true,
-	"observability": { "enabled": false }
+	"observability": { "enabled": false },
 }

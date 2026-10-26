@@ -26,9 +26,7 @@
 	padding: clamp(2.5rem, 7vw, 5rem) clamp(1.25rem, 5vw, 4rem);
 	border: 1px solid var(--sl-color-hairline);
 	border-radius: 1.5rem;
-	background:
-		radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--sl-color-accent-low) 75%, transparent), transparent 65%),
-		var(--sl-color-bg-nav);
+	background: radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--sl-color-accent-low) 75%, transparent), transparent 65%), var(--sl-color-bg-nav);
 }
 [data-has-hero] .hero h1 {
 	letter-spacing: -0.02em;
@@ -84,9 +82,7 @@
 	padding: clamp(1.25rem, 4vw, 2.5rem);
 	border: 1px solid var(--sl-color-hairline);
 	border-radius: 1.25rem;
-	background:
-		linear-gradient(135deg, color-mix(in srgb, var(--sl-color-accent-low) 65%, transparent), transparent 55%),
-		var(--sl-color-bg-nav);
+	background: linear-gradient(135deg, color-mix(in srgb, var(--sl-color-accent-low) 65%, transparent), transparent 55%), var(--sl-color-bg-nav);
 }
 .dvb-quick-start-intro {
 	margin: 0 0 1rem;
