@@ -30,7 +30,7 @@ The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https:
 
 ## Releases
 
-Devbook ships from `main`; there are no tags or release branches. The `VERSION` file holds the version number, and it goes up only with a release, so projects are told to upgrade only when something they load changed.
+Devbook ships from `main`; there are no tags and no other branches to install from. The `VERSION` file holds the version number, and it goes up only with a release, so projects are told to upgrade only when something they load changed.
 
 **What releases.** A push to `main` that changes a shipped path (`instructions/`, `stacks/`, `skills/`, `templates/`, `kit/`, `LICENSE-CC-BY-4.0`, `CHANGELOG.md`, `devbook.manifest.json`), or a manual run of the Release workflow. Site, eval and CI changes don't release.
 
@@ -52,8 +52,6 @@ For a change to shipped files:
 1. In the same PR, add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something, and commit the modelled results (`npm run evals:model -- --variant main,local`).
 2. Merge the PR. The Release workflow raises `VERSION` if the gates pass, and projects see the new version when they next check.
 3. Deploy the site if it changed (`npm run deploy`).
-
-The old `v2026.11.02` tag stays so projects pinned to it keep working; no new tags are made.
 
 ## Local checks
 
