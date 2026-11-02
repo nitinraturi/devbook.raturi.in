@@ -233,3 +233,8 @@ test('staleness notice is decided when the page is viewed, not when it was built
 	await expect(notice).toBeVisible();
 	await expect(notice).toContainText('may be out of date');
 });
+
+test('local server answers a malformed URL with 400 and keeps serving', async ({ request }) => {
+	expect((await request.get('/%E0%A4%A')).status()).toBe(400);
+	expect((await request.get('/')).status()).toBe(200);
+});

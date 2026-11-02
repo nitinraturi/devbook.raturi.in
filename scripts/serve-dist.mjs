@@ -54,7 +54,14 @@ const rules = parseHeaders(await readFile(join(dist, '_headers'), 'utf8'));
 
 createServer((req, res) => {
 	const url = new URL(req.url ?? '/', 'http://localhost');
-	let path = decodeURIComponent(url.pathname);
+	let path;
+	try {
+		path = decodeURIComponent(url.pathname);
+	} catch {
+		// Malformed percent-encoding: reject the request instead of crashing the server.
+		res.writeHead(400).end();
+		return;
+	}
 	for (const r of rules) if (r.pattern.test(path)) for (const [k, v] of r.headers) res.setHeader(k, v);
 
 	let file = normalize(join(dist, path));
