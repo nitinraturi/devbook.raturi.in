@@ -217,3 +217,19 @@ test('security headers are applied', async ({ request }) => {
 	expect(h['x-content-type-options']).toBe('nosniff');
 	expect(h['strict-transport-security']).toContain('max-age=');
 });
+
+test('staleness notice is decided when the page is viewed, not when it was built', async ({ page }) => {
+	await page.goto('/stacks/astro/');
+	const notice = page.locator('[data-stale-notice]');
+	const verified = Date.parse((await notice.getAttribute('data-verified'))!);
+	const days = Number(await notice.getAttribute('data-stale-days'));
+
+	await page.clock.setFixedTime(verified + 864e5);
+	await page.reload();
+	await expect(notice).toBeHidden();
+
+	await page.clock.setFixedTime(verified + (days + 1) * 864e5);
+	await page.reload();
+	await expect(notice).toBeVisible();
+	await expect(notice).toContainText('may be out of date');
+});

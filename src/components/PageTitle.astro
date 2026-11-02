@@ -23,7 +23,12 @@ const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
 		Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
 	</p>
 )}
-{isStale && <Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>}
+{/* `hidden` is the build-time answer (the no-JS fallback); src/scripts/site.ts recomputes it when the page is viewed. */}
+{lastVerified && (
+	<div data-stale-notice data-verified={verifiedIso} data-stale-days={STALE_AFTER_DAYS} hidden={!isStale}>
+		<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
+	</div>
+)}
 <div class="dvb-actions">
 	<button type="button" data-copy-md={mdHref}>
 		Copy page as Markdown
