@@ -48,6 +48,12 @@ jobs:
       - name: Rule IDs
         run: npm run check:rule-ids
 
+      - name: Eval tasks
+        run: npm run evals:validate
+
+      - name: Enforcement kit hooks
+        run: npm run test:kit
+
       - name: Accent contrast
         run: npm run contrast
 

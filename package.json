@@ -18,9 +18,10 @@
     "evals:validate": "node evals/run.mjs --validate",
     "contrast": "node scripts/check-contrast.mjs",
     "test:e2e": "playwright test",
+    "test:kit": "node --test 'kit/**/*.test.mjs'",
     "lhci": "lhci autorun",
     "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run check:rule-ids && npm run evals:validate && npm run contrast && npm run build && npm run test:e2e",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run check:rule-ids && npm run evals:validate && npm run test:kit && npm run contrast && npm run build && npm run test:e2e",
     "deploy": "wrangler deploy"
   },
   "dependencies": {
