@@ -14,6 +14,7 @@ hero:
 ---
 
 import { CardGrid, Code, LinkCard } from '@astrojs/starlight/components';
+import History from '../../components/History.astro';
 import setupPrompt from '../../../templates/setup-prompt.md?raw';
 import agentsTemplate from '../../../templates/AGENTS.md?raw';
 
@@ -82,4 +83,15 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     <LinkCard title="Feature docs" description="One short file per complex feature with its rules, flow and file map, so agents read less code." href="/instructions/feature-docs/" />
     <LinkCard title="Stack notes" description="Short notes for Astro, Starlight, Cloudflare, TypeScript, Django, GA4 and three.js." href="/stacks/astro/" />
   </CardGrid>
+</section>
+
+<section class="dvb-home-history" aria-labelledby="history-title">
+  <div class="dvb-home-section-heading">
+    <div>
+      <p class="dvb-home-eyebrow">Built in the open since October 2026</p>
+      <h2 id="history-title">How Devbook was made</h2>
+    </div>
+    <a class="dvb-home-text-link" href="/about/">The full story, and how AI was used <span aria-hidden="true">→</span></a>
+  </div>
+  <History perDay={3} />
 </section>

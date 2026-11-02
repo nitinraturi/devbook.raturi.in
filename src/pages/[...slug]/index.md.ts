@@ -1,15 +1,16 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { posix } from 'node:path';
+import { changelogDays, formatDay } from '../../lib/changelog';
 
 // Serves each docs page's source as Markdown at <page>/index.md, used by the
 // "Copy page as Markdown" button. MDX components are turned into plain Markdown so the
 // file has the same content as the page: <Code> with a `?raw` import becomes a fenced
 // block, <Tabs> become headings, <Steps> the list inside, <Aside> a blockquote and
-// <CardGrid>/<LinkCard>/<Card> a link list. scripts/check-markdown.mjs fails the build
+// <CardGrid>/<LinkCard>/<Card> a link list, and <History> the changelog timeline. scripts/check-markdown.mjs fails the build
 // if a component is left over.
 
-const raw = import.meta.glob<string>(['/templates/*.md', '/LICENSE'], {
+const raw = import.meta.glob<string>(['/templates/*.md', '/LICENSE', '/CHANGELOG.md'], {
 	query: '?raw',
 	import: 'default',
 	eager: true,
@@ -27,6 +28,18 @@ function fence(code: string, lang: string, title: string | undefined, indent: st
 	const f = '`'.repeat(longest + 1);
 	const lines = [`${f}${lang}${title ? ` title="${title}"` : ''}`, ...code.trimEnd().split('\n'), f];
 	return lines.map((l) => (l ? indent + l : l)).join('\n');
+}
+
+/** The <History> timeline as a list: one item per day, with the day's entries nested. */
+function history(perDay: number | undefined) {
+	return changelogDays(raw['/CHANGELOG.md'] ?? '')
+		.map(({ date, titles }) => {
+			const shown = perDay ? titles.slice(0, perDay) : titles;
+			const more = titles.length - shown.length;
+			const items = [...shown, ...(more > 0 ? [`and ${more} more`] : [])].map((t) => `  - ${t}`);
+			return [`- ${formatDay(date)}`, ...items].join('\n');
+		})
+		.join('\n');
 }
 
 function toMarkdown(body: string, filePath: string | undefined) {
@@ -87,6 +100,11 @@ function toMarkdown(body: string, filePath: string | undefined) {
 			const [title, href, description] = ['title', 'href', 'description'].map((n) => attr(tag, n));
 			const label = href ? `[${title}](${href})` : `**${title}**`;
 			out.push(`- ${label}${description ? `: ${description}` : ''}`);
+			continue;
+		}
+		const timeline = tag.match(/^<History(?:\s+perDay=\{(\d+)\})?\s*\/>$/);
+		if (timeline) {
+			(aside ?? out).push(history(timeline[1] ? Number(timeline[1]) : undefined));
 			continue;
 		}
 		const code = tag.match(/^<Code\s+code=\{(\w+)\}\s+lang="(\w+)"(?:\s+title="([^"]*)")?\s*\/>$/);

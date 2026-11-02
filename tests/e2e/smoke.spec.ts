@@ -9,6 +9,7 @@ const PAGES = [
 	'/start-here/setup/',
 	'/start-here/using-devbook/',
 	'/start-here/enforcement-kit/',
+	'/about/',
 	'/start-here/writing-instructions/',
 	'/instructions/core/',
 	'/instructions/security/',
@@ -248,4 +249,14 @@ test('staleness notice is decided when the page is viewed, not when it was built
 test('local server answers a malformed URL with 400 and keeps serving', async ({ request }) => {
 	expect((await request.get('/%E0%A4%A')).status()).toBe(400);
 	expect((await request.get('/')).status()).toBe(200);
+});
+
+test('the history timeline is built from the changelog', async ({ page }) => {
+	const changelog = await readFile(new URL('../../CHANGELOG.md', import.meta.url), 'utf8');
+	const newest = changelog.match(/^## \d{4}-\d{2}-\d{2}: (.+)$/m)?.[1];
+	expect(newest).toBeTruthy();
+	await page.goto('/about/');
+	await expect(page.locator('.dvb-timeline').getByText(newest!, { exact: true })).toBeVisible();
+	await page.goto('/');
+	await expect(page.locator('.dvb-home-history .dvb-timeline > li').first()).toBeVisible();
 });

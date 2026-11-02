@@ -307,3 +307,30 @@
 	color: var(--sl-color-accent-high);
 	box-shadow: inset 0 0 0 1px var(--sl-color-accent);
 }
+
+/* History timeline (homepage and /about/). */
+.dvb-timeline {
+	display: grid;
+	gap: 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.dvb-timeline > li {
+	margin: 0;
+	padding-inline-start: 1.25rem;
+	border-inline-start: 2px solid var(--sl-color-accent);
+}
+.dvb-timeline time {
+	display: block;
+	font-weight: 700;
+}
+.dvb-timeline ul {
+	margin: 0.25rem 0 0;
+	padding-inline-start: 1.1rem;
+	color: var(--sl-color-gray-2);
+}
+.dvb-timeline-more {
+	list-style: none;
+	font-style: italic;
+}

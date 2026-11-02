@@ -64,6 +64,7 @@ export default defineConfig({
 						'start-here/enforcement-kit',
 						'start-here/writing-instructions',
 						'start-here/contact',
+						'about',
 						'license',
 					],
 				},

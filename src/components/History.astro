@@ -1,0 +1,31 @@
+---
+// Timeline of Devbook's development, built from CHANGELOG.md so the dates and titles live in one place.
+import changelog from '../../CHANGELOG.md?raw';
+import { changelogDays, formatDay } from '../lib/changelog';
+
+interface Props {
+	/** Show at most this many entries per day, with a count of the rest. */
+	perDay?: number;
+}
+
+const { perDay } = Astro.props;
+const days = changelogDays(changelog);
+---
+
+<ol class="dvb-timeline">
+	{days.map((day) => {
+		const shown = perDay ? day.titles.slice(0, perDay) : day.titles;
+		const more = day.titles.length - shown.length;
+		return (
+			<li>
+				<time datetime={day.date}>{formatDay(day.date)}</time>
+				<ul>
+					{shown.map((title) => (
+						<li>{title}</li>
+					))}
+					{more > 0 && <li class="dvb-timeline-more">and {more} more</li>}
+				</ul>
+			</li>
+		);
+	})}
+</ol>
