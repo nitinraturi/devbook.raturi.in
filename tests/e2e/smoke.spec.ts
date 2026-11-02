@@ -56,10 +56,12 @@ test('homepage shows the complete setup prompt and AGENTS.md template', async ({
 	expect(await (await request.get('/index.md')).text()).toContain(prompt);
 });
 
-test('every @ path in the AGENTS.md template exists in the repo', async () => {
+test('every Devbook path in the AGENTS.md template exists in the repo', async () => {
 	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
-	const paths = [...agents.matchAll(/^@\.devbook\/(\S+)$/gm)].map((m) => m[1]!).filter((p) => !p.includes('<'));
-	expect(paths.length).toBeGreaterThanOrEqual(9);
+	const paths = [...agents.matchAll(/^(?:@|- `)\.devbook\/([^\s`]+)/gm)]
+		.map((m) => m[1]!)
+		.filter((p) => !p.includes('<'));
+	expect(paths.length).toBeGreaterThanOrEqual(12);
 	for (const p of paths) await expect(readFile(new URL(`../../${p}`, import.meta.url), 'utf8')).resolves.toBeTruthy();
 });
 
@@ -153,15 +155,23 @@ test('every instruction file is listed in the AGENTS.md template and on the home
 	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
 	await page.goto('/');
 	for (const f of files) {
-		expect(agents).toContain(`@.devbook/instructions/${f}`);
+		expect(agents).toContain(`.devbook/instructions/${f}`);
 		await expect(page.locator(`a[href="/instructions/${f.replace(/\.md$/, '')}/"]`).first()).toBeAttached();
 	}
 });
 
-test('the setup prompt names every instruction file', async () => {
-	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
+test('the setup skill names every instruction file and links every path-scoped one', async () => {
+	const skill = await readFile(new URL('../../skills/devbook-setup/SKILL.md', import.meta.url), 'utf8');
 	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
-	for (const f of files) expect(prompt).toMatch(new RegExp(`\\b${f.replace(/\.md$/, '')}\\b`));
+	for (const f of files) {
+		const name = f.replace(/\.md$/, '');
+		expect(skill).toMatch(new RegExp(`\\b${name}\\b`));
+		const text = await readFile(new URL(`../../instructions/${f}`, import.meta.url), 'utf8');
+		if (/^paths:/m.test(text))
+			expect(skill, `${name} has paths, so setup must link it`).toMatch(new RegExp(`\\b${name}\\b[^\\n]*By file path`));
+	}
+	for (const s of await readdir(new URL('../../skills/', import.meta.url)))
+		if (s !== 'devbook-setup') expect(skill).toContain(s);
 });
 
 test('license page shows the full LICENSE text', async ({ page }) => {

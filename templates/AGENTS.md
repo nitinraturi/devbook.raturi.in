@@ -11,19 +11,21 @@
 - Rules: <project-specific rules; they override Devbook where they say so>
 
 ## Devbook
-Read and follow every file below before your first change in a session. Paths are relative to the repository root.
+Follow these in every task:
 
 @.devbook/instructions/core.md
 @.devbook/instructions/security.md
 @.devbook/instructions/testing.md
-<!-- Keep only the lines that apply, and delete the rest: -->
-@.devbook/instructions/performance.md
-@.devbook/instructions/api-data.md
-@.devbook/instructions/database.md
-@.devbook/instructions/design.md
-@.devbook/instructions/seo.md
-@.devbook/instructions/content.md
-@.devbook/instructions/mobile.md
-@.devbook/instructions/licensing.md
-@.devbook/instructions/feature-docs.md
-@.devbook/stacks/<stack>.md
+
+Before working on the matching kind of change, read the file and follow it. Paths are relative to the repository root.
+<!-- Keep only the lines that apply, and delete the rest. -->
+- `.devbook/instructions/performance.md`: pages, endpoints, queries, caching or deploys
+- `.devbook/instructions/api-data.md`: API endpoints, webhooks or the OpenAPI document
+- `.devbook/instructions/database.md`: tables, models, migrations or queries
+- `.devbook/instructions/design.md`: UI, styles, components or forms
+- `.devbook/instructions/seo.md`: pages, URLs, metadata, sitemaps or structured data
+- `.devbook/instructions/content.md`: copy, docs, blog posts or UI text
+- `.devbook/instructions/mobile.md`: iOS or Android app code
+- `.devbook/instructions/licensing.md`: adding dependencies, assets or copied code, or licence files
+- `.devbook/instructions/feature-docs.md`: building or changing a feature with business rules
+- `.devbook/stacks/<stack>.md`: work that touches <stack>
