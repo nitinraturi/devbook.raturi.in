@@ -1,0 +1,27 @@
+---
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title} · Lumen</title>
+		<meta name="description" content={description} />
+	</head>
+	<body>
+		<header>
+			<a href="/">Lumen</a>
+			<nav>
+				<a href="/blog/">Blog</a> <a href="/contact/">Contact</a>
+			</nav>
+		</header>
+		<main>
+			<slot />
+		</main>
+		<footer>
+			<p>© Lumen Labs</p>
+		</footer>
+	</body>
+</html>

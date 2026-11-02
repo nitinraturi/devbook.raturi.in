@@ -1,0 +1,28 @@
+{
+  "description": "A small Django JSON API for notes, with plain Django views and Django's test runner.",
+  "setup": ["python3 -m venv .venv", ".venv/bin/pip install --quiet --disable-pip-version-check -r requirements.txt"],
+  "test": ".venv/bin/python manage.py test",
+  "testPattern": "manage\\.py test",
+  "devbook": [
+    "instructions/core.md",
+    "instructions/security.md",
+    "instructions/testing.md",
+    "instructions/performance.md",
+    "instructions/api-data.md",
+    "instructions/database.md"
+  ],
+  "stacks": ["stacks/django.md"],
+  "allowedTools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "Bash(.venv/bin/python manage.py *)",
+    "Bash(.venv/bin/python -m *)",
+    "Bash(python manage.py *)",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)"
+  ]
+}
