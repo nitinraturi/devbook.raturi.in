@@ -41,7 +41,10 @@ headers = headers
 	.replaceAll('__SCRIPT_HASHES__', [...scripts].sort().join(' '))
 	.replaceAll('__GA_SCRIPT__', ga('https://www.googletagmanager.com'))
 	.replaceAll('__GA_IMG__', ga('https://www.googletagmanager.com https://*.google-analytics.com'))
-	.replaceAll('__GA_CONNECT__', ga('https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com'))
+	.replaceAll(
+		'__GA_CONNECT__',
+		ga('https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com'),
+	)
 	.replace(/ +;/g, ';')
 	.replace(/  +/g, ' ');
 await writeFile(path, headers);

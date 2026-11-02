@@ -36,7 +36,10 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { property: 'og:image', content: `${SITE}/og-default.png` } },
 				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
 				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
-				{ tag: 'meta', attrs: { property: 'og:image:alt', content: 'Devbook: senior-engineer instructions for Claude and Copilot.' } },
+				{
+					tag: 'meta',
+					attrs: { property: 'og:image:alt', content: 'Devbook: senior-engineer instructions for Claude and Copilot.' },
+				},
 				{ tag: 'meta', attrs: { name: 'twitter:image', content: `${SITE}/og-default.png` } },
 			],
 			plugins: [

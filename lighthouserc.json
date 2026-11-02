@@ -10,7 +10,10 @@
         "http://127.0.0.1:4324/stacks/astro/"
       ],
       "numberOfRuns": 3,
-      "settings": { "formFactor": "mobile", "screenEmulation": { "mobile": true, "width": 412, "height": 823, "deviceScaleFactor": 1.75 } }
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": { "mobile": true, "width": 412, "height": 823, "deviceScaleFactor": 1.75 }
+      }
     },
     "assert": {
       "assertions": {

@@ -26,7 +26,10 @@ let changed = 0;
 for (const file of await htmlFiles(dist)) {
 	const html = await readFile(file, 'utf8');
 	const next = html
-		.replace(/<input type="checkbox" disabled(="")?>/g, '<input type="checkbox" disabled aria-hidden="true" tabindex="-1">')
+		.replace(
+			/<input type="checkbox" disabled(="")?>/g,
+			'<input type="checkbox" disabled aria-hidden="true" tabindex="-1">',
+		)
 		.replace(/<pre data-language="([\w-]*)">/g, '<pre data-language="$1" tabindex="0">')
 		.replace(/<table>/g, '<table tabindex="0">');
 	if (next !== html) {

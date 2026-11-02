@@ -27,10 +27,13 @@ function toMarkdown(body: string) {
 	}
 	return body
 		.replace(/^import\s.+$\n?/gm, '')
-		.replace(/<Code\s+code=\{(\w+)\}\s+lang="(\w+)"(?:\s+title="([^"]*)")?\s*\/>/g, (all, name: string, lang: string, title?: string) => {
-			const src = imports.get(name);
-			return src === undefined ? all : fence(src, lang, title);
-		})
+		.replace(
+			/<Code\s+code=\{(\w+)\}\s+lang="(\w+)"(?:\s+title="([^"]*)")?\s*\/>/g,
+			(all, name: string, lang: string, title?: string) => {
+				const src = imports.get(name);
+				return src === undefined ? all : fence(src, lang, title);
+			},
+		)
 		.trim();
 }
 

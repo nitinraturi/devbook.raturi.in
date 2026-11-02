@@ -27,7 +27,11 @@
 	border: 1px solid var(--sl-color-hairline);
 	border-radius: 1.5rem;
 	background:
-		radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--sl-color-accent-low) 75%, transparent), transparent 65%),
+		radial-gradient(
+			ellipse at 90% 0%,
+			color-mix(in srgb, var(--sl-color-accent-low) 75%, transparent),
+			transparent 65%
+		),
 		var(--sl-color-bg-nav);
 }
 [data-has-hero] .hero h1 {
