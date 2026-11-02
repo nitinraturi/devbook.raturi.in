@@ -1,6 +1,6 @@
 # ADR-0004: Accent colour and contrast
 
-**Status:** accepted · **Date:** 2026-10-22 · **Decider:** Nitin Raturi
+**Status:** superseded by ADR-0006 · **Date:** 2026-10-22 · **Decider:** Nitin Raturi
 
 ## Context
 BUILD-PROMPT §3 asks for one restrained blue that passes WCAG AA in both themes, set only through Starlight's CSS custom properties.

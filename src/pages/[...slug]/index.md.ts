@@ -2,12 +2,14 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { posix } from 'node:path';
 import { changelogDays, formatDay } from '../../lib/changelog';
+import { instructionRows, stackTitles } from '../../lib/instruction-index';
 
 // Serves each docs page's source as Markdown at <page>/index.md, used by the
 // "Copy page as Markdown" button. MDX components are turned into plain Markdown so the
 // file has the same content as the page: <Code> with a `?raw` import becomes a fenced
 // block, <Tabs> become headings, <Steps> the list inside, <Aside> a blockquote and
-// <CardGrid>/<LinkCard>/<Card> a link list, and <History> the changelog timeline. scripts/check-markdown.mjs fails the build
+// <CardGrid>/<LinkCard>/<Card> a link list, <History> the changelog timeline and
+// <InstructionIndex> the list of instruction files. scripts/check-markdown.mjs fails the build
 // if a component is left over.
 
 const raw = import.meta.glob<string>(['/templates/*.md', '/LICENSE', '/CHANGELOG.md'], {
@@ -42,7 +44,16 @@ function history(perDay: number | undefined) {
 		.join('\n');
 }
 
-function toMarkdown(body: string, filePath: string | undefined) {
+/** The <InstructionIndex> as a list, one line per instruction file plus the stack notes. */
+async function instructionIndex() {
+	const rows = (await instructionRows()).map(
+		(row) => `- [${row.title}](${row.href}) (\`${row.prefix}\`, ${row.loads.toLowerCase()}): ${row.description}`,
+	);
+	const stacks = `- [Stack notes](/stacks/astro/) (by task): short notes for one technology each: ${(await stackTitles()).join(', ')}.`;
+	return [...rows, stacks].join('\n');
+}
+
+function toMarkdown(body: string, filePath: string | undefined, index: string) {
 	const dir = posix.dirname(`/${filePath ?? ''}`);
 	const imports = new Map<string, string>();
 	for (const m of body.matchAll(/^import\s+(\w+)\s+from\s+['"]([^'"]+)\?raw['"];?\s*$/gm)) {
@@ -102,6 +113,10 @@ function toMarkdown(body: string, filePath: string | undefined) {
 			out.push(`- ${label}${description ? `: ${description}` : ''}`);
 			continue;
 		}
+		if (tag === '<InstructionIndex />') {
+			(aside ?? out).push(index);
+			continue;
+		}
 		const timeline = tag.match(/^<History(?:\s+perDay=\{(\d+)\})?\s*\/>$/);
 		if (timeline) {
 			(aside ?? out).push(history(timeline[1] ? Number(timeline[1]) : undefined));
@@ -120,9 +135,9 @@ function toMarkdown(body: string, filePath: string | undefined) {
 	return out.join('\n').trim();
 }
 
-export const GET: APIRoute<{ entry: CollectionEntry<'docs'> }> = ({ props }) => {
+export const GET: APIRoute<{ entry: CollectionEntry<'docs'> }> = async ({ props }) => {
 	const { title, description, sources } = props.entry.data;
 	const cited = sources?.length ? `Sources: ${sources.join('; ')}.\n\n` : '';
-	const md = `# ${title}\n\n> ${description}\n\n${cited}${toMarkdown(props.entry.body ?? '', props.entry.filePath)}\n`;
+	const md = `# ${title}\n\n> ${description}\n\n${cited}${toMarkdown(props.entry.body ?? '', props.entry.filePath, await instructionIndex())}\n`;
 	return new Response(md, { headers: { 'Content-Type': 'text/markdown; charset=utf-8' } });
 };

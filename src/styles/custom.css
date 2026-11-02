@@ -1,204 +1,182 @@
 /*
- * Devbook theme. Starlight is themed only through its CSS custom properties.
- * Accent: one restrained blue. Contrast ratios are checked by
- * scripts/check-contrast.mjs and recorded in docs/adr/0004-accent-colour-contrast.md.
- * Fonts: Starlight's system stacks (no webfont).
+ * Devbook theme: a printed engineering standard. Warm paper and graphite neutrals, thin ruled
+ * lines, one vermilion marker colour, the system sans and IBM Plex Mono. Direction and tokens:
+ * docs/design-system.md (ADR-0006). Contrast is checked by scripts/check-contrast.mjs.
+ * Starlight's styles sit in cascade layers, so these unlayered rules override them.
  */
 
-/* Dark theme (Starlight default). */
+/* Tokens: dark theme (Starlight's default). */
 :root {
-	--sl-color-accent-low: #0c2a5c;
-	--sl-color-accent: #4d8dff;
-	--sl-color-accent-high: #bcd4ff;
+	--dvb-surface: oklch(0.2 0.006 60);
+	--dvb-surface-raised: oklch(0.24 0.008 60);
+	--dvb-surface-sunken: oklch(0.175 0.006 60);
+	--dvb-ink-strong: oklch(0.96 0.006 60);
+	--dvb-ink: oklch(0.88 0.008 60);
+	--dvb-ink-muted: oklch(0.74 0.01 60);
+	--dvb-ink-faint: oklch(0.52 0.01 60);
+	--dvb-rule: oklch(0.33 0.008 60);
+	--dvb-accent: oklch(0.72 0.15 42);
+	--dvb-accent-text: oklch(0.8 0.11 48);
+	--dvb-accent-wash: oklch(0.3 0.06 40);
+
+	--dvb-shadow: 0 0.5rem 1.5rem oklch(0.1 0.01 60 / 0.5);
 }
 
-/* Light theme. */
+/* Tokens: light theme. */
 :root[data-theme='light'] {
-	--sl-color-accent-low: #dbe7fe;
-	--sl-color-accent: #1d4ed8;
-	--sl-color-accent-high: #1e3a8a;
+	--dvb-surface: oklch(0.985 0.004 60);
+	--dvb-surface-raised: oklch(0.96 0.006 60);
+	--dvb-surface-sunken: oklch(0.94 0.007 60);
+	--dvb-ink-strong: oklch(0.2 0.01 60);
+	--dvb-ink: oklch(0.3 0.01 60);
+	--dvb-ink-muted: oklch(0.45 0.012 60);
+	--dvb-ink-faint: oklch(0.62 0.012 60);
+	--dvb-rule: oklch(0.87 0.008 60);
+	--dvb-accent: oklch(0.52 0.17 35);
+	--dvb-accent-text: oklch(0.5 0.17 35);
+	--dvb-accent-wash: oklch(0.94 0.03 40);
+
+	--dvb-shadow: 0 0.5rem 1.5rem oklch(0.3 0.02 60 / 0.12);
 }
 
-/* Home (splash) page. */
-[data-has-hero] .hero {
-	max-width: 70rem;
-	margin: clamp(1.5rem, 5vw, 3.5rem) auto 2.5rem;
-	padding: clamp(2.5rem, 7vw, 5rem) clamp(1.25rem, 5vw, 4rem);
-	border: 1px solid var(--sl-color-hairline);
-	border-radius: 1.5rem;
-	background:
-		radial-gradient(
-			ellipse at 90% 0%,
-			color-mix(in srgb, var(--sl-color-accent-low) 75%, transparent),
-			transparent 65%
-		),
-		var(--sl-color-bg-nav);
+/* Theme-independent tokens. */
+:root {
+	--dvb-space-1: 0.5rem;
+	--dvb-space-2: 1rem;
+	--dvb-space-3: 1.5rem;
+	--dvb-space-4: 2rem;
+	--dvb-space-6: 3rem;
+	--dvb-space-8: 4rem;
+	--dvb-radius-sm: 0.25rem;
+	--dvb-radius: 0.5rem;
+	--dvb-duration: 180ms;
+	--dvb-label: var(--sl-text-xs);
+
+	/* Type: system sans for text, IBM Plex Mono for labels and code; modular scale 1.2, fluid between 360 px and 1440 px. */
+	--sl-font-mono: 'IBM Plex Mono';
+	--sl-text-body: 1.0625rem;
+	--sl-line-height: 1.6;
+	--sl-line-height-headings: 1.15;
+	--sl-text-h1: clamp(2rem, 1.75rem + 1.1vw, 2.6rem);
+	--sl-text-h2: clamp(1.6rem, 1.45rem + 0.7vw, 2.07rem);
+	--sl-text-h3: clamp(1.35rem, 1.27rem + 0.35vw, 1.73rem);
+	--sl-text-h4: 1.44rem;
+	--sl-text-h5: 1.2rem;
 }
-[data-has-hero] .hero h1 {
-	letter-spacing: -0.02em;
-	font-size: clamp(2.75rem, 7vw, 5rem);
-	line-height: 1.05;
+
+/* Map Starlight's colour tokens to the roles above, in both themes. */
+:root,
+:root[data-theme='light'] {
+	--sl-color-white: var(--dvb-ink-strong);
+	--sl-color-gray-1: var(--dvb-ink-strong);
+	--sl-color-gray-2: var(--dvb-ink);
+	--sl-color-gray-3: var(--dvb-ink-muted);
+	--sl-color-gray-4: var(--dvb-ink-faint);
+	--sl-color-gray-5: var(--dvb-rule);
+	--sl-color-gray-6: var(--dvb-surface-raised);
+	--sl-color-gray-7: var(--dvb-surface-raised);
+	--sl-color-black: var(--dvb-surface);
+	--sl-color-accent-low: var(--dvb-accent-wash);
+	--sl-color-accent: var(--dvb-accent);
+	--sl-color-accent-high: var(--dvb-accent-text);
+	--sl-color-text: var(--dvb-ink);
+	--sl-color-text-accent: var(--dvb-accent-text);
+	--sl-color-bg: var(--dvb-surface);
+	--sl-color-bg-nav: var(--dvb-surface);
+	--sl-color-bg-sidebar: var(--dvb-surface);
+	--sl-color-bg-inline-code: var(--dvb-surface-raised);
+	--sl-color-hairline: var(--dvb-rule);
+	--sl-color-hairline-light: var(--dvb-rule);
+	--sl-color-hairline-shade: var(--dvb-rule);
+	accent-color: var(--dvb-accent);
 }
-[data-has-hero] .hero,
-[data-has-hero] .sl-markdown-content {
-	max-width: 70rem;
-	margin-inline: auto;
+
+/* Base type. */
+.sl-markdown-content :is(h1, h2, h3, h4) {
+	letter-spacing: -0.015em;
+	text-wrap: balance;
 }
-[data-has-hero] .sl-markdown-content {
-	padding-inline: clamp(1rem, 3vw, 2rem);
+.sl-markdown-content p,
+.sl-markdown-content li {
+	text-wrap: pretty;
 }
-.dvb-home-intro {
-	max-width: 52rem;
-	margin: 0 auto clamp(3rem, 7vw, 5rem);
-	text-align: center;
-}
-.dvb-home-intro > p:last-child {
-	margin: 0;
-	font-size: clamp(1.125rem, 2vw, 1.35rem);
-	line-height: 1.7;
-	color: var(--sl-color-gray-2);
-}
-.dvb-home-eyebrow {
-	margin: 0 0 0.5rem;
-	color: var(--sl-color-text-accent);
-	font-size: var(--sl-text-xs);
-	font-weight: 700;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-}
-.dvb-home-section-heading {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: end;
-	justify-content: space-between;
-	gap: 1rem;
-	margin-bottom: 1.5rem;
-}
-.dvb-home-section-heading h2 {
-	margin: 0;
-	font-size: clamp(1.6rem, 3vw, 2.1rem);
-	letter-spacing: -0.025em;
-}
-.dvb-home-text-link {
-	font-size: var(--sl-text-sm);
-	font-weight: 650;
-}
-.dvb-quick-start {
-	margin: 0 auto clamp(3rem, 7vw, 5rem);
-	padding: clamp(1.25rem, 4vw, 2.5rem);
-	border: 1px solid var(--sl-color-hairline);
-	border-radius: 1.25rem;
-	background:
-		linear-gradient(135deg, color-mix(in srgb, var(--sl-color-accent-low) 65%, transparent), transparent 55%),
-		var(--sl-color-bg-nav);
-}
-.dvb-quick-start-intro {
-	margin: 0 0 1rem;
-	color: var(--sl-color-gray-2);
-	line-height: 1.7;
-}
-.dvb-quick-start pre {
-	max-height: 30rem;
-	margin: 0;
-	border: 1px solid var(--sl-color-hairline);
-	border-radius: 0.875rem;
-}
-.dvb-quick-start-notes {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-	margin-top: 1rem;
-}
-.dvb-quick-start-notes p {
-	margin: 0;
-	padding: 1rem;
-	border: 1px solid var(--sl-color-hairline);
-	border-radius: 0.75rem;
-	color: var(--sl-color-gray-2);
-	font-size: var(--sl-text-sm);
-	line-height: 1.65;
-}
-.dvb-quick-start-notes strong {
-	color: var(--sl-color-text);
-}
-.dvb-quick-start-notes a {
+.sl-markdown-content :is(strong, b) {
 	font-weight: 600;
 }
-.dvb-home-reading-path {
-	margin: 1.25rem 0 0;
-	color: var(--sl-color-gray-2);
-	font-size: var(--sl-text-sm);
-	line-height: 1.7;
+.sl-markdown-content a {
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
 }
-.dvb-home-reading-path strong {
-	color: var(--sl-color-text);
+.sl-markdown-content a:hover {
+	text-decoration-thickness: 2px;
 }
-.dvb-home-layer-grid h3 {
-	margin: 1rem 0 0.5rem;
-	font-size: 1.1rem;
+:focus-visible {
+	outline: 2px solid var(--dvb-accent);
+	outline-offset: 2px;
 }
-.dvb-home-layer-grid p {
+
+/* Header and sidebar: one surface, separated by Starlight's ruled lines. */
+.site-title {
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	color: var(--dvb-ink-strong);
+}
+nav.sidebar .large {
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	font-weight: 400;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--dvb-ink-muted);
+}
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+	background: transparent;
+	color: var(--dvb-accent-text);
+	font-weight: 600;
+	box-shadow: inset 2px 0 0 var(--dvb-accent);
+}
+
+/* Signature element: rule IDs as margin clause numbers (added by scripts/postbuild-html.mjs). */
+.sl-markdown-content ul:has(> li.dvb-rule) {
+	padding-inline-start: 0;
+	border-top: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content li.dvb-rule {
+	position: relative;
 	margin: 0;
-	color: var(--sl-color-gray-2);
-	font-size: var(--sl-text-sm);
-	line-height: 1.65;
+	padding-block: 0.7rem;
+	list-style: none;
+	border-bottom: 1px solid var(--dvb-rule);
 }
-.dvb-home-layers {
-	margin-bottom: clamp(3rem, 7vw, 5rem);
+.dvb-rule-id {
+	display: block;
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	letter-spacing: 0.02em;
+	color: var(--dvb-accent-text);
 }
-.dvb-home-layer-grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-}
-.dvb-home-layer-grid article {
-	padding: 1.25rem;
-	border-top: 2px solid var(--sl-color-accent);
-	border-radius: 0.25rem 0.25rem 0.875rem 0.875rem;
-	background: var(--sl-color-bg-nav);
-}
-.dvb-home-layer-grid h3 {
-	margin-top: 0;
-}
-.dvb-home-modules {
-	margin-bottom: 2.5rem;
-}
-.dvb-home-rule-note {
-	max-width: 52rem;
-	margin: 2rem auto 0;
-	padding: 1rem 1.25rem;
-	border-left: 3px solid var(--sl-color-accent);
-	background: var(--sl-color-bg-nav);
-	color: var(--sl-color-gray-2);
-	font-size: var(--sl-text-sm);
-	line-height: 1.7;
-}
-@media (max-width: 50rem) {
-	.dvb-home-layer-grid,
-	.dvb-quick-start-notes {
-		grid-template-columns: 1fr;
+@media (min-width: 50rem) {
+	.sl-markdown-content li.dvb-rule {
+		padding-inline-start: 6rem;
 	}
-	.dvb-home-section-heading {
-		align-items: start;
-	}
-}
-@media (max-width: 35rem) {
-	[data-has-hero] .hero {
-		margin-block: 1rem 2rem;
-		border-radius: 1rem;
+	.dvb-rule-id {
+		position: absolute;
+		inset-inline-start: 0;
+		top: 0.95rem;
 	}
 }
 
-/* Last-verified line under the page title. */
+/* Page title extras: verified date, sources and the Markdown actions. */
 .dvb-verified {
-	margin-top: 0.5rem;
+	margin-top: var(--dvb-space-1);
 	font-size: var(--sl-text-sm);
-	color: var(--sl-color-gray-3);
+	color: var(--dvb-ink-muted);
 }
-
-/* Small page actions row (copy as Markdown). */
 .dvb-actions {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 0.75rem;
 	margin-top: 0.75rem;
@@ -211,55 +189,334 @@
 	cursor: pointer;
 }
 .dvb-actions button {
-	padding: 0.25rem 0.625rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 0.375rem;
-	background: transparent;
-	color: var(--sl-color-gray-2);
+	min-height: 2rem;
+	padding: 0.25rem 0.75rem;
+	border: 1px solid var(--dvb-rule);
+	border-radius: var(--dvb-radius-sm);
+	background: var(--dvb-surface-raised);
+	color: var(--dvb-ink);
+	transition: border-color var(--dvb-duration) ease-out;
+}
+.dvb-actions a {
+	color: var(--dvb-accent-text);
 }
 .dvb-actions button:hover {
-	border-color: var(--sl-color-text-accent);
-	color: var(--sl-color-white);
+	border-color: var(--dvb-accent);
+	color: var(--dvb-ink-strong);
+}
+.dvb-actions button:active {
+	background: var(--dvb-surface-sunken);
+}
+
+/* Home (splash) page. */
+[data-has-hero] .hero,
+[data-has-hero] .sl-markdown-content {
+	max-width: 68rem;
+	margin-inline: auto;
+}
+[data-has-hero] .hero {
+	padding-inline: clamp(var(--dvb-space-2), 3vw, var(--dvb-space-4));
+	padding-block: clamp(var(--dvb-space-4), 6vw, var(--dvb-space-8)) var(--dvb-space-4);
+	border-bottom: 1px solid var(--dvb-rule);
+}
+[data-has-hero] .hero .stack,
+[data-has-hero] .hero .copy {
+	align-items: start;
+	text-align: start;
+}
+[data-has-hero] .hero .copy > * {
+	max-width: 44rem;
+}
+[data-has-hero] .hero h1 {
+	font-size: clamp(2.6rem, 1.9rem + 3.2vw, 4.3rem);
+	letter-spacing: -0.03em;
+	line-height: 1.02;
+}
+[data-has-hero] .hero .tagline {
+	font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3rem);
+	line-height: 1.55;
+	color: var(--dvb-ink);
+}
+[data-has-hero] .hero .actions {
+	justify-content: start;
+}
+.sl-link-button {
+	border-radius: var(--dvb-radius-sm);
+	font-weight: 600;
+}
+.sl-link-button.primary {
+	border-color: var(--dvb-accent);
+	background: var(--dvb-accent);
+	color: var(--dvb-surface);
+}
+.sl-link-button.primary:hover {
+	border-color: var(--dvb-ink-strong);
+	background: var(--dvb-ink-strong);
+	color: var(--dvb-surface);
+}
+[data-has-hero] .sl-markdown-content {
+	padding-inline: clamp(var(--dvb-space-2), 3vw, var(--dvb-space-4));
+}
+[data-has-hero] .sl-markdown-content > section {
+	margin-block: clamp(var(--dvb-space-6), 7vw, var(--dvb-space-8));
+}
+.dvb-home-eyebrow {
+	margin: 0 0 var(--dvb-space-1);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--dvb-accent-text);
+}
+.dvb-home-section-heading {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	justify-content: space-between;
+	gap: var(--dvb-space-2);
+	margin-bottom: var(--dvb-space-3);
+}
+.dvb-home-section-heading > * {
+	min-width: 0;
+}
+.dvb-home-section-heading h2 {
+	margin: 0;
+}
+.dvb-home-text-link {
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+}
+
+/* Setup prompt: a sunken band rather than a card. */
+.sl-markdown-content .dvb-quick-start {
+	margin-top: var(--dvb-space-4);
+	padding: clamp(var(--dvb-space-2), 4vw, var(--dvb-space-4));
+	border-radius: var(--dvb-radius);
+	background: var(--dvb-surface-sunken);
+}
+.dvb-quick-start-intro {
+	max-width: 70ch;
+	color: var(--dvb-ink);
+}
+.dvb-quick-start pre {
+	max-height: 30rem;
+}
+.sl-markdown-content .dvb-quick-start-notes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+	gap: var(--dvb-space-2) var(--dvb-space-3);
+	margin: var(--dvb-space-3) 0 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: step;
+}
+.sl-markdown-content .dvb-quick-start-notes li {
+	margin: 0;
+	padding-top: var(--dvb-space-1);
+	border-top: 1px solid var(--dvb-rule);
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+	counter-increment: step;
+}
+.dvb-quick-start-notes li::before {
+	content: counter(step, decimal-leading-zero);
+	display: block;
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	color: var(--dvb-accent-text);
+}
+.dvb-quick-start-notes strong {
+	color: var(--dvb-ink-strong);
+}
+
+/* "What the prompt creates": three short notes under the template, separated by rules. */
+.sl-markdown-content .dvb-home-layer-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+	gap: var(--dvb-space-3);
+	margin-top: var(--dvb-space-3);
+}
+.sl-markdown-content .dvb-home-layer-grid article {
+	margin: 0;
+	padding-top: var(--dvb-space-1);
+	border-top: 2px solid var(--dvb-ink-strong);
+}
+.sl-markdown-content .dvb-home-layer-grid h3 {
+	margin: 0 0 var(--dvb-space-1);
+	font-size: var(--sl-text-h5);
+}
+.sl-markdown-content .dvb-home-layer-grid p {
+	margin: 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+
+/* Instruction index: a ruled table of contents. */
+.sl-markdown-content .dvb-index {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--dvb-ink-strong);
+}
+.sl-markdown-content .dvb-index > li {
+	display: grid;
+	grid-template-columns: 4.5rem minmax(0, 1fr);
+	gap: 0.15rem var(--dvb-space-2);
+	margin: 0;
+	padding-block: 0.85rem;
+	border-bottom: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content .dvb-index > li > * {
+	margin: 0;
+}
+.dvb-index-prefix,
+.dvb-index-loads {
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	letter-spacing: 0.04em;
+}
+.dvb-index-prefix {
+	padding-top: 0.3rem;
+	color: var(--dvb-accent-text);
+}
+.dvb-index-loads {
+	grid-column: 2;
+	color: var(--dvb-ink-muted);
+}
+.sl-markdown-content .dvb-index a {
+	color: var(--dvb-ink-strong);
+	font-size: var(--sl-text-lg);
+	font-weight: 600;
+	text-decoration: none;
+}
+.sl-markdown-content .dvb-index a:hover {
+	color: var(--dvb-accent-text);
+	text-decoration: underline;
+}
+.sl-markdown-content .dvb-index p {
+	margin: 0.15rem 0 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+@media (min-width: 50rem) {
+	.sl-markdown-content .dvb-index > li {
+		grid-template-columns: 4.5rem minmax(0, 1fr) 8rem;
+	}
+	.dvb-index-loads {
+		grid-column: auto;
+		padding-top: 0.3rem;
+		text-align: end;
+	}
+}
+
+/* History timeline (homepage and /about/). */
+.sl-markdown-content .dvb-timeline {
+	display: grid;
+	gap: var(--dvb-space-3);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sl-markdown-content .dvb-timeline > li {
+	display: grid;
+	gap: 0.25rem;
+	margin: 0;
+	padding-top: var(--dvb-space-1);
+	border-top: 1px solid var(--dvb-rule);
+}
+.dvb-timeline time {
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	letter-spacing: 0.04em;
+	color: var(--dvb-accent-text);
+}
+.sl-markdown-content .dvb-timeline ul {
+	margin: 0;
+	padding-inline-start: 1.1rem;
+	color: var(--dvb-ink);
+}
+.sl-markdown-content .dvb-timeline ul li {
+	margin: 0.15rem 0 0;
+}
+.dvb-timeline-more {
+	list-style: none;
+	color: var(--dvb-ink-muted);
+}
+@media (min-width: 50rem) {
+	.sl-markdown-content .dvb-timeline > li {
+		grid-template-columns: 11rem minmax(0, 1fr);
+		gap: var(--dvb-space-2);
+	}
+}
+
+/* Content tabs: a segmented control, so the choice is obvious. */
+.sl-markdown-content starlight-tabs [role='tablist'] {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	padding: 0.25rem;
+	border: 1px solid var(--dvb-rule);
+	border-radius: var(--dvb-radius);
+	background: var(--dvb-surface-raised);
+}
+.sl-markdown-content starlight-tabs [role='tablist'] .tab {
+	margin: 0;
+}
+.sl-markdown-content starlight-tabs [role='tab'] {
+	padding: 0.45rem 0.9rem;
+	border: 0;
+	border-radius: var(--dvb-radius-sm);
+	color: var(--dvb-ink-muted);
+	font-weight: 600;
+	box-shadow: none;
+}
+.sl-markdown-content starlight-tabs [role='tab']:hover {
+	color: var(--dvb-ink-strong);
+}
+.sl-markdown-content starlight-tabs [role='tab'][aria-selected='true'] {
+	background: var(--dvb-surface);
+	color: var(--dvb-ink-strong);
+	box-shadow: inset 0 -2px 0 var(--dvb-accent);
 }
 
 /* Site footer line (author, privacy, consent). */
 .dvb-site-footer {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem 1.25rem;
+	gap: var(--dvb-space-1) 1.25rem;
 	justify-content: center;
-	margin-top: 2rem;
-	padding-top: 1rem;
-	border-top: 1px solid var(--sl-color-hairline);
+	margin-top: var(--dvb-space-4);
+	padding-top: var(--dvb-space-2);
+	border-top: 1px solid var(--dvb-rule);
 	font-size: var(--sl-text-xs);
-	color: var(--sl-color-gray-3);
+	color: var(--dvb-ink-muted);
 }
-.dvb-site-footer a {
-	color: var(--sl-color-gray-2);
+.dvb-site-footer a,
+.dvb-site-footer button {
+	color: var(--dvb-ink);
 }
 .dvb-site-footer button {
 	padding: 0;
 	border: 0;
 	background: none;
-	color: var(--sl-color-gray-2);
 	text-decoration: underline;
 }
 
 /* Consent banner (only rendered when analytics is configured). */
 .dvb-consent {
 	position: fixed;
-	inset-inline: 1rem;
-	bottom: 1rem;
+	inset-inline: var(--dvb-space-2);
+	bottom: var(--dvb-space-2);
 	z-index: 100;
 	max-width: 36rem;
 	margin-inline: auto;
-	padding: 1rem 1.25rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 0.5rem;
-	background: var(--sl-color-bg-nav);
-	color: var(--sl-color-text);
+	padding: var(--dvb-space-2) 1.25rem;
+	border: 1px solid var(--dvb-rule);
+	border-radius: var(--dvb-radius);
+	background: var(--dvb-surface-raised);
+	color: var(--dvb-ink);
 	font-size: var(--sl-text-sm);
-	box-shadow: var(--sl-shadow-lg);
+	box-shadow: var(--dvb-shadow);
 }
 .dvb-consent p {
 	margin: 0 0 0.75rem;
@@ -270,67 +527,20 @@
 }
 .dvb-consent .dvb-consent-actions button {
 	flex: 1;
-	padding: 0.5rem 1rem;
-	border: 1px solid var(--sl-color-text-accent);
-	border-radius: 0.375rem;
+	min-height: 2.75rem;
+	padding: var(--dvb-space-1) var(--dvb-space-2);
+	border: 1px solid var(--dvb-accent);
+	border-radius: var(--dvb-radius-sm);
 	background: transparent;
-	color: var(--sl-color-white);
+	color: var(--dvb-ink-strong);
 	font-weight: 600;
 }
-
-/* Content tabs: make the choice obvious with a segmented control instead of plain underlined labels. */
-.sl-markdown-content starlight-tabs [role='tablist'] {
-	display: inline-flex;
-	flex-wrap: wrap;
-	gap: 0.25rem;
-	padding: 0.25rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 0.75rem;
-	background: var(--sl-color-gray-6);
-}
-.sl-markdown-content starlight-tabs [role='tablist'] .tab {
-	margin: 0;
-}
-.sl-markdown-content starlight-tabs [role='tab'] {
-	padding: 0.45rem 0.9rem;
-	border: 0;
-	border-radius: 0.5rem;
-	color: var(--sl-color-gray-2);
-	font-weight: 600;
-	box-shadow: none;
-}
-.sl-markdown-content starlight-tabs [role='tab']:hover {
-	color: var(--sl-color-white);
-}
-.sl-markdown-content starlight-tabs [role='tab'][aria-selected='true'] {
-	background: var(--sl-color-accent-low);
-	color: var(--sl-color-accent-high);
-	box-shadow: inset 0 0 0 1px var(--sl-color-accent);
+.dvb-consent .dvb-consent-actions button:hover {
+	background: var(--dvb-accent-wash);
 }
 
-/* History timeline (homepage and /about/). */
-.dvb-timeline {
-	display: grid;
-	gap: 1.25rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-.dvb-timeline > li {
-	margin: 0;
-	padding-inline-start: 1.25rem;
-	border-inline-start: 2px solid var(--sl-color-accent);
-}
-.dvb-timeline time {
-	display: block;
-	font-weight: 700;
-}
-.dvb-timeline ul {
-	margin: 0.25rem 0 0;
-	padding-inline-start: 1.1rem;
-	color: var(--sl-color-gray-2);
-}
-.dvb-timeline-more {
-	list-style: none;
-	font-style: italic;
+@media (prefers-reduced-motion: reduce) {
+	.dvb-actions button {
+		transition: none;
+	}
 }

@@ -2,6 +2,8 @@
 import Default from '@astrojs/starlight/components/Head.astro';
 import { buildGraph } from '../lib/schema';
 import { GA_ID, IS_PREVIEW } from '../lib/site';
+// The one webfont, preloaded so labels and code don't wait for the stylesheet (PERF-07).
+import plexMono from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 
 const route = Astro.locals.starlightRoute;
 const isHome = route.id === '';
@@ -15,6 +17,7 @@ const CONSENT_REGIONS = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE',
 ---
 
 <Default />
+<link rel="preload" href={plexMono} as="font" type="font/woff2" crossorigin />
 {IS_PREVIEW && <meta name="robots" content="noindex, nofollow" />}
 <script type="application/ld+json" set:html={jsonLd} />
 {GA_ID && (

@@ -28,7 +28,8 @@ export default defineConfig({
 			credits: false,
 			// The 404 page is src/pages/404.astro.
 			disable404Route: true,
-			customCss: ['./src/styles/custom.css'],
+			// IBM Plex Mono, self-hosted, Latin only (docs/design-system.md, ADR-0006).
+			customCss: ['@fontsource/ibm-plex-mono/latin-400.css', './src/styles/custom.css'],
 			components: {
 				Head: './src/components/Head.astro',
 				PageTitle: './src/components/PageTitle.astro',
