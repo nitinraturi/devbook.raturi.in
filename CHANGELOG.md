@@ -2,6 +2,22 @@
 
 Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with every commit to `main`. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-02: Adapters for Cursor, Codex and Copilot code review
+
+### Added
+- **`link.mjs --assistants`** writes files for more assistants from the same sources, as `devbook.manifest.json` declares per file:
+  - `cursor`: generated `.cursor/rules/devbook-*.mdc` rules. Core, security and testing always apply, path-scoped files attach by glob, and the rest are agent-requested by description. Cursor reads only `.mdc` there and doesn't inline `@` references.
+  - `codex`: skill links in `.agents/skills/`, where Codex looks for repository skills.
+  - `copilot-review`: Copilot's instruction files as copies, which code review on github.com can read, plus the always-loaded rules as an instruction for every file.
+  - The default stays `claude,copilot`. Skills stay in `.claude/skills/`, which Claude Code, VS Code Copilot and Cursor all read.
+- `verify.mjs --assistants` fails when a generated file differs from its source; `link.mjs` refreshes them on every run.
+- An `Assistants` line in the `AGENTS.md` template's Project section records the list, so upgrades pass it again.
+
+### Changed
+- The `AGENTS.md` template asks assistants that don't load `@` lines (Codex, Cursor, Copilot outside the CLI) to read the three mandatory files before their first change.
+
+**Upgrade:** update `.devbook/`, add the `Assistants` line and the new first sentence of the Devbook section from `.devbook/templates/AGENTS.md`, then run `node .devbook/skills/devbook-setup/scripts/link.mjs --assistants <yours>` and `verify.mjs` with the same list. For Cursor, commit the generated `.cursor/rules/devbook-*.mdc` files.
+
 ## 2026-11-02: Skills that run scripts
 
 ### Added

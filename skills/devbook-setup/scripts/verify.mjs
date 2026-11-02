@@ -3,7 +3,7 @@
 // every link link.mjs would make exists and resolves, generated copies match their sources, and no other Devbook
 // link is broken. Exit 0 when all is well, 1 with the list of problems.
 //
-//   node .devbook/skills/devbook-setup/scripts/verify.mjs [--root <dir>] [--assistants claude,copilot]
+//   node .devbook/skills/devbook-setup/scripts/verify.mjs [--root <dir>] [--assistants claude,copilot,cursor,codex,copilot-review]
 import { fileURLToPath } from 'node:url';
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';

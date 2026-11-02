@@ -43,6 +43,8 @@ for (const f of files.filter((f) => f.kind === 'instruction')) {
 			.filter(Boolean);
 		if (!fm.paths?.length) error(`${f.path}: path-tier instruction needs paths: globs`);
 		else if (fm.paths.join(',') !== applyTo.join(',')) error(`${f.path}: paths and applyTo must list the same globs`);
+		else if (fm.paths.join(',') !== (f.globs ?? []).join(','))
+			error(`${f.path}: globs in devbook.manifest.json must equal its paths: frontmatter`);
 	} else if (fm.paths || fm.applyTo) error(`${f.path}: only path-tier instructions carry paths/applyTo`);
 }
 
@@ -57,6 +59,10 @@ for (const f of files.filter((f) => f.kind === 'skill')) {
 	if (text.split('\n').length >= 500) error(`${f.path}: body must stay under 500 lines`);
 	if (f.linked !== false) skillDescriptionChars += fm.description?.length ?? 0;
 }
+
+// Every file's adapters are defined, so link.mjs never meets one it can't write.
+for (const f of files)
+	for (const id of f.adapters ?? []) if (!manifest.adapters?.[id]) error(`${f.path}: unknown adapter "${id}"`);
 
 const size = new Map();
 for (const f of files) {
@@ -79,6 +85,10 @@ const always = files.filter((f) => f.tier === 'always').map((f) => f.path);
 const sum = (paths) => paths.reduce((n, p) => n + (size.get(p) ?? 0), 0);
 budget('always', sum(always), budgets.alwaysBytes);
 budget('website', sum([...always, ...budgets.websiteSet]), budgets.websiteBytes);
+// Codex joins AGENTS.md files up to project_doc_max_bytes (32 KiB by default). Keep the always tier, the template's
+// Devbook section and a typical Project section under half of it, so projects keep wide margin.
+const template = await readFile(new URL('templates/AGENTS.md', root), 'utf8');
+budget('codex chain (always + AGENTS.md, half of 32 KiB)', sum(always) + Buffer.byteLength(template) + 2000, 16384);
 // Every linked skill's description loads in every chat, so their total is budgeted like the always tier.
 budget('skill descriptions', skillDescriptionChars, budgets.skillDescriptionChars);
 

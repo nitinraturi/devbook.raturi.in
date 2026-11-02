@@ -42,9 +42,11 @@ Instruction files load in three ways. Pick the ones that apply:
 
 Run the link script from the repository root. It reads the files `AGENTS.md` lists and links, from `.devbook/devbook.manifest.json`, each path-scoped instruction into `.claude/rules/` and `.github/instructions/`, and the matching skills into `.claude/skills/`. Every project gets `devbook-security-review`, `devbook-release-check` and `devbook-upgrade`; `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration` and `devbook-seo-audit` come with feature-docs, api-data, database and seo. It never links `devbook-setup`, and it copies files with a generated-file header where symlinks don't work.
 
+Ask which assistants the team uses, or infer it from the repo (`.cursor/`, `.codex/`, Copilot code review in `.github/`), and pass them as `--assistants`: `claude` and `copilot` (the default), `cursor` (generated `.cursor/rules/*.mdc`), `codex` (skills in `.agents/skills/`) and `copilot-review` (copies Copilot code review can read on github.com, plus the always-loaded rules as a Copilot instruction).
+
 ```sh
-node .devbook/skills/devbook-setup/scripts/link.mjs --dry-run   # check the plan first
-node .devbook/skills/devbook-setup/scripts/link.mjs
+node .devbook/skills/devbook-setup/scripts/link.mjs --dry-run --assistants claude,copilot   # check the plan first
+node .devbook/skills/devbook-setup/scripts/link.mjs --assistants claude,copilot
 node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs   # SEC-29
 ```
 
@@ -62,6 +64,6 @@ node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs   # SEC-29
 
 ## 6. Verify and report
 
-- Run `node .devbook/skills/devbook-setup/scripts/verify.mjs` and fix every problem it lists until it exits 0.
+- Run `node .devbook/skills/devbook-setup/scripts/verify.mjs --assistants <the same list>` and fix every problem it lists until it exits 0. Record the list in the Project section of `AGENTS.md` (`- Assistants: claude, copilot`), so upgrades pass it again.
 - Report the files you changed, the Devbook version (from `.devbook/VERSION`), the kit parts installed or declined, the instruction files and skills you chose and why, and any TODOs or questions.
 - Remind the user to commit `.devbook`, `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/`, `.github/instructions/` and any kit files, plus `.gitmodules` for a submodule; to clone with `--recurse-submodules`; and to start a new chat so the instructions load.

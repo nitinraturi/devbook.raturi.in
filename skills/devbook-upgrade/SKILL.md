@@ -25,7 +25,7 @@ Tell the user, in a few lines, what changes for them and each **Upgrade** note t
 - Submodule (a `.devbook/.git` file exists): `git -C .devbook fetch -q origin stable && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`. Fetch `main` instead when the project follows it, or when `compare.mjs` said there is no stable channel yet.
 - Copy: rerun the copy command from `.devbook/templates/setup-prompt.md`.
 - Apply each **Upgrade** note. Keep the project's own content in `AGENTS.md`, and ask before removing anything.
-- Run `node .devbook/skills/devbook-setup/scripts/link.mjs` to refresh links and generated copies, then `node .devbook/skills/devbook-setup/scripts/verify.mjs` until it exits 0.
+- Run `node .devbook/skills/devbook-setup/scripts/link.mjs --assistants <list>` to refresh links and generated files, with the list from the Assistants line in `AGENTS.md` (default `claude,copilot`), then `verify.mjs` with the same list until it exits 0.
 
 ## 4. Report
 

@@ -71,6 +71,8 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
    node .devbook/skills/devbook-setup/scripts/verify.mjs
    ```
 
+   For other assistants, add them to the list: `--assistants claude,copilot,cursor,codex`. `cursor` generates `.cursor/rules/*.mdc`, `codex` links skills into `.agents/skills/`, and `copilot-review` writes copies Copilot code review can read. Pass the same list to `verify.mjs`, and note it on the `Assistants` line in `AGENTS.md`.
+
 5. Add the secret-file patterns to `.gitignore` (SEC-29):
 
    ```sh
@@ -80,6 +82,19 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 6. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/` and `.github/instructions/`, then start a new chat.
 
 </Steps>
+
+## Which assistants load the rules
+
+A load probe asks a question only Devbook answers (CORE-02, and DES-04 after opening a `.css` file), so a pass shows the files reached the assistant. It is the `astro-load-probe` eval task.
+
+| Assistant | What setup writes | Load probe |
+|---|---|---|
+| Claude Code | `CLAUDE.md`, `.claude/rules/`, `.claude/skills/` | Modelled pass; not yet measured |
+| GitHub Copilot (VS Code, CLI, cloud agent) | `.github/copilot-instructions.md`, `.github/instructions/`, skills in `.claude/skills/` | Not yet tested |
+| Cursor | `.cursor/rules/devbook-*.mdc`, skills in `.claude/skills/` | Not yet tested |
+| Codex | `AGENTS.md`, skills in `.agents/skills/` | Not yet tested |
+
+"Modelled" means the evals worked out, from each tool's documented loading rules, that the rules are in context; see [the evals](https://github.com/nitinraturi/devbook.raturi.in/tree/main/evals). Measured results replace these as they are run.
 
 ## 3. Optional: add the enforcement kit
 

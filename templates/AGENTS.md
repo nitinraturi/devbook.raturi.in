@@ -9,9 +9,10 @@
 - Project docs: <links to design system, specs or domain rules, if any>
 - Features: <one line per feature doc, `- <feature>: <path to FEATURE.md>`, if any>
 - Rules: <project-specific rules; they override Devbook where they say so>
+- Assistants: <claude, copilot, cursor, codex, copilot-review: the ones link.mjs writes files for>
 
 ## Devbook
-Follow these in every task:
+Follow these in every task. If your assistant doesn't load `@` lines, read these three files before your first change:
 
 @.devbook/instructions/core.md
 @.devbook/instructions/security.md

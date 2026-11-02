@@ -95,6 +95,7 @@
     "stacks/cloudflare.md#workers": "not_found_handling|404-page",
     "stacks/django.md#money": "DecimalField",
     "stacks/django.md#production": "SECRET_KEY. from the environment|secure cookies",
-    "stacks/django.md#versions": "LTS release|supported release"
+    "stacks/django.md#versions": "LTS release|supported release",
+    "DES-04": "360 ?px"
   }
 }
