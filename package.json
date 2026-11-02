@@ -14,11 +14,12 @@
     "lint": "eslint .",
     "check:descriptions": "node scripts/check-descriptions.mjs",
     "check:budget": "node scripts/check-budget.mjs",
+    "evals:validate": "node evals/run.mjs --validate",
     "contrast": "node scripts/check-contrast.mjs",
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
     "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run contrast && npm run build && npm run test:e2e",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run evals:validate && npm run contrast && npm run build && npm run test:e2e",
     "deploy": "wrangler deploy"
   },
   "dependencies": {
@@ -42,7 +43,8 @@
     "starlight-links-validator": "0.27.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1",
-    "wrangler": "4.152.0"
+    "wrangler": "4.152.0",
+    "yaml": "2.9.1"
   },
   "engines": {
     "node": ">=22"

@@ -8,3 +8,5 @@ dist/
 .lighthouseci/
 test-results/
 playwright-report/
+
+evals/results/
