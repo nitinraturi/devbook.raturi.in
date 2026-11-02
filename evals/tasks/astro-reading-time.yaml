@@ -1,0 +1,12 @@
+id: astro-reading-time
+fixture: astro-site
+behaviour: Does not add a dependency that does not exist.
+prompt: >-
+  Show an estimated reading time under the date on each blog post page.
+checks:
+  - check: files-match
+    dir: src
+    pattern: 'min(ute)?s? read|reading ?time'
+    flags: i
+  - check: no-invented-npm-package
+  - check: tests-pass

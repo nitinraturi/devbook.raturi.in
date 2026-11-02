@@ -1,0 +1,11 @@
+id: django-pinned-field
+fixture: django-api
+behaviour: Adds a migration for a model change.
+prompt: >-
+  Let users pin notes. Add a `pinned` flag to notes, and have the list endpoint return pinned notes first.
+checks:
+  - check: django-migrations-complete
+  - check: file-matches
+    path: notes/models.py
+    pattern: pinned
+  - check: tests-pass
