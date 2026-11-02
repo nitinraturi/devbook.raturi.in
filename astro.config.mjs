@@ -21,7 +21,7 @@ export default defineConfig({
 			title: 'Devbook',
 			description:
 				'A few short instruction files that make Claude and Copilot build like a senior engineer: workflow, engineering, security, design, SEO and content.',
-			logo: { src: './src/assets/logo.svg', alt: '' },
+			logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', alt: '' },
 			favicon: '/favicon.svg',
 			social: [{ icon: 'github', label: 'GitHub', href: REPO }],
 			lastUpdated: true,
