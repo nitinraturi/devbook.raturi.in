@@ -1,0 +1,69 @@
+---
+// The latest committed eval result per variant, read from evals/results/*.json at build time, so the evals page
+// and the homepage claim always show the committed numbers.
+import { latestResults, pct, tokens } from '../lib/evals';
+
+interface Props {
+	/** `overall` (one row per variant) or `failures` (tasks that don't pass on the newest Devbook variant). */
+	view?: 'overall' | 'failures';
+}
+
+const { view = 'overall' } = Astro.props;
+const results = latestResults();
+const newest = results.find((r) => r.variant === 'local') ?? results.find((r) => r.variant === 'main');
+const labels: Record<string, string> = {
+	none: 'No Devbook (project section only)',
+	'ref:9504d10': 'Before the prune (October 2026)',
+	main: 'Before v1',
+	local: 'v1',
+	stable: 'Latest release',
+};
+const failures = newest
+	? Object.entries(newest.tasks)
+			.filter(([, t]) => t.passRate < 1)
+			.map(([id, t]) => ({ id, why: t.failed[0] ?? '' }))
+	: [];
+---
+
+{view === 'overall' ? (
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Devbook version</th>
+				<th scope="col">Tasks passed</th>
+				<th scope="col">Rules in context</th>
+				<th scope="col">Rules in reach</th>
+				<th scope="col">Devbook tokens per task</th>
+			</tr>
+		</thead>
+		<tbody>
+			{results.map((r) => (
+				<tr>
+					<td>
+						{labels[r.variant] ?? r.variant}
+						{r.commit && (
+							<>
+								{' '}
+								(<code>{r.commit.replace('+local', '')}</code>)
+							</>
+						)}
+					</td>
+					<td>
+						{pct(r.overall.passRate)} of {r.overall.runs}
+					</td>
+					<td>{pct(r.overall.coverageLoaded ?? 0)}</td>
+					<td>{pct(r.overall.coverageReachable ?? 0)}</td>
+					<td>{tokens(r.overall.meanInputTokens)}</td>
+				</tr>
+			))}
+		</tbody>
+	</table>
+) : (
+	<ul>
+		{failures.map((f) => (
+			<li>
+				<code>{f.id}</code>: {f.why}
+			</li>
+		))}
+	</ul>
+)}

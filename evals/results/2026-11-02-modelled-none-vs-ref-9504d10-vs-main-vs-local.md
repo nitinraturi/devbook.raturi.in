@@ -6,97 +6,119 @@ Modelled: no model was called. "Pass" means every rule the task tests is in the 
 
 | Variant | Model | Runs | Pass rate | Rules loaded | Rules reachable | Mean input tokens | Mean cost |
 |---|---|---|---|---|---|---|---|
-| none | modelled | 66 | 0% | 0% | 0% | 126 | $0.000 |
-| ref:9504d10 @ 9504d10 | modelled | 66 | 68% | 90% | 90% | 10,073 | $0.000 |
-| main @ 8b5199c | modelled | 66 | 86% | 75% | 92% | 5,177 | $0.000 |
+| none | modelled | 67 | 0% | 0% | 0% | 125 | $0.000 |
+| ref:9504d10 @ 9504d10 | modelled | 67 | 69% | 91% | 91% | 10,095 | $0.000 |
+| main @ 8b5199c | modelled | 67 | 90% | 75% | 93% | 5,183 | $0.000 |
+| local @ bb8fafa+local | modelled | 67 | 93% | 75% | 93% | 4,933 | $0.000 |
 
 ## Per task
 
 Pass rate (passes/runs) and mean input tokens. Δ is against none.
 
-| Task | none | ref:9504d10 (Δ tokens) | main (Δ tokens) |
-|---|---|---|---|
-| android-api-key | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 3,748 (+3,620) |
-| android-camera-permission | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 4,318 (+4,190) |
-| android-delete-button | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 5,274 (+5,146) |
-| android-icon-font | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 4,548 (+4,420) |
-| android-offline-notes | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 5,844 (+5,716) |
-| android-save-token | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 3,748 (+3,620) |
-| android-setup | 0% 0/1, 128 | 0% 0/1, 128 (+0) | 100% 1/1, 1,601 (+1,473) |
-| astro-add-helper | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) |
-| astro-add-license | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 4,310 (+4,192) |
-| astro-blog-announcement | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,454 (+4,336) |
-| astro-branch-security-check | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 3,894 (+3,776) |
-| astro-button-focus | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-cache-headers | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,143 (+4,025) |
-| astro-contact-form-fields | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-copied-snippet | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,310 (+4,192) |
-| astro-csp-footer-year | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-devbook-up-to-date | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 4,080 (+3,962) |
-| astro-fix-failing-test | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) |
-| astro-hero-image | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,027 (+6,909) |
-| astro-launch-google | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 5,165 (+5,047) |
-| astro-meta-description | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-missing-analytics-id | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-moved-url | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-new-post-meta | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) |
-| astro-not-found | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-reading-time | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) |
-| astro-ready-to-ship | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 3,795 (+3,677) |
-| astro-reduced-motion | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) |
-| astro-scheduled-posts | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 0% 0/1, 5,311 (+5,193) |
-| astro-secret-key | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) |
-| astro-security-headers | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) |
-| astro-self-host-font | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,323 (+7,205) |
-| astro-seo-audit | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 6,690 (+6,572) |
-| astro-setup | 0% 0/1, 118 | 0% 0/1, 118 (+0) | 100% 1/1, 1,591 (+1,473) |
-| astro-sitemap | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 5,165 (+5,047) |
-| astro-subscribe-endpoint | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,868 (+4,750) |
-| astro-testimonials | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) |
-| astro-typo-no-commit | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) |
-| astro-view-transitions | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 8,267 (+8,149) |
-| django-bump-version | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,558 (+3,424) |
-| django-cors | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) |
-| django-crud-no-feature-doc | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 6,345 (+6,211) |
-| django-delete-note | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,220 (+5,086) |
-| django-error-format | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,220 (+5,086) |
-| django-fix-failing-test | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) |
-| django-list-all | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) |
-| django-missing-attachment | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,298 (+5,164) |
-| django-note-price | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 6,693 (+6,559) |
-| django-note-str | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,298 (+5,164) |
-| django-patch-title | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,220 (+5,086) |
-| django-pinned-field | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 6,978 (+6,844) |
-| django-production-settings | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,842 (+3,708) |
-| django-rate-limit | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) |
-| django-rename-url-no-commit | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) |
-| django-search | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,575 (+5,441) |
-| django-security-review | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,504 (+5,370) |
-| django-session-cookies | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,558 (+3,424) |
-| django-setup | 0% 0/1, 134 | 0% 0/1, 134 (+0) | 100% 1/1, 1,607 (+1,473) |
-| django-sharing-feature-doc | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,888 (+5,754) |
-| django-ship-failing | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 3,842 (+3,708) |
-| django-split-body | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,031 (+4,897) |
-| django-unique-slug | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 6,693 (+6,559) |
-| django-update-devbook | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 4,127 (+3,993) |
-| django-upgrade-django | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,842 (+3,708) |
-| django-validation-not-review | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,505 (+5,371) |
-| django-weekly-query | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 6,693 (+6,559) |
+| Task | none | ref:9504d10 (Δ tokens) | main (Δ tokens) | local (Δ tokens) |
+|---|---|---|---|---|
+| android-api-key | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 3,748 (+3,620) | 100% 1/1, 3,214 (+3,086) |
+| android-camera-permission | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 4,318 (+4,190) | 100% 1/1, 3,664 (+3,536) |
+| android-delete-button | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 5,274 (+5,146) | 100% 1/1, 4,740 (+4,612) |
+| android-icon-font | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 4,548 (+4,420) | 100% 1/1, 4,020 (+3,892) |
+| android-offline-notes | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 5,844 (+5,716) | 100% 1/1, 4,740 (+4,612) |
+| android-save-token | 0% 0/1, 128 | 100% 1/1, 7,233 (+7,105) | 100% 1/1, 3,748 (+3,620) | 100% 1/1, 3,214 (+3,086) |
+| android-setup | 0% 0/1, 128 | 0% 0/1, 128 (+0) | 100% 1/1, 1,601 (+1,473) | 100% 1/1, 1,740 (+1,612) |
+| astro-add-helper | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) | 100% 1/1, 2,988 (+2,870) |
+| astro-add-license | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 4,310 (+4,192) | 100% 1/1, 3,794 (+3,676) |
+| astro-blog-announcement | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,454 (+4,336) | 100% 1/1, 3,938 (+3,820) |
+| astro-branch-security-check | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 3,894 (+3,776) | 100% 1/1, 4,053 (+3,935) |
+| astro-button-focus | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-cache-headers | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,143 (+4,025) | 100% 1/1, 4,263 (+4,145) |
+| astro-contact-form-fields | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-copied-snippet | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,310 (+4,192) | 100% 1/1, 3,794 (+3,676) |
+| astro-csp-footer-year | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-devbook-up-to-date | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 4,080 (+3,962) | 100% 1/1, 3,438 (+3,320) |
+| astro-fix-failing-test | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) | 100% 1/1, 2,988 (+2,870) |
+| astro-hero-image | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,027 (+6,909) | 100% 1/1, 7,153 (+7,035) |
+| astro-launch-google | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 5,165 (+5,047) | 100% 1/1, 5,304 (+5,186) |
+| astro-load-probe | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 5,036 (+4,918) | 100% 1/1, 4,513 (+4,395) |
+| astro-meta-description | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-missing-analytics-id | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-moved-url | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-new-post-meta | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) | 100% 1/1, 7,463 (+7,345) |
+| astro-not-found | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-reading-time | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) | 100% 1/1, 7,463 (+7,345) |
+| astro-ready-to-ship | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 3,795 (+3,677) | 100% 1/1, 3,292 (+3,174) |
+| astro-reduced-motion | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) | 100% 1/1, 7,463 (+7,345) |
+| astro-scheduled-posts | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 0% 0/1, 5,311 (+5,193) | 0% 0/1, 4,801 (+4,683) |
+| astro-secret-key | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) | 100% 1/1, 2,988 (+2,870) |
+| astro-security-headers | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 3,510 (+3,392) | 100% 1/1, 3,623 (+3,505) |
+| astro-self-host-font | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,323 (+7,205) | 100% 1/1, 7,469 (+7,351) |
+| astro-seo-audit | 0% 0/1, 118 | 0% 0/1, 11,538 (+11,420) | 100% 1/1, 6,690 (+6,572) | 100% 1/1, 6,829 (+6,711) |
+| astro-setup | 0% 0/1, 118 | 0% 0/1, 118 (+0) | 100% 1/1, 1,591 (+1,473) | 100% 1/1, 1,730 (+1,612) |
+| astro-sitemap | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 5,165 (+5,047) | 100% 1/1, 5,304 (+5,186) |
+| astro-subscribe-endpoint | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 4,868 (+4,750) | 100% 1/1, 4,352 (+4,234) |
+| astro-testimonials | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 7,338 (+7,220) | 100% 1/1, 7,463 (+7,345) |
+| astro-typo-no-commit | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 6,394 (+6,276) | 100% 1/1, 6,513 (+6,395) |
+| astro-view-transitions | 0% 0/1, 118 | 100% 1/1, 11,538 (+11,420) | 100% 1/1, 8,267 (+8,149) | 100% 1/1, 8,420 (+8,302) |
+| django-bump-version | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,558 (+3,424) | 100% 1/1, 3,049 (+2,915) |
+| django-cors | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) | 100% 1/1, 5,352 (+5,218) |
+| django-crud-no-feature-doc | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 6,345 (+6,211) | 100% 1/1, 5,849 (+5,715) |
+| django-delete-note | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 5,505 (+5,371) | 100% 1/1, 5,002 (+4,868) |
+| django-error-format | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,220 (+5,086) | 100% 1/1, 5,002 (+4,868) |
+| django-fix-failing-test | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) | 100% 1/1, 5,002 (+4,868) |
+| django-list-all | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) | 100% 1/1, 4,717 (+4,583) |
+| django-missing-attachment | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,298 (+5,164) | 100% 1/1, 4,795 (+4,661) |
+| django-note-price | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 6,693 (+6,559) | 0% 0/1, 6,196 (+6,062) |
+| django-note-str | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,298 (+5,164) | 100% 1/1, 4,795 (+4,661) |
+| django-patch-title | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 5,505 (+5,371) | 100% 1/1, 5,002 (+4,868) |
+| django-pinned-field | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 6,978 (+6,844) | 100% 1/1, 6,482 (+6,348) |
+| django-production-settings | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,842 (+3,708) | 100% 1/1, 3,989 (+3,855) |
+| django-rate-limit | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) | 100% 1/1, 4,717 (+4,583) |
+| django-rename-url-no-commit | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,220 (+5,086) | 100% 1/1, 4,717 (+4,583) |
+| django-search | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,575 (+5,441) | 100% 1/1, 5,088 (+4,954) |
+| django-security-review | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,504 (+5,370) | 100% 1/1, 5,782 (+5,648) |
+| django-session-cookies | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,558 (+3,424) | 100% 1/1, 3,684 (+3,550) |
+| django-setup | 0% 0/1, 134 | 0% 0/1, 134 (+0) | 100% 1/1, 1,607 (+1,473) | 100% 1/1, 1,746 (+1,612) |
+| django-sharing-feature-doc | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,888 (+5,754) | 0% 0/1, 5,391 (+5,257) |
+| django-ship-failing | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 3,842 (+3,708) | 100% 1/1, 3,353 (+3,219) |
+| django-split-body | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 5,031 (+4,897) | 0% 0/1, 4,528 (+4,394) |
+| django-unique-slug | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 0% 0/1, 6,693 (+6,559) | 0% 0/1, 6,196 (+6,062) |
+| django-update-devbook | 0% 0/1, 134 | 0% 0/1, 10,129 (+9,995) | 100% 1/1, 4,127 (+3,993) | 100% 1/1, 3,499 (+3,365) |
+| django-upgrade-django | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 3,842 (+3,708) | 100% 1/1, 3,049 (+2,915) |
+| django-validation-not-review | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 5,505 (+5,371) | 100% 1/1, 5,002 (+4,868) |
+| django-weekly-query | 0% 0/1, 134 | 100% 1/1, 10,129 (+9,995) | 100% 1/1, 6,693 (+6,559) | 100% 1/1, 6,197 (+6,063) |
 
 ## Worse than another variant
 
 - android-setup: ref:9504d10 0% vs main 100%
+- android-setup: ref:9504d10 0% vs local 100%
 - astro-add-license: ref:9504d10 0% vs main 100%
+- astro-add-license: ref:9504d10 0% vs local 100%
 - astro-branch-security-check: ref:9504d10 0% vs main 100%
+- astro-branch-security-check: ref:9504d10 0% vs local 100%
 - astro-devbook-up-to-date: ref:9504d10 0% vs main 100%
+- astro-devbook-up-to-date: ref:9504d10 0% vs local 100%
 - astro-launch-google: ref:9504d10 0% vs main 100%
+- astro-launch-google: ref:9504d10 0% vs local 100%
 - astro-ready-to-ship: ref:9504d10 0% vs main 100%
+- astro-ready-to-ship: ref:9504d10 0% vs local 100%
 - astro-seo-audit: ref:9504d10 0% vs main 100%
+- astro-seo-audit: ref:9504d10 0% vs local 100%
 - astro-setup: ref:9504d10 0% vs main 100%
+- astro-setup: ref:9504d10 0% vs local 100%
 - django-crud-no-feature-doc: ref:9504d10 0% vs main 100%
+- django-crud-no-feature-doc: ref:9504d10 0% vs local 100%
+- django-delete-note: ref:9504d10 0% vs main 100%
+- django-delete-note: ref:9504d10 0% vs local 100%
+- django-error-format: ref:9504d10 0% vs local 100%
+- django-patch-title: ref:9504d10 0% vs main 100%
+- django-patch-title: ref:9504d10 0% vs local 100%
+- django-security-review: ref:9504d10 0% vs local 100%
 - django-setup: ref:9504d10 0% vs main 100%
+- django-setup: ref:9504d10 0% vs local 100%
 - django-ship-failing: ref:9504d10 0% vs main 100%
+- django-ship-failing: ref:9504d10 0% vs local 100%
 - django-update-devbook: ref:9504d10 0% vs main 100%
+- django-update-devbook: ref:9504d10 0% vs local 100%
+- django-error-format: main 0% vs local 100%
+- django-security-review: main 0% vs local 100%
 
 ## Failures
 
@@ -120,6 +142,7 @@ Pass rate (passes/runs) and mean input tokens. Δ is against none.
 - astro-fix-failing-test · none: rules-visible: not in context or reachable: CORE-02, TEST-02
 - astro-hero-image · none: rules-visible: not in context or reachable: PERF-05, PERF-06, SEO-19
 - astro-launch-google · none: rules-visible: not in context or reachable: SEO-25, SEO-04; skill-trigger: expected devbook-seo-audit, model loads none
+- astro-load-probe · none: rules-visible: not in context or reachable: CORE-02, DES-04
 - astro-meta-description · none: rules-visible: not in context or reachable: SEO-11
 - astro-missing-analytics-id · none: rules-visible: not in context or reachable: CORE-04, CORE-03
 - astro-moved-url · none: rules-visible: not in context or reachable: SEO-09, SEO-08
@@ -188,11 +211,14 @@ Pass rate (passes/runs) and mean input tokens. Δ is against none.
 - django-unique-slug · ref:9504d10: skill-trigger: expected devbook-db-migration, model loads none
 - django-update-devbook · ref:9504d10: skill-trigger: expected devbook-upgrade, model loads none
 - astro-scheduled-posts · main: skill-trigger: expected devbook-feature-doc, model loads none
-- django-delete-note · main: skill-trigger: expected devbook-api-endpoint, model loads none
 - django-error-format · main: skill-trigger: expected devbook-api-endpoint, model loads none
 - django-note-price · main: skill-trigger: expected devbook-db-migration, model loads none
-- django-patch-title · main: skill-trigger: expected devbook-api-endpoint, model loads none
 - django-security-review · main: skill-trigger: expected devbook-security-review, model loads devbook-release-check
 - django-sharing-feature-doc · main: skill-trigger: expected devbook-feature-doc, model loads none
 - django-split-body · main: skill-trigger: expected devbook-db-migration, model loads none
 - django-unique-slug · main: skill-trigger: expected devbook-db-migration, model loads none
+- astro-scheduled-posts · local: skill-trigger: expected devbook-feature-doc, model loads none
+- django-note-price · local: skill-trigger: expected devbook-db-migration, model loads none
+- django-sharing-feature-doc · local: skill-trigger: expected devbook-feature-doc, model loads none
+- django-split-body · local: skill-trigger: expected devbook-db-migration, model loads none
+- django-unique-slug · local: skill-trigger: expected devbook-db-migration, model loads none

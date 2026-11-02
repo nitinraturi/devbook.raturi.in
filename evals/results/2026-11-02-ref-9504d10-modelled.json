@@ -1,6 +1,6 @@
 {
   "date": "2026-11-02",
-  "startedAt": "2026-11-02T16:25:29.750Z",
+  "startedAt": "2026-11-02T17:14:43.508Z",
   "method": "modelled",
   "model": "modelled",
   "variant": "ref:9504d10",
@@ -9,16 +9,16 @@
   "repeat": 1,
   "tokenizer": "bytes / 4",
   "overall": {
-    "runs": 66,
-    "passes": 45,
-    "passRate": 0.6818181818181818,
-    "meanInputTokens": 10072.878787878788,
+    "runs": 67,
+    "passes": 46,
+    "passRate": 0.6865671641791045,
+    "meanInputTokens": 10094.746268656716,
     "minInputTokens": 118,
     "maxInputTokens": 11538,
     "meanOutputTokens": 0,
     "meanCostUsd": 0,
-    "coverageLoaded": 0.904040404040404,
-    "coverageReachable": 0.904040404040404
+    "coverageLoaded": 0.9054726368159204,
+    "coverageReachable": 0.9054726368159204
   },
   "tasks": {
     "android-api-key": {
@@ -280,6 +280,19 @@
       "coverageLoaded": 1,
       "coverageReachable": 1,
       "failed": ["skill-trigger: expected devbook-seo-audit, model loads none"]
+    },
+    "astro-load-probe": {
+      "runs": 1,
+      "passes": 1,
+      "passRate": 1,
+      "meanInputTokens": 11538,
+      "minInputTokens": 11538,
+      "maxInputTokens": 11538,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 1,
+      "coverageReachable": 1,
+      "failed": []
     },
     "astro-meta-description": {
       "runs": 1,

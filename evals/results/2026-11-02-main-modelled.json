@@ -1,6 +1,6 @@
 {
   "date": "2026-11-02",
-  "startedAt": "2026-11-02T16:47:46.467Z",
+  "startedAt": "2026-11-02T17:14:43.508Z",
   "method": "modelled",
   "model": "modelled",
   "variant": "main",
@@ -9,16 +9,16 @@
   "repeat": 1,
   "tokenizer": "bytes / 4",
   "overall": {
-    "runs": 66,
-    "passes": 59,
-    "passRate": 0.8939393939393939,
-    "meanInputTokens": 5185.227272727273,
+    "runs": 67,
+    "passes": 60,
+    "passRate": 0.8955223880597015,
+    "meanInputTokens": 5183,
     "minInputTokens": 1591,
     "maxInputTokens": 8267,
     "meanOutputTokens": 0,
     "meanCostUsd": 0,
-    "coverageLoaded": 0.7512626262626263,
-    "coverageReachable": 0.9242424242424242
+    "coverageLoaded": 0.7549751243781095,
+    "coverageReachable": 0.9253731343283582
   },
   "tasks": {
     "android-api-key": {
@@ -275,6 +275,19 @@
       "meanInputTokens": 5165,
       "minInputTokens": 5165,
       "maxInputTokens": 5165,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 1,
+      "coverageReachable": 1,
+      "failed": []
+    },
+    "astro-load-probe": {
+      "runs": 1,
+      "passes": 1,
+      "passRate": 1,
+      "meanInputTokens": 5036,
+      "minInputTokens": 5036,
+      "maxInputTokens": 5036,
       "meanOutputTokens": 0,
       "meanCostUsd": 0,
       "coverageLoaded": 1,

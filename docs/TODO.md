@@ -1,5 +1,15 @@
 # Owner TODOs and known gaps
 
+## v1 launch (owner, in order)
+- [ ] **Release App:** create the GitHub App, set `RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY`, make the App the only bypass actor on the `main` and new `stable` rulesets (`DEPLOY.md`, Releases). Confirm a personal-account repository can add an App as a bypass actor.
+- [ ] **First release:** after merging, run the Release workflow by hand so `stable` and the first GitHub Release exist. Only then deploy the site, because the setup commands now point at `stable`.
+- [ ] **Old token:** delete the `VERSION_PUSH_TOKEN` secret and revoke the token.
+- [ ] **Claude token:** run `claude setup-token` and save it as the `CLAUDE_CODE_OAUTH_TOKEN` secret (paste into `gh secret set`, never as an argument). Leave `MEASURED_EVALS` unset to keep evals modelled; set it to `true` to spend subscription usage on measured runs.
+- [ ] **Settings:** turn on private vulnerability reporting (Security → Settings) and "Allow auto-merge" (General).
+- [ ] **Labels:** create `rule-wrong`, `rule-ignored`, `suggest-source` and `make-eval`, so the issue forms and triage apply them.
+- [ ] **First runs:** dispatch Sources (with "all"), Review (`sources`, `monthly`, `quarterly`) and Digest once, and check their summaries.
+- [ ] **Measured baseline (optional):** `node evals/run.mjs --task django-search --variant main --repeat 3 --yes` to see the real usage per run before a full baseline.
+
 ## Owner
 - [ ] **GA4:** the site uses the raturi.in property (`G-4343Y0SFZ5`). Confirm its data retention is **14 months**, the period `/privacy/` states (Admin → Data collection and modification → Data retention). Optionally add a hostname filter or comparison for `devbook.raturi.in` in reports.
 - [ ] **OG image:** review `public/og-default.png` (regenerate with `npm run og:image` after editing `scripts/generate-og.mjs`).

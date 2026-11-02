@@ -5,6 +5,9 @@ sidebar:
   order: 1
 ---
 
+import ManifestFiles from '../../../components/ManifestFiles.astro';
+import SkillIndex from '../../../components/SkillIndex.astro';
+
 Devbook is a set of short rule files for AI coding assistants. You add them to a project once. After that, every chat with the assistant starts with the same engineering, security and design rules, so you don't have to repeat them.
 
 ## The terms you need
@@ -73,21 +76,13 @@ Every rule has a stable ID (`CORE-02`, `SEC-05`), so an override can name exactl
 
 Core, security and testing load in every project. The rest are set up only when they apply, so a small script doesn't pay for design or SEO rules, and even then they load only for the matching files or tasks.
 
-| File | Set it up when | Loads |
-|---|---|---|
-| [Core](/instructions/core/), [Security](/instructions/security/), [Testing](/instructions/testing/) | Always | Every chat |
-| [Web security](/instructions/security-web/) | It serves pages or an API to browsers, or has its own sign-in | Pages, headers, settings, auth and session code |
-| [Performance](/instructions/performance/) | Any app, site or service | When a task needs it |
-| [REST APIs](/instructions/api-data/) | The project has a backend or API | API files |
-| [Databases](/instructions/database/) | It stores data in a relational database | Models, migrations, SQL |
-| [Design](/instructions/design/) | It has any user interface | Styles, components, templates |
-| [SEO](/instructions/seo/) and [Content](/instructions/content/) | It is a public website, docs site or blog | Pages and layouts; Markdown content |
-| [Mobile apps](/instructions/mobile/) | It is an iOS, Android, React Native or Flutter app | Swift, Kotlin, Dart files |
-| [Licensing](/instructions/licensing/) | It is published or distributed, or ships third-party code, fonts, images or data | When a task needs it |
-| [Feature docs](/instructions/feature-docs/) | Its features have business rules, states or permissions | When a task needs it |
-| Stack notes | You use that technology | When a task needs it |
+<ManifestFiles />
 
-Eight skills cover multi-step jobs: `devbook-security-review`, `devbook-release-check`, `devbook-upgrade`, `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration`, `devbook-seo-audit`, and `devbook-setup`, which the setup prompt uses. The globs in each path-scoped file suit common layouts; if yours differs, the "read" list still covers it.
+Skills cover multi-step jobs. Setup links the ones that fit, and `devbook-setup` is read by the setup prompt:
+
+<SkillIndex />
+
+The globs in each path-scoped file suit common layouts; if yours differs, the "read" list still covers it.
 
 ## What it costs
 

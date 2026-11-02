@@ -641,3 +641,19 @@ nav.sidebar .large {
 		transition: none;
 	}
 }
+
+/* Homepage: the eval result under the hero, and the three terms before "What loads". */
+.sl-markdown-content .dvb-home-claim {
+	max-width: 65ch;
+	margin: 0 0 var(--dvb-space-4);
+	padding-left: var(--dvb-space-2);
+	border-left: 3px solid var(--dvb-accent);
+	color: var(--dvb-ink);
+	text-wrap: pretty;
+}
+.sl-markdown-content .dvb-home-terms {
+	max-width: 65ch;
+	margin-top: var(--dvb-space-2);
+	padding-left: var(--dvb-space-3);
+	color: var(--dvb-ink-muted);
+}

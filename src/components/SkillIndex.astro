@@ -1,0 +1,27 @@
+---
+// Every skill's name, description and when setup links it, from the skills' frontmatter and the manifest.
+import { skillRows } from '../lib/instruction-index';
+
+const rows = skillRows();
+---
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Skill</th>
+			<th scope="col">What it does, and when it's used</th>
+			<th scope="col">Linked in</th>
+		</tr>
+	</thead>
+	<tbody>
+		{rows.map((row) => (
+			<tr>
+				<td>
+					<code>{row.name}</code>
+				</td>
+				<td>{row.description}</td>
+				<td>{row.linked}</td>
+			</tr>
+		))}
+	</tbody>
+</table>

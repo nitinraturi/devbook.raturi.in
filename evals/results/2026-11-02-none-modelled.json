@@ -1,6 +1,6 @@
 {
   "date": "2026-11-02",
-  "startedAt": "2026-11-02T16:25:29.750Z",
+  "startedAt": "2026-11-02T17:14:43.508Z",
   "method": "modelled",
   "model": "modelled",
   "variant": "none",
@@ -9,10 +9,10 @@
   "repeat": 1,
   "tokenizer": "bytes / 4",
   "overall": {
-    "runs": 66,
+    "runs": 67,
     "passes": 0,
     "passRate": 0,
-    "meanInputTokens": 125.60606060606061,
+    "meanInputTokens": 125.49253731343283,
     "minInputTokens": 118,
     "maxInputTokens": 134,
     "meanOutputTokens": 0,
@@ -286,6 +286,19 @@
         "rules-visible: not in context or reachable: SEO-25, SEO-04",
         "skill-trigger: expected devbook-seo-audit, model loads none"
       ]
+    },
+    "astro-load-probe": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 118,
+      "minInputTokens": 118,
+      "maxInputTokens": 118,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0,
+      "coverageReachable": 0,
+      "failed": ["rules-visible: not in context or reachable: CORE-02, DES-04"]
     },
     "astro-meta-description": {
       "runs": 1,

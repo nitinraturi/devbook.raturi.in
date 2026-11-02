@@ -1,0 +1,42 @@
+---
+// The instruction files with when to set each up and how it loads, from devbook.manifest.json and each file's
+// frontmatter, so guides never restate them.
+import { instructionRows } from '../lib/instruction-index';
+
+const rows = await instructionRows();
+const loads = (row: (typeof rows)[number]) =>
+	row.tier === 'path'
+		? `Files like ${row.globs
+				.slice(0, 4)
+				.map((g) => g.replace(/^\*\*\//, ''))
+				.join(', ')}`
+		: row.loads;
+---
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">File</th>
+			<th scope="col">Set it up when</th>
+			<th scope="col">Loads</th>
+		</tr>
+	</thead>
+	<tbody>
+		{rows.map((row) => (
+			<tr>
+				<td>
+					<a href={row.href}>{row.title}</a>
+				</td>
+				<td>{row.loadWhen}</td>
+				<td>{loads(row)}</td>
+			</tr>
+		))}
+		<tr>
+			<td>
+				<a href="/stacks/astro/">Stack notes</a>
+			</td>
+			<td>You use that technology</td>
+			<td>By task</td>
+		</tr>
+	</tbody>
+</table>

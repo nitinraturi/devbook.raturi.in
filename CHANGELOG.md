@@ -2,6 +2,18 @@
 
 Notable changes to Devbook, newest first. Devbook is developed on `main` and released to the `stable` branch; each release raises `VERSION` and has a GitHub Release. Each entry is in the first release on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-02: Devbook v1
+
+Devbook is a set of short rule files that AI coding assistants load from your project: core, security and testing in every chat (9 KB), the rest only when a matching file or task needs them, and skills for multi-step jobs. v1 is the first public release on the `stable` channel. It brings everything in the entries below: a smaller always-loaded tier, browser and sign-in rules in `security-web.md`, setup and upgrade scripts, adapters for Cursor, Codex and Copilot code review, release gates, and sources that are checked every week. The [evals page](https://devbook.raturi.in/evals/) shows what was measured.
+
+**Upgrade from any earlier version:**
+1. Move to `stable`. **Submodule:** `git config -f .gitmodules submodule..devbook.branch stable && git -C .devbook fetch -q origin stable && git -C .devbook checkout -q FETCH_HEAD`. **Copy:** rerun the copy command from the [setup page](https://devbook.raturi.in/start-here/setup/). A project pinned to the `v2026.11.02` tag moves the same way.
+2. Replace the Devbook section of `AGENTS.md` with the one in `.devbook/templates/AGENTS.md`, keeping the "read when" lines for the files you use. Delete any "At the start of each session" paragraph, and add the `security-web.md` line if the project has pages, an API for browsers or its own sign-in. Add the `Assistants` line to the Project section.
+3. Run `node .devbook/skills/devbook-setup/scripts/link.mjs --assistants <yours>`, then `verify.mjs` with the same list until it exits 0.
+4. Run `node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs`, review the diff, commit and start a new chat.
+
+Or ask your assistant "Is Devbook up to date?", and it walks through these steps.
+
 ## 2026-11-02: Sources with URLs, checked every week
 
 ### Added
@@ -354,7 +366,7 @@ The instructions now hold about 250 rules instead of about 410. The mandatory co
 
 The history below is from the earlier, versioned design.
 
-## 2026-10-23: v1.0.0 (versioned design, superseded)
+## 2026-10-23: First design, v1.0.0 (replaced the next day by unversioned files)
 
 ### Added
 - Mandatory baseline rule packs in `rules/` (`core` always, plus `web`, `mobile` and `llm-features`). They are distilled from the design principles, coding standards, security, testing, definition-of-done, accessibility, performance, mobile and LLM guides.

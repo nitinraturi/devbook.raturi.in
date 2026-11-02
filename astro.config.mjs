@@ -64,6 +64,7 @@ export default defineConfig({
 						'start-here/using-devbook',
 						'start-here/skills-and-instructions',
 						'start-here/enforcement-kit',
+						'evals',
 						'start-here/writing-instructions',
 						'start-here/contact',
 						'about',

@@ -2,14 +2,16 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { posix } from 'node:path';
 import { changelogDays, formatDay } from '../../lib/changelog';
-import { instructionRows, stackTitles } from '../../lib/instruction-index';
+import { latestResults, pct, resultsDate, taskCount, tokens } from '../../lib/evals';
+import { instructionRows, skillRows, stackTitles } from '../../lib/instruction-index';
 
 // Serves each docs page's source as Markdown at <page>/index.md, used by the
 // "Copy page as Markdown" button. MDX components are turned into plain Markdown so the
 // file has the same content as the page: <Code> with a `?raw` import becomes a fenced
 // block, <Tabs> become headings, <Steps> the list inside, <Aside> a blockquote and
 // <CardGrid>/<LinkCard>/<Card> a link list, <History> the changelog timeline and
-// <InstructionIndex> the list of instruction files. scripts/check-markdown.mjs fails the build
+// <InstructionIndex> the list of instruction files, <ManifestFiles>, <SkillIndex>, <EvalResults> and
+// <EvalClaim> their tables or sentence, and {taskCount()}/{resultsDate()} their values. scripts/check-markdown.mjs fails the build
 // if a component is left over.
 
 const raw = import.meta.glob<string>(['/templates/*.md', '/LICENSE', '/CHANGELOG.md'], {
@@ -53,7 +55,58 @@ async function instructionIndex() {
 	return [...rows, stacks].join('\n');
 }
 
-function toMarkdown(body: string, filePath: string | undefined, index: string) {
+/** <ManifestFiles>, <SkillIndex>, <EvalResults> and <EvalClaim> as Markdown, from the same data as the components. */
+async function generated(tag: string): Promise<string | undefined> {
+	if (tag === '<ManifestFiles />') {
+		const rows = (await instructionRows()).map(
+			(r) =>
+				`| [${r.title}](${r.href}) | ${r.loadWhen} | ${r.tier === 'path' ? `Files like ${r.globs.slice(0, 4).join(', ')}` : r.loads} |`,
+		);
+		return [
+			'| File | Set it up when | Loads |',
+			'|---|---|---|',
+			...rows,
+			'| [Stack notes](/stacks/astro/) | You use that technology | By task |',
+		].join('\n');
+	}
+	if (tag === '<SkillIndex />') {
+		const rows = skillRows().map((r) => `| \`${r.name}\` | ${r.description} | ${r.linked} |`);
+		return ["| Skill | What it does, and when it's used | Linked in |", '|---|---|---|', ...rows].join('\n');
+	}
+	if (tag === '<EvalResults />') {
+		const rows = latestResults().map(
+			(r) =>
+				`| ${r.variant}${r.commit ? ` (\`${r.commit.replace('+local', '')}\`)` : ''} | ${pct(r.overall.passRate)} of ${r.overall.runs} | ${pct(r.overall.coverageLoaded ?? 0)} | ${pct(r.overall.coverageReachable ?? 0)} | ${tokens(r.overall.meanInputTokens)} |`,
+		);
+		return [
+			'| Devbook version | Tasks passed | Rules in context | Rules in reach | Devbook tokens per task |',
+			'|---|---|---|---|---|',
+			...rows,
+		].join('\n');
+	}
+	if (tag === '<EvalResults view="failures" />') {
+		const newest =
+			latestResults().find((r) => r.variant === 'local') ?? latestResults().find((r) => r.variant === 'main');
+		return Object.entries(newest?.tasks ?? {})
+			.filter(([, t]) => t.passRate < 1)
+			.map(([id, t]) => `- \`${id}\`: ${t.failed[0] ?? ''}`)
+			.join('\n');
+	}
+	if (tag === '<EvalClaim />') {
+		const results = latestResults();
+		const v1 =
+			results.find((r) => r.variant === 'local') ??
+			results.find((r) => r.variant === 'stable') ??
+			results.find((r) => r.variant === 'main');
+		const before = results.find((r) => r.variant === 'ref:9504d10');
+		return v1 && before
+			? `In modelled evals on ${taskCount()} tasks, Devbook puts the rules each task needs in front of the assistant in ${pct(v1.overall.passRate)} of tasks, using ${tokens(v1.overall.meanInputTokens)} tokens per task, against ${pct(before.overall.passRate)} at ${tokens(before.overall.meanInputTokens)} tokens before the prune. [What was measured, and what wasn't](/evals/)`
+			: '';
+	}
+	return undefined;
+}
+
+async function toMarkdown(body: string, filePath: string | undefined, index: string) {
 	const dir = posix.dirname(`/${filePath ?? ''}`);
 	const imports = new Map<string, string>();
 	for (const m of body.matchAll(/^import\s+(\w+)\s+from\s+['"]([^'"]+)\?raw['"];?\s*$/gm)) {
@@ -113,6 +166,11 @@ function toMarkdown(body: string, filePath: string | undefined, index: string) {
 			out.push(`- ${label}${description ? `: ${description}` : ''}`);
 			continue;
 		}
+		const made = await generated(tag);
+		if (made !== undefined) {
+			(aside ?? out).push(made);
+			continue;
+		}
 		if (tag === '<InstructionIndex />') {
 			(aside ?? out).push(index);
 			continue;
@@ -130,7 +188,7 @@ function toMarkdown(body: string, filePath: string | undefined, index: string) {
 			(aside ?? out).push(fence(src, code[2]!, code[3], inList ? ' '.repeat(listIndent!) : ''));
 			continue;
 		}
-		(aside ?? out).push(line);
+		(aside ?? out).push(line.replace('{taskCount()}', String(taskCount())).replace('{resultsDate()}', resultsDate()));
 	}
 	return out.join('\n').trim();
 }
@@ -138,6 +196,6 @@ function toMarkdown(body: string, filePath: string | undefined, index: string) {
 export const GET: APIRoute<{ entry: CollectionEntry<'docs'> }> = async ({ props }) => {
 	const { title, description, sources } = props.entry.data;
 	const cited = sources?.length ? `Sources: ${sources.join('; ')}.\n\n` : '';
-	const md = `# ${title}\n\n> ${description}\n\n${cited}${toMarkdown(props.entry.body ?? '', props.entry.filePath, await instructionIndex())}\n`;
+	const md = `# ${title}\n\n> ${description}\n\n${cited}${await toMarkdown(props.entry.body ?? '', props.entry.filePath, await instructionIndex())}\n`;
 	return new Response(md, { headers: { 'Content-Type': 'text/markdown; charset=utf-8' } });
 };

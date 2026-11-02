@@ -1,9 +1,9 @@
 ---
 title: Devbook
-description: A few short instruction files that make Claude and Copilot build like a senior engineer. Add them to any project with one setup prompt.
+description: Short rule files AI coding assistants load from your project, so every chat follows the same engineering, security and design rules. Set up with one prompt.
 template: splash
 hero:
-  tagline: A few short instruction files that make Claude and Copilot build like a senior engineer. Core, security and testing are mandatory; web security, performance, APIs, databases, design, SEO, content, licensing and feature docs are added as needed. Add them to any project with one prompt.
+  tagline: Devbook is a set of short rule files that AI coding assistants load from your project, so every chat follows the same engineering, security and design rules. Add it to any project with one prompt.
   actions:
     - text: Copy the setup prompt
       link: '#setup'
@@ -16,8 +16,11 @@ hero:
 import { Code } from '@astrojs/starlight/components';
 import InstructionIndex from '../../components/InstructionIndex.astro';
 import History from '../../components/History.astro';
+import EvalClaim from '../../components/EvalClaim.astro';
 import setupPrompt from '../../../templates/setup-prompt.md?raw';
 import agentsTemplate from '../../../templates/AGENTS.md?raw';
+
+<EvalClaim />
 
 <section class="dvb-home-flow" aria-labelledby="flow-title">
   <div class="dvb-home-section-heading">
@@ -50,6 +53,13 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
       <p>Rules load as they apply. You keep working as before; the output gets better.</p>
     </li>
   </ol>
+
+  <h3 class="dvb-flow-subhead">Three terms</h3>
+  <ul class="dvb-home-terms">
+    <li><strong><code>AGENTS.md</code></strong>: the instruction file at your project's root that coding assistants read at the start of a chat.</li>
+    <li><strong>Path rules</strong>: instruction files that load only when the assistant opens a matching file, such as design rules for a <code>.css</code> file.</li>
+    <li><strong>Skills</strong>: step-by-step procedures, such as a security review, that load only when a request matches them.</li>
+  </ul>
 
   <h3 class="dvb-flow-subhead">What loads, and when</h3>
   <div class="dvb-flow-tiers">
@@ -107,6 +117,7 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     <li><strong>Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</li>
     <li><strong>Commit.</strong> Commit those files and the <code>devbook-*</code> links in <code>.claude/</code> and <code>.github/instructions/</code>, along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</li>
     <li><strong>Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</li>
+    <li><strong>Licences.</strong> The instructions, stack notes, skills and guides are <a href="/license/">CC BY 4.0</a>; keeping <code>.devbook/</code> with its licence file is enough credit. The templates, the kit and the code are MIT-0.</li>
     <li><strong>Stay current.</strong> Setup takes the latest release from <code>stable</code>, and <code>.devbook/VERSION</code> records its version number. Devbook changes in your project only when you update. Ask "Is Devbook up to date?" and the assistant compares your version with <code>stable</code>, summarises the changelog and updates when you agree. With the <a href="/start-here/enforcement-kit/">enforcement kit</a>, Claude Code tells you when a newer version is out. See <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it up to date</a>.</li>
   </ol>
 </section>
@@ -125,8 +136,8 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
       <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads core, security and testing in every session, path-scoped rules when it opens a matching file, and skills when a task needs them.</p>
     </article>
     <article>
-      <h3>GitHub Copilot</h3>
-      <p>Copilot reads <code>AGENTS.md</code> on its own. <code>copilot-instructions.md</code> tells it to read the Devbook files listed there, and VS Code attaches the path-scoped ones to matching files.</p>
+      <h3>Copilot, Cursor and Codex</h3>
+      <p>Copilot reads <code>AGENTS.md</code> and attaches the path-scoped files to matching files. Setup can also generate Cursor rules and link skills for Codex. <a href="/start-here/setup/#which-assistants-load-the-rules">What each one loads</a></p>
     </article>
     <article>
       <h3>Your rules</h3>

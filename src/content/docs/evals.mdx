@@ -1,0 +1,40 @@
+---
+title: Evals
+description: What Devbook's evals measure, the latest results for each version, how to reproduce them, and what they don't show yet. Built from the committed results.
+---
+
+import EvalResults from '../../components/EvalResults.astro';
+import { resultsDate, taskCount } from '../../lib/evals';
+
+Devbook is tested on {taskCount()} small tasks in three sample projects (an Astro site, a Django API and an Android app). Each task tests one or more rules, such as "fix the cause when a test fails" or "keep the CSP strict", or whether a skill loads for the right request. These results are from {resultsDate()}.
+
+## Latest results
+
+<EvalResults />
+
+- **Tasks passed:** every rule the task tests is in the assistant's context or one file away, and the right skill loads (or, for near-miss requests, doesn't).
+- **Rules in context:** the share of tested rules loaded before the assistant does anything. **In reach:** loaded, or in a file the loaded text points to.
+- **Devbook tokens per task:** what Devbook adds to the context for a task, estimated as bytes / 4. The assistant's own system prompt and your code come on top.
+
+"Before the prune" loads every file in every chat, so its rules are almost always in context, at a much higher token cost. It has no skills, so it fails the skill tasks.
+
+## What these numbers are, and aren't
+
+These are **modelled** results. For each task and version, the evals install Devbook into the sample project exactly as setup would, then work out what Claude Code loads, from its documented rules for `CLAUDE.md` imports, path-scoped rules and skills. No model is called, so the results are free, repeatable and identical on every run.
+
+What they don't show yet:
+
+- **Whether the assistant follows a rule it can see.** That needs measured runs, where Claude Code does each task and automated checks read the files it left and the commands it ran. The harness is ready; measured results will appear here once they are run.
+- **Other assistants.** Copilot, Cursor and Codex load files differently; the setup page lists what [each assistant loads](/start-here/setup/#which-assistants-load-the-rules).
+- **Skill triggering by a real model.** The modelled check matches the request's words against each skill's description, so it misses requests that use other words. These tasks fail it today:
+
+<EvalResults view="failures" />
+
+## Reproduce them
+
+```sh
+git clone https://github.com/nitinraturi/devbook.raturi.in && cd devbook.raturi.in && npm ci
+node evals/model.mjs --variant none,ref:9504d10,main --no-save
+```
+
+The tasks, checks and fixtures are in [`evals/`](https://github.com/nitinraturi/devbook.raturi.in/tree/main/evals), with a README on adding tasks and running measured evals.
