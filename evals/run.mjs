@@ -6,6 +6,7 @@
 // then run the task's checks against the final files and the transcript. Writes report.json and
 // report.md under evals/results/<timestamp>/.
 import { spawn } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -65,11 +66,17 @@ if (opts.help) {
 
 // ---------- Load and validate tasks ----------
 
+// Tasks write {{FAKE_SECRET}} instead of a literal key, so no key-shaped string is committed for secret scanners to flag.
+const fakeSecret = `bd_live_${randomBytes(8).toString('hex')}`;
+
 async function loadTasks() {
 	const tasks = [];
 	for (const name of (await readdir(join(here, 'tasks'))).filter((n) => n.endsWith('.yaml')).sort()) {
 		try {
-			tasks.push({ file: name, ...parseYaml(await readFile(join(here, 'tasks', name), 'utf8')) });
+			tasks.push({
+				file: name,
+				...parseYaml((await readFile(join(here, 'tasks', name), 'utf8')).replaceAll('{{FAKE_SECRET}}', fakeSecret)),
+			});
 		} catch (error) {
 			throw new Error(`tasks/${name}: ${error.message}`, { cause: error });
 		}
