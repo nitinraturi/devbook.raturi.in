@@ -32,7 +32,7 @@ Instruction files load in three ways. Pick the ones that apply:
 
 ## 3. Write the agent files
 
-- `AGENTS.md`: start from `.devbook/templates/AGENTS.md`, or merge it into the existing file without losing content. Fill the Project section with facts you verified from the repo: real commands, stack and layout. Mark unknowns as TODO. In the Devbook section, keep the three `@` lines and only the "read when" lines for the files chosen in step 2, and remove the template comments. Every chosen file gets a "read when" line, path-scoped ones too, so assistants without path rules still find them.
+- `AGENTS.md`: start from `.devbook/templates/AGENTS.md`, or merge it into the existing file without losing content. Fill the Project section with facts you verified from the repo: real commands, stack and layout. Mark unknowns as TODO. In the Devbook section, keep the three `@` lines, the `devbook-upgrade` line and only the "read when" lines for the files chosen in step 2, and remove the template comments. Every chosen file gets a "read when" line, path-scoped ones too, so assistants without path rules still find them.
 - `CLAUDE.md`: must contain the line `@AGENTS.md`. Keep any existing content.
 - `.github/copilot-instructions.md`: copy `.devbook/templates/copilot-instructions.md`, or add its text to the existing file.
 - If existing project rules conflict with Devbook, list the conflicts and ask. Don't silently drop either side.
@@ -54,7 +54,7 @@ ln -s ../../.devbook/instructions/design.md .github/instructions/devbook-design.
 
 Link the skills that fit the project into `.claude/skills/`. Claude Code and VS Code Copilot both read that folder. Each skill's description costs a little context in every chat, so link only useful ones:
 
-- Always: `devbook-security-review`, `devbook-release-check`.
+- Always: `devbook-security-review`, `devbook-release-check`, `devbook-upgrade`.
 - `devbook-feature-doc` with feature-docs; `devbook-api-endpoint` with api-data; `devbook-db-migration` with database; `devbook-seo-audit` with seo.
 
 ```sh
@@ -70,7 +70,7 @@ Claude Code asks before writing to `.claude/`. If that write is refused, finish 
 
 `.devbook/kit/` turns a few rules into checks (see `.devbook/kit/README.md`). Ask the user which parts they want, and install only those. If they don't answer, skip it and mention it in the report.
 
-- Claude Code hooks that block `git push`, `.env` edits and recursive `rm` outside the project: merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`, keeping existing settings. They need Node.js on the `PATH`.
+- Claude Code hooks that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook release exists: merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`, keeping existing settings. They need Node.js on the `PATH`.
 - A gitleaks secret scan and a Conventional Commits check on each commit: give the user the link commands from the kit README, because `.git/hooks/` is per clone.
 - Starter CI: copy `.devbook/kit/ci/node.yml` or `python.yml` to `.github/workflows/ci.yml` only if the project has no CI. Change the commands to the project's real ones, and copy `zizmor.yml` to `.github/zizmor.yml`.
 

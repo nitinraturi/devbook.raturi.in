@@ -177,6 +177,12 @@
       "loadWhen": "Checking a release or deploy is ready; link in every project."
     },
     {
+      "path": "skills/devbook-upgrade/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Checking for and applying a newer Devbook release; link in every project."
+    },
+    {
       "path": "skills/devbook-feature-doc/SKILL.md",
       "kind": "skill",
       "tier": "task",

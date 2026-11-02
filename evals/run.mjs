@@ -22,6 +22,7 @@ const DEVBOOK_PATHS = ['instructions', 'stacks', 'templates', 'skills', 'LICENSE
 const SKILLS = {
 	'devbook-security-review': null,
 	'devbook-release-check': null,
+	'devbook-upgrade': null,
 	'devbook-feature-doc': 'instructions/feature-docs.md',
 	'devbook-api-endpoint': 'instructions/api-data.md',
 	'devbook-db-migration': 'instructions/database.md',

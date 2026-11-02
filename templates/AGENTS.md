@@ -29,3 +29,4 @@ Before working on the matching kind of change, read the file and follow it. Path
 - `.devbook/instructions/licensing.md`: adding dependencies, assets or copied code, or licence files
 - `.devbook/instructions/feature-docs.md`: building or changing a feature with business rules
 - `.devbook/stacks/<stack>.md`: work that touches <stack>
+- `.devbook/skills/devbook-upgrade/SKILL.md`: when asked whether Devbook is up to date, or to upgrade it
