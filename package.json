@@ -5,7 +5,7 @@
   "license": "(MIT-0 AND CC-BY-4.0)",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",
+    "build": "node scripts/astro-build.mjs && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",
     "build:prod": "DEVBOOK_ENV=production npm run build",
     "preview": "node scripts/serve-dist.mjs",
     "typecheck": "astro check",
