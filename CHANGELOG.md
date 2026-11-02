@@ -2,6 +2,13 @@
 
 Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM.DD`); each entry is in the first release tagged after it. Read the entries after your current version before you upgrade.
 
+## 2026-11-02: Cloudflare preview builds
+
+### Changed
+- **`stacks/cloudflare.md`** now says to add `"previews": {}` to `wrangler.jsonc` when you use Workers Builds. Non-production branches run `npx wrangler preview` by default, and without the block, branch builds and pull request checks fail. It also covers preview variables, routes and the fact that preview URLs are public.
+
+**Upgrade:** if Workers Builds fails on your branches, add `"previews": {}` to `wrangler.jsonc`.
+
 ## 2026-11-02: Find out when a newer Devbook is out
 
 ### Added
