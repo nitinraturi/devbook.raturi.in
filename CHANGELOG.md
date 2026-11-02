@@ -2,6 +2,25 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-11-02: Load rules only when they apply
+
+A chat now starts with core, security and testing (10 KB), the "read" list and the skill descriptions: about 12 KB in all, instead of every chosen file. The rest load when the work needs them.
+
+### Added
+- **Path-scoped instructions.** Design, REST APIs, databases, SEO, content and mobile carry their own globs in frontmatter (`paths:` for Claude Code, `applyTo:` for Copilot). Setup links them into `.claude/rules/devbook-<name>.md` and `.github/instructions/devbook-<name>.instructions.md`, so each loads only when the assistant reads or edits a matching file, such as a `.css` file for design. Tested in Claude Code with the `InstructionsLoaded` hook: nothing loads at session start, and opening an `.astro` page loads design and SEO. We couldn't test Copilot's handling of linked files.
+- **Skills** in `skills/`: `devbook-security-review`, `devbook-release-check`, `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration`, `devbook-seo-audit`, and `devbook-setup` for the setup itself. Projects link the ones they need into `.claude/skills/`, which Claude Code and VS Code both read. Only each skill's name and description load until a task needs it.
+
+### Changed
+- The `AGENTS.md` template keeps `@` lines for core, security and testing, then lists the other files with when to read each, instead of "read every file below". Assistants without path rules or skills (Codex, Cursor, Gemini CLI) open them from that list.
+- The setup prompt is now short: it adds `.devbook/` and hands over to `skills/devbook-setup/SKILL.md`. The copy command also downloads `skills/`.
+- `.github/copilot-instructions.md` tells Copilot to read the three core files up front and the others before matching work.
+
+**Upgrade:** existing projects keep working unchanged, because every file keeps its path and `@` lines still load. To switch to on-demand loading:
+1. Update `.devbook/`. For the copy method, rerun the download command; it now includes `skills/`.
+2. In `AGENTS.md`, keep the three `@` lines for core, security and testing, and turn the other `@` lines into "read" lines, as in `.devbook/templates/AGENTS.md`.
+3. Link the path-scoped files and the skills you want, as on the [setup page](https://devbook.raturi.in/start-here/setup/#2-connect-your-assistants), or ask your assistant to "follow .devbook/skills/devbook-setup/SKILL.md".
+4. Copy the new `.devbook/templates/copilot-instructions.md`, commit, and start a new chat.
+
 ## 2026-11-02: Fewer, numbered rules
 
 The instructions now hold about 250 rules instead of about 410. The mandatory core, security and testing files are 10 KB (about 2,500 tokens) instead of 14.6 KB; a public website's set is 27 KB instead of 36 KB. Every removed rule failed the deletion test in the [writing guide](https://devbook.raturi.in/start-here/writing-instructions/): a capable model already does it, or another file already says it. The full rule-by-rule audit, with a reason for each verdict, is in `docs/plans/prune-audit.md`.

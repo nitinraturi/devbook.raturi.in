@@ -32,16 +32,16 @@ git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devb
 Downloads plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0
+rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/skills devbook.raturi.in-main/LICENSE-CC-BY-4.0
 ```
 
 On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
 
 ```powershell
-Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/LICENSE-CC-BY-4.0; Remove-Item devbook.tar.gz
+Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/skills devbook.raturi.in-main/LICENSE-CC-BY-4.0; Remove-Item devbook.tar.gz
 ```
 
-Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/` and `templates/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`.
+Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/` and `skills/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`.
 
 </TabItem>
 </Tabs>
@@ -50,7 +50,7 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
 <Steps>
 
-1. Create `AGENTS.md` at the repository root and fill in the Project section with your real commands, layout and rules. In the Devbook section, keep only the lines that apply: core, security and testing always, then the others from [the table of when to load each file](/start-here/how-it-works/#mandatory-and-optional-files), plus one stack note for each technology you use.
+1. Create `AGENTS.md` at the repository root and fill in the Project section with your real commands, layout and rules. In the Devbook section, keep the three `@` lines and only the "read" lines that apply: see [the table of when to load each file](/start-here/how-it-works/#mandatory-and-optional-files), plus one stack note for each technology you use.
 
    <Code code={agentsTemplate} lang="md" title="AGENTS.md" />
 
@@ -64,16 +64,33 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
    <Code code={copilotTemplate} lang="md" title=".github/copilot-instructions.md" />
 
-4. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`, then start a new chat.
+4. Link each path-scoped file you chose (design, api-data, database, seo, content, mobile) into both rule folders. Claude Code then loads it only when a matching file is read or edited, and Copilot when one is edited:
+
+   ```sh
+   mkdir -p .claude/rules .github/instructions
+   ln -s ../../.devbook/instructions/design.md .claude/rules/devbook-design.md
+   ln -s ../../.devbook/instructions/design.md .github/instructions/devbook-design.instructions.md
+   ```
+
+5. Link the skills that fit, so the assistant can load them for matching tasks. `devbook-security-review` and `devbook-release-check` suit every project; add `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration` or `devbook-seo-audit` with their instruction files:
+
+   ```sh
+   mkdir -p .claude/skills
+   ln -s ../../.devbook/skills/devbook-security-review .claude/skills/devbook-security-review
+   ```
+
+6. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/` and `.github/instructions/`, then start a new chat.
 
 </Steps>
 
 ## How the instructions load
 
-Claude Code expands the `@` lines; Copilot, Codex and Cursor read `AGENTS.md` and are asked to open the listed files. Gemini CLI needs a setting to read `AGENTS.md` at all. Write `@` paths as plain text, because an `@` path inside backticks is not imported. [How Devbook works](/start-here/how-it-works/#how-each-assistant-loads-the-rules) explains each assistant and which rule wins.
+Core, security and testing load in every chat through the `@` lines; Claude Code expands them, and Copilot, Codex and Cursor are asked to open them. The path-scoped files load when a matching file is read or edited (Claude Code) or edited (Copilot), and every assistant can open the files in the "read" list when a task calls for them. Skills load only their name and description until a task needs them. [How Devbook works](/start-here/how-it-works/#how-each-assistant-loads-the-rules) explains each assistant and which rule wins.
 
-<Aside type="caution" title="Cloud agents and submodules">
-Hosted agents only see a submodule's files if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`. You can also switch to the Copy method, whose files are in the repository itself.
+To load everything in every chat instead, for example in a short-lived project where cost doesn't matter, replace the "read" lines with `@` lines (`@.devbook/instructions/design.md`) and skip the links. Write `@` paths as plain text, because an `@` path inside backticks is not imported.
+
+<Aside type="caution" title="Symlinks, cloud agents and submodules">
+On Windows, symlinks need Developer Mode and `git config core.symlinks true`; without them, skip steps 4 and 5 and rely on the "read" lines. Hosted agents only see a submodule's files if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`. You can also switch to the Copy method, whose files are in the repository itself.
 </Aside>
 
 ## Check it works
@@ -89,13 +106,13 @@ Start a new chat and ask which Devbook files the assistant is following. [Use De
 git submodule update --remote .devbook       # pull the latest Devbook, then commit the change
 git clone --recurse-submodules <your-repo>   # clone a project that uses Devbook
 git submodule update --init                  # fetch .devbook in an existing clone
-git rm .devbook                              # remove; then delete the @ lines from AGENTS.md
+git rm .devbook                              # remove; then delete the Devbook section and links
 ```
 
 </TabItem>
 <TabItem label="Copy (plain files)">
 
-Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/` and the `@` lines from `AGENTS.md`.
+Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/`, the Devbook section of `AGENTS.md` and the `devbook-*` links in `.claude/` and `.github/instructions/`.
 
 To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then run the submodule command.
 
@@ -106,4 +123,4 @@ Devbook has no version pins. Either way, your repository records exactly which D
 
 ## License
 
-The instruction files and stack notes are [CC BY 4.0](/license/): keep `.devbook/` with its `LICENSE-CC-BY-4.0` file and that counts as credit. The templates are MIT-0 and need no notice.
+The instruction files, stack notes and skills are [CC BY 4.0](/license/): keep `.devbook/` with its `LICENSE-CC-BY-4.0` file and that counts as credit. The templates are MIT-0 and need no notice.

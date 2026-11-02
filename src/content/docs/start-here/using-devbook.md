@@ -42,7 +42,7 @@ Keep the section short. Every line loads in every chat, and long files are follo
 
 ## Add or remove instruction files
 
-Edit the Devbook section of `AGENTS.md`: add or delete `@.devbook/instructions/<file>.md` or `@.devbook/stacks/<stack>.md` lines, then start a new chat. [How Devbook works](/start-here/how-it-works/#mandatory-and-optional-files) lists when to load each file. For a technology without a stack note, add the rules to your Project section.
+Edit the "read" list in the Devbook section of `AGENTS.md`, adding or deleting a line per file, then start a new chat. For a path-scoped file (design, REST APIs, databases, SEO, content, mobile), also add or delete its two links, as on the [setup page](/start-here/setup/#2-connect-your-assistants). For a skill, add or delete its link in `.claude/skills/`. [How Devbook works](/start-here/how-it-works/#mandatory-and-optional-files) lists when each file applies. For a technology without a stack note, add the rules to your Project section.
 
 ## Document complex features
 
@@ -57,14 +57,14 @@ Which Devbook instruction files are you following in this project,
 and what do they require before you call a task done?
 ```
 
-The answer should name the files in your `AGENTS.md` and mention running checks and reporting what was not done. If it doesn't, see the troubleshooting section below.
+The answer should name core, security and testing, and mention running checks and reporting what was not done. Path-scoped files appear only after the assistant has opened a matching file. In Claude Code, `/memory` lists the instruction files loaded so far. If the answer is wrong, see the troubleshooting section below.
 
 ## Keep it up to date
 
 - **Submodule:** run `git submodule update --remote .devbook`, review the diff and commit it.
 - **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook), review `git diff .devbook` and commit.
 
-Then read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md). Some entries have an **Upgrade** section, for example when a file is added or split and you need a new `@` line.
+Then read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md). Some entries have an **Upgrade** section, for example when a file is added or split and you need a new line or link.
 
 Review each update's diff before you commit it. These files steer your assistant, so treat an update like a dependency upgrade: read what changed, and pin the submodule to the old commit if something doesn't suit your project yet.
 
@@ -78,12 +78,15 @@ Review each update's diff before you commit it. These files steer your assistant
 | The assistant mentions `npm run check` or Devbook's contributor rules | It opened `.devbook/AGENTS.md`, which is for changing Devbook itself. Tell it to follow your root `AGENTS.md`; that file says the same. |
 | A cloud agent says `.devbook/` is empty | Its checkout skips submodules. Add `git submodule update --init` to its setup steps, or switch to the copy method. |
 | Copilot skips some files | Copilot doesn't expand `@` lines. Check that `.github/copilot-instructions.md` tells it to read the files listed in `AGENTS.md`. |
+| A path rule didn't load | It loads only after the assistant reads or edits a matching file; ask it to open one. Check that the link resolves (`ls -L .claude/rules`) and that your files match the globs in the instruction's `paths:` list. If they don't, rely on the "read" line, or ask the assistant to read the file. |
+| A skill didn't trigger | Check the link resolves (`ls -L .claude/skills`) and that the folder name matches the skill's `name`. Ask for the task in the words of its description, or name it: "use the devbook-security-review skill". Smaller, faster models use skills less often on their own. |
+| Links show up as small text files (Windows) | Git checked out symlinks as plain files. Turn on Developer Mode, set `git config core.symlinks true` and check out again, or delete the links and rely on the "read" list. |
 | Two rules conflict | Your Project section wins where it says so. Write the exception there with its reason. |
 | A rule is wrong for your project | Override it in your Project section. If it's wrong for everyone, [tell us](/start-here/contact/). |
 
 ## Common questions
 
-**Does Devbook change my code?** Only the setup prompt writes files, and only `.devbook/`, `AGENTS.md`, `CLAUDE.md` and `.github/copilot-instructions.md`. It doesn't commit.
+**Does Devbook change my code?** Only the setup prompt writes files, and only `.devbook/`, `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` and the `devbook-*` links in `.claude/` and `.github/instructions/`. It doesn't commit.
 
 **Can I use it in an existing project?** Yes. The setup prompt merges into your existing agent files and lists any conflicts for you to decide.
 

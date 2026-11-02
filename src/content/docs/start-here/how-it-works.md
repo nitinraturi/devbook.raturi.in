@@ -28,19 +28,30 @@ your-project/
 ├── .devbook/                       Devbook itself (submodule or copied files)
 │   ├── instructions/               core.md, security.md, design.md, …
 │   ├── stacks/                     astro.md, django.md, …
+│   ├── skills/                     devbook-security-review/, devbook-release-check/, …
 │   └── templates/                  AGENTS.md, CLAUDE.md, FEATURE.md, …
 ├── AGENTS.md                       your project facts + the Devbook files you chose
 ├── CLAUDE.md                       one line: @AGENTS.md
-└── .github/copilot-instructions.md one sentence that points Copilot to AGENTS.md
+├── .claude/rules/devbook-*.md      links to the path-scoped instructions
+├── .claude/skills/devbook-*        links to the skills you chose
+└── .github/
+    ├── copilot-instructions.md     points Copilot to AGENTS.md
+    └── instructions/devbook-*.instructions.md   the same path-scoped links, for Copilot
 ```
 
-`AGENTS.md` is the only file you edit. Its **Project** section holds facts about your project: what it is, the commands, the layout and your own rules. Its **Devbook** section lists the instruction files that apply, one `@` line each.
+`AGENTS.md` is the only file you edit. Its **Project** section holds facts about your project: what it is, the commands, the layout and your own rules. Its **Devbook** section has three `@` lines for the files every chat needs, then a "read" list: one line per other file that applies, saying when to open it. The links are created once by the setup.
 
 ## How each assistant loads the rules
 
-- **Claude Code** reads `CLAUDE.md` at the start of every chat, follows `@AGENTS.md`, then follows each `@.devbook/...` line. The full text is in context before you type anything.
-- **GitHub Copilot** (VS Code agent mode, the coding agent and the CLI) reads `AGENTS.md` and `.github/copilot-instructions.md` on its own. It does not expand `@` lines, so the sentence in `copilot-instructions.md` tells it to open each listed file. It normally does, but that is an instruction, not a guarantee.
-- **Codex** reads `AGENTS.md` files from the repository root down to the folder you work in and joins them, up to 32 KiB by default. Its docs describe no `@` imports, so the `@` lines arrive as plain text and the model has to open each file itself, as with Copilot.
+Devbook loads in three tiers, so a chat pays only for what its task needs:
+
+1. **Every chat:** core, security and testing, through the `@` lines in `AGENTS.md`.
+2. **By file path:** design, REST APIs, databases, SEO, content and mobile carry their own globs (`paths:` for Claude Code, `applyTo:` for Copilot). Through the links in `.claude/rules/` and `.github/instructions/`, each loads only when the assistant reads or edits a matching file, such as a `.css` file for design.
+3. **By task:** performance, licensing, feature docs and stack notes are in the "read" list, so the assistant opens them when a task calls for them. Skills load only their name and description until a task needs one, then the full procedure.
+
+- **Claude Code** reads `CLAUDE.md` at the start of every chat, follows `@AGENTS.md`, and loads the three `@` files. It loads a linked rule the first time it reads or edits a matching file, and a skill when the task matches its description.
+- **GitHub Copilot** (VS Code agent mode, the coding agent and the CLI) reads `AGENTS.md` and `.github/copilot-instructions.md` on its own. It does not expand `@` lines, so the sentence in `copilot-instructions.md` tells it to open the three core files and the "read" files when they apply. It normally does, but that is an instruction, not a guarantee. VS Code attaches a linked `.instructions.md` file when a matching file is edited, and reads skills from `.claude/skills/`.
+- **Codex** reads `AGENTS.md` files from the repository root down to the folder you work in and joins them, up to 32 KiB by default. Its docs describe no `@` imports or path rules, so the `@` lines and the "read" list arrive as plain text and the model has to open each file itself, as with Copilot.
 - **Cursor** reads `AGENTS.md` in the root and in subfolders. Its docs describe no imports for `AGENTS.md`; in Cursor's own rules, an `@` file mention points the agent to a file to read with its tools rather than adding the file's text. Expect the same as Copilot: the agent is asked to open the files.
 - **Gemini CLI** reads `GEMINI.md` by default, not `AGENTS.md`. To use `AGENTS.md`, set `"context": { "fileName": ["AGENTS.md", "GEMINI.md"] }` in `.gemini/settings.json`. Gemini expands `@` imports, but its documented forms start with `./`, `../` or `/`, so check that the `@.devbook/...` lines load by asking which files it is following.
 
@@ -57,33 +68,35 @@ Every rule has a stable ID (`CORE-02`, `SEC-05`), so an override can name exactl
 
 ## Mandatory and optional files
 
-Core, security and testing load in every project. The rest load only when they apply, so a small script doesn't pay for design or SEO rules.
+Core, security and testing load in every project. The rest are set up only when they apply, so a small script doesn't pay for design or SEO rules, and even then they load only for the matching files or tasks.
 
-| File | Load it when |
-|---|---|
-| [Core](/instructions/core/), [Security](/instructions/security/), [Testing](/instructions/testing/) | Always |
-| [Performance](/instructions/performance/) | Any app, site or service |
-| [REST APIs](/instructions/api-data/) | The project has a backend or API |
-| [Databases](/instructions/database/) | It stores data in a relational database |
-| [Design](/instructions/design/) | It has any user interface |
-| [SEO](/instructions/seo/) and [Content](/instructions/content/) | It is a public website, docs site or blog |
-| [Mobile apps](/instructions/mobile/) | It is an iOS, Android, React Native or Flutter app |
-| [Licensing](/instructions/licensing/) | It is published or distributed, or ships third-party code, fonts, images or data |
-| [Feature docs](/instructions/feature-docs/) | Its features have business rules, states or permissions |
-| Stack notes | You use that technology |
+| File | Set it up when | Loads |
+|---|---|---|
+| [Core](/instructions/core/), [Security](/instructions/security/), [Testing](/instructions/testing/) | Always | Every chat |
+| [Performance](/instructions/performance/) | Any app, site or service | When a task needs it |
+| [REST APIs](/instructions/api-data/) | The project has a backend or API | API files |
+| [Databases](/instructions/database/) | It stores data in a relational database | Models, migrations, SQL |
+| [Design](/instructions/design/) | It has any user interface | Styles, components, templates |
+| [SEO](/instructions/seo/) and [Content](/instructions/content/) | It is a public website, docs site or blog | Pages and layouts; Markdown content |
+| [Mobile apps](/instructions/mobile/) | It is an iOS, Android, React Native or Flutter app | Swift, Kotlin, Dart files |
+| [Licensing](/instructions/licensing/) | It is published or distributed, or ships third-party code, fonts, images or data | When a task needs it |
+| [Feature docs](/instructions/feature-docs/) | Its features have business rules, states or permissions | When a task needs it |
+| Stack notes | You use that technology | When a task needs it |
+
+Seven skills cover multi-step jobs: `devbook-security-review`, `devbook-release-check`, `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration`, `devbook-seo-audit`, and `devbook-setup`, which the setup prompt uses. The globs in each path-scoped file suit common layouts; if yours differs, the "read" list still covers it.
 
 ## What it costs
 
-Every rule takes up part of the context window in every chat, so Devbook keeps its files short. Sizes today:
+Every rule loaded takes up part of the context window, so Devbook keeps its files short and loads most of them only when needed. Sizes today:
 
-| Project type | Files | Size | About |
+| Project type | At the start of every chat | Most a chat can add | Files that can be added |
 |---|---|---|---|
-| Any project | Core, security, testing | 10 KB | 2,500 tokens |
-| Public website | + performance, design, SEO, content | 27 KB | 6,700 tokens |
-| API service | + performance, REST APIs, databases | 24 KB | 6,000 tokens |
-| Web app | + performance, REST APIs, databases, design, feature docs | 33 KB | 8,300 tokens |
+| Any project | about 12 KB, 3,000 tokens | — | — |
+| Public website | about 12 KB, 3,000 tokens | 18 KB, 4,500 tokens | performance, design, SEO, content |
+| API service | about 12 KB, 3,000 tokens | 15 KB, 3,800 tokens | performance, REST APIs, databases |
+| Web app | about 12 KB, 3,000 tokens | 25 KB, 6,200 tokens | performance, REST APIs, databases, design, feature docs |
 
-That is a small share of a modern context window, and it is the same in every chat, so providers can cache it.
+The start of every chat holds core, security and testing (10 KB), the "read" list in `AGENTS.md` and the descriptions of the linked skills. A chat that only touches backend code never loads design or SEO rules. The always-loaded part is the same in every chat, so providers can cache it.
 
 ## What it can't do
 

@@ -17,6 +17,8 @@ npm run lhci     # Lighthouse budgets
 
 - `instructions/*.md`: the product. Mandatory `core`, `security` and `testing`, plus conditional `performance`, `api-data`, `database`, `design`, `seo`, `content`, `mobile`, `licensing` and `feature-docs`. They are rendered on the site through the symlink `src/content/docs/instructions`.
 - `stacks/*.md`: short notes for one technology each, also rendered through a symlink.
+- `skills/<name>/SKILL.md`: Agent Skills that projects link into `.claude/skills/`. Each `name` starts with `devbook-` and matches its folder; the description says when to use it.
+- Loading tiers (in `devbook.manifest.json`): core, security and testing are `@` imports; design, api-data, database, seo, content and mobile carry identical `paths:` and `applyTo:` globs and are linked into projects' `.claude/rules/` and `.github/instructions/`; the rest are read-when lines or skills. Never add `paths:` to an always-loaded file.
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md`, `copilot-instructions.md` and `FEATURE.md`. Pages import them with `?raw`; never copy template text into a page.
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
 - `evals/`: the evaluation harness (fixtures, tasks, checks, `run.mjs`) that measures whether a Devbook version changes what an agent does. See `evals/README.md`; never run it without `--dry-run` unless the user approves the spend.
@@ -42,8 +44,8 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 
 - [ ] `npm run check` passes.
 - [ ] Changed instruction text passes the review checklist in `src/content/docs/start-here/writing-instructions.md`.
-- [ ] If you renamed or added a file, update `devbook.manifest.json`, `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
+- [ ] If you renamed or added a file (including a skill), update `devbook.manifest.json`, `skills/devbook-setup/SKILL.md`, `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
-- [ ] Never rename or delete a file in `instructions/`, `stacks/` or `templates/`, because projects import them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
-- [ ] `instructions/`, `stacks/` and the `start-here/` guides are CC BY 4.0; `templates/` and code are MIT-0. Never move text between them without updating `/license/`.
-- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/` or `templates/`.
+- [ ] Never rename or delete a file in `instructions/`, `stacks/`, `skills/` or `templates/`, because projects import and link them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
+- [ ] `instructions/`, `stacks/`, `skills/` and the `start-here/` guides are CC BY 4.0; `templates/` and code are MIT-0. Never move text between them without updating `/license/`.
+- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/` or `templates/`.

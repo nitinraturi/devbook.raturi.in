@@ -17,14 +17,18 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 | `instructions/licensing.md` | project licence, SPDX, dependency and asset licences, notices, copied code | published or distributed project, or third-party code and assets |
 | `instructions/feature-docs.md` | when to write a feature doc, where it lives, EARS rules with IDs, flow, file map, keeping it in sync | app or service with business rules |
 | `stacks/*.md` | Astro, Starlight, Cloudflare, TypeScript, Django, GA4, three.js | you use that technology |
+| `skills/*/SKILL.md` | security review, release check, feature doc, API endpoint, database migration, SEO audit, setup | the task needs it (loaded on demand) |
+
+Core, security and testing load in every chat. Design, REST APIs, databases, SEO, content and mobile load only when the assistant opens a matching file, through links in `.claude/rules/` and `.github/instructions/`. The rest are listed in `AGENTS.md` to read when a task needs them.
 
 ## Use it in a project
 
 Paste [`templates/setup-prompt.md`](templates/setup-prompt.md) into Claude Code or Copilot agent mode inside your project. The prompt walks the assistant through these steps:
 
 1. Add Devbook at `.devbook/`. The default is a submodule that tracks `main`. Set `Method: copy` to download plain files you commit instead.
-2. Create or merge a root `AGENTS.md`. It has your project section, then `@.devbook/...` lines for the files that apply.
+2. Create or merge a root `AGENTS.md`. It has your project section, then `@` lines for core, security and testing, and a list of the other files to read when a task needs them.
 3. Create a `CLAUDE.md` containing `@AGENTS.md`, and a `.github/copilot-instructions.md` that tells Copilot to read the files `AGENTS.md` lists.
+4. Link the path-scoped instructions into `.claude/rules/` and `.github/instructions/`, and the skills that fit into `.claude/skills/`.
 
 To update a submodule, run `git submodule update --remote .devbook`. For a copy, rerun the download command on the setup page. Project rules in `AGENTS.md` override Devbook only where they say so explicitly, and your direct request overrides both. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps.
 
@@ -44,7 +48,7 @@ To measure whether a change to the instructions helps, use the evals in [`evals/
 
 ## License
 
-- `instructions/`, `stacks/` and the site's guides in `src/content/docs/start-here/`: [CC BY 4.0](LICENSE-CC-BY-4.0). Reuse and change them with credit. Keeping `.devbook/` with its license file counts as credit.
+- `instructions/`, `stacks/`, `skills/` and the site's guides in `src/content/docs/start-here/`: [CC BY 4.0](LICENSE-CC-BY-4.0). Reuse and change them with credit. Keeping `.devbook/` with its license file counts as credit.
 - `templates/`, the site code and the evals in `evals/`: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
 
 See the [license page](https://devbook.raturi.in/license/) for how to give credit.

@@ -30,7 +30,7 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
   <Code code={setupPrompt} lang="text" title="Paste into Claude or Copilot" />
   <div class="dvb-quick-start-notes">
     <p><strong>1. Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</p>
-    <p><strong>2. Commit.</strong> Commit those files along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</p>
+    <p><strong>2. Commit.</strong> Commit those files and the <code>devbook-*</code> links in <code>.claude/</code> and <code>.github/instructions/</code>, along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</p>
     <p><strong>3. Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</p>
     <p><strong>4. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update a submodule, run <code>git submodule update --remote .devbook</code>. For a copy, run the download command again.</p>
   </div>
@@ -47,11 +47,11 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
   <div class="dvb-home-layer-grid">
     <article>
       <h3>Claude Code</h3>
-      <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads the <code>@</code> imports into every session.</p>
+      <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads core, security and testing in every session, path-scoped rules when it opens a matching file, and skills when a task needs them.</p>
     </article>
     <article>
       <h3>GitHub Copilot</h3>
-      <p>Copilot reads <code>AGENTS.md</code> on its own. <code>copilot-instructions.md</code> tells it to read each Devbook file listed there.</p>
+      <p>Copilot reads <code>AGENTS.md</code> on its own. <code>copilot-instructions.md</code> tells it to read the Devbook files listed there, and VS Code attaches the path-scoped ones to matching files.</p>
     </article>
     <article>
       <h3>Your rules</h3>
@@ -63,7 +63,7 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
 <section class="dvb-home-modules" aria-labelledby="modules-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">Short enough to load every time</p>
+      <p class="dvb-home-eyebrow">Loaded only when they apply</p>
       <h2 id="modules-title">The instructions</h2>
     </div>
   </div>
