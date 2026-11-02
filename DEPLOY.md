@@ -24,7 +24,9 @@ The Worker serves only `https://devbook.raturi.in`, configured in `wrangler.json
 
 ## Optional: deploy on push (Workers Builds)
 
-In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, with production branch `main` and deploy command `npx wrangler deploy`. Non-production branches upload preview versions; they build as previews (`noindex`, no analytics) because `WORKERS_CI_BRANCH` is not `main`.
+In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, with production branch `main` and deploy command `npx wrangler deploy`. Use `npx wrangler preview` for non-production branches; they build as previews (`noindex`, no analytics) because `WORKERS_CI_BRANCH` is not `main`.
+
+The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https://developers.cloudflare.com/workers/previews/configuration/#wrangler-configuration-file). Static assets and compatibility settings stay at the top level; production routes do not target Previews. Preview URLs are public unless access controls are configured.
 
 ## Releases
 
