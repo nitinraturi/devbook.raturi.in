@@ -69,5 +69,5 @@ Claude Code asks before writing to `.claude/`. If that write is refused, finish 
 ## 6. Verify and report
 
 - Confirm every `@` path and "read when" path in `AGENTS.md` exists, and every link resolves (`ls -L .claude/rules .claude/skills .github/instructions`).
-- Report the files you changed, the instruction files and skills you chose and why, and any TODOs or questions.
+- Report the files you changed, the Devbook version (tag or main), the instruction files and skills you chose and why, and any TODOs or questions.
 - Remind the user to commit `.devbook`, `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/` and `.github/instructions/`, plus `.gitmodules` for a submodule; to clone with `--recurse-submodules`; and to start a new chat so the instructions load.

@@ -200,7 +200,7 @@ test('page Markdown is served and setup includes the templates', async ({ reques
 	expect(md).toMatch(/^# Setup\n/);
 	expect(md).toContain('@.devbook/instructions/core.md');
 	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
-	const copyCommand = prompt.match(/^\s*(rm -rf \.devbook .+)$/m)?.[1];
+	const copyCommand = prompt.match(/(rm -rf \.devbook .+)$/m)?.[1];
 	expect(copyCommand).toBeTruthy();
 	expect(md).toContain(copyCommand!);
 	expect(md).not.toContain('import ');
