@@ -5,8 +5,9 @@ sidebar:
   order: 2
 sources:
   - OWASP Top 10
-  - OWASP Cheat Sheet Series, including the Secrets Management Cheat Sheet
+  - OWASP Secrets Management Cheat Sheet
   - GitHub Docs on secret scanning and fine-grained tokens
+lastVerified: 2026-11-02
 ---
 
 Follow the OWASP Cheat Sheet Series for anything not listed. Browser and sign-in rules (CSP, cookies, headers, passwords) are in `security-web.md`.

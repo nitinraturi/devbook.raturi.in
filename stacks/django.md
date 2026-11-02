@@ -2,6 +2,8 @@
 title: Django
 description: Django notes - app layout, production security settings, data and migrations, APIs, background jobs, testing and deployment. Verify against current Django docs.
 lastVerified: 2026-10-22
+sources:
+  - Django deployment checklist and supported versions
 ---
 
 Check the current Django docs and release notes before using an API. Use a supported release, and an LTS release for long-lived projects.

@@ -5,6 +5,7 @@ sidebar:
   order: 9
 sources:
   - Google Search Central, Creating helpful, reliable, people-first content
+lastVerified: 2026-11-02
 # Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
 paths:
   - "**/*.mdx"

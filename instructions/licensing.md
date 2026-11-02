@@ -9,6 +9,7 @@ sources:
   - Open Source Initiative licence list
   - choosealicense.com (GitHub)
   - Creative Commons guidance
+lastVerified: 2026-11-02
 ---
 
 Load for published or distributed projects, or any project using third-party code or assets. This is not legal advice: a human decides on licences, and a lawyer reviews anything unclear or high-stakes.

@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # full history for Starlight "Last updated" dates
+          persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -38,9 +39,11 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      # instructions/ and stacks/ name their sources without URLs today, so the guides,
-      # templates and README are checked too. LinkedIn answers bots with 429/999.
+      # Source URLs live in sources.json and are watched by sources.yml; this checks the links in the
+      # pages, templates and README. LinkedIn answers bots with 429/999.
       - name: External links
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:

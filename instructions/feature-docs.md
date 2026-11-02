@@ -7,6 +7,7 @@ sources:
   - Anthropic, Effective context engineering for AI agents
   - Spec-driven development (GitHub Spec Kit, Kiro)
   - EARS requirement syntax (Alistair Mavin et al., IEEE RE 2009)
+lastVerified: 2026-11-02
 ---
 
 Load for any app or service with business rules. A feature doc is the durable answer to "what does this feature do, under which conditions, and where is it": rules and flow live there, and how it works lives in the code.

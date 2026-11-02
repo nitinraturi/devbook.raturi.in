@@ -10,6 +10,7 @@ sources:
   - Google API Improvement Proposals, Microsoft Azure REST API Guidelines, Zalando RESTful API Guidelines, Stripe API
   - OWASP API Security Top 10 (2023)
   - Standard Webhooks
+lastVerified: 2026-11-02
 # Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
 paths:
   - "**/api/**"

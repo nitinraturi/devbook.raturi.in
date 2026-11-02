@@ -6,6 +6,7 @@ sidebar:
 sources:
   - Apple Human Interface Guidelines and App Store Review Guidelines
   - Google Material guidance and Google Play policies
+lastVerified: 2026-11-02
 # Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
 paths:
   - "**/*.swift"

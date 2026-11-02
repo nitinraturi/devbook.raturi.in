@@ -4,8 +4,9 @@ description: Mandatory testing rules for any stack - a test per acceptance crite
 sidebar:
   order: 3
 sources:
-  - The Practical Test Pyramid (Ham Vocke, martinfowler.com)
-  - Software Engineering at Google (Winters, Manshreck and Wright)
+  - The Practical Test Pyramid (Ham Vocke)
+  - Software Engineering at Google
+lastVerified: 2026-11-02
 ---
 
 - TEST-01: Map each acceptance criterion to at least one test. Test behaviour through public interfaces, not implementation details, so refactors don't break tests.

@@ -7,6 +7,7 @@ sources:
   - web.dev Core Web Vitals guidance
   - Lighthouse scoring
   - Site Reliability Engineering (Google)
+lastVerified: 2026-11-02
 ---
 
 Load for any app, site or service. Pagination is in the REST API instructions, and indexes are in the database instructions.

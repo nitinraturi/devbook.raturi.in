@@ -2,6 +2,8 @@
 title: three.js
 description: three.js notes for fast, accessible 3D on web pages - lazy islands with poster images, pure maths core, allocation-free frame loops and fallbacks.
 lastVerified: 2026-10-22
+sources:
+  - three.js documentation
 ---
 
 Check the current three.js docs and migration guide before using an API, because it has frequent breaking releases.

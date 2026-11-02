@@ -6,6 +6,7 @@ sidebar:
 sources:
   - Google Search Essentials
   - Google Search Central documentation
+lastVerified: 2026-11-02
 # Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
 paths:
   - "**/pages/**"

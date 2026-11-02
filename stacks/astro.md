@@ -2,6 +2,8 @@
 title: Astro
 description: Astro stack notes for content sites - static output, minimal islands, typed content collections, image handling and checks. Verify against current Astro docs.
 lastVerified: 2026-10-22
+sources:
+  - Astro documentation
 ---
 
 Check the current Astro docs and upgrade guide for exact APIs before using them.

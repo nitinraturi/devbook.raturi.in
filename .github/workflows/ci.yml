@@ -31,6 +31,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: false
 
+  # Workflow security for this repository's own workflows and the kit's starter CI.
+  workflows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Fails on unpinned actions and other workflow risks; reads .github/zizmor.yml.
+      - uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
+        with:
+          advanced-security: false
+          inputs: .github/workflows kit/ci
+          config: .github/zizmor.yml
+
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -39,6 +55,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # full history for Starlight "Last updated" dates
+          persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

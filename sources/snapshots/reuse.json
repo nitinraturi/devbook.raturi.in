@@ -1,0 +1,11 @@
+{
+  "id": "reuse",
+  "urls": {
+    "https://reuse.software/spec/": {
+      "changedAt": "2026-11-02T17:08:34.839Z",
+      "hash": "9186df7f64bd5f24435061b971c9eea2964453f57a2b7712518b79efda04b003",
+      "text": "REUSE Specification",
+      "checkedAt": "2026-11-02T17:08:34.839Z"
+    }
+  }
+}

@@ -2,6 +2,8 @@
 title: GA4 and consent
 description: Google Analytics 4 notes - production-only loading, Consent Mode v2 defaults, consent banner, events without personal data and SPA page views.
 lastVerified: 2026-10-22
+sources:
+  - Google tag consent mode documentation
 ---
 
 Check Google's current Consent Mode docs before implementing.

@@ -22,11 +22,12 @@
     "test:kit": "npm run test:scripts",
     "lhci": "lhci autorun",
     "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run check:rule-ids && npm run check:version && npm run evals:validate && npm run check:skills && npm run test:scripts && npm run contrast && npm run build && npm run test:e2e",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run check:rule-ids && npm run check:sources && npm run check:version && npm run evals:validate && npm run check:skills && npm run test:scripts && npm run contrast && npm run build && npm run test:e2e",
     "deploy": "wrangler deploy",
     "evals:model": "node evals/model.mjs",
-    "test:scripts": "node --test 'kit/**/*.test.mjs' 'skills/**/*.test.mjs'",
-    "check:skills": "node scripts/check-skills.mjs"
+    "test:scripts": "node --test 'kit/**/*.test.mjs' 'skills/**/*.test.mjs' 'scripts/*.test.mjs'",
+    "check:skills": "node scripts/check-skills.mjs",
+    "check:sources": "node scripts/sync-sources.mjs --check"
   },
   "dependencies": {
     "@astrojs/starlight": "0.42.6",

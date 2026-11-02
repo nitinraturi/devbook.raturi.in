@@ -1,0 +1,25 @@
+name: Suggest a source
+description: Suggest a primary source a rule or file should follow or be checked against.
+labels: [suggest-source]
+body:
+  - type: input
+    id: file
+    attributes:
+      label: Rule ID or file
+      placeholder: instructions/seo.md
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Source URL
+      description: Official docs, a standard or a recognised guideline.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What it supports or changes
+    validations:
+      required: true

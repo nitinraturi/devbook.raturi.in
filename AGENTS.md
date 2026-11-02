@@ -23,6 +23,8 @@ npm run lhci     # Lighthouse budgets
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
 - `kit/`: the optional enforcement kit (Claude Code hooks, git hooks, starter CI) that projects opt into. It is code, so MIT-0; `npm run test:scripts` tests the hooks and the skills' scripts.
 - `evals/`: the evaluation harness (fixtures, tasks, checks) that shows whether a Devbook version changes what an agent sees and does. `npm run evals:model` (the modelled run) is free; commit its `evals/results/` with any change to shipped files. Never run `run.mjs` without `--dry-run` unless the user approves the spend. See `evals/README.md`.
+- `sources.json`: every primary source with its URLs, cadence and the rule IDs it supports. `scripts/sync-sources.mjs` writes the `sources:` frontmatter from it; add a source there, never in frontmatter. `sources/snapshots/` holds what the weekly watcher last saw.
+- `maintainer/`: repository-only prompts for the scheduled Claude reviews (`maintainer/review.md`). Never a skill, so projects never load it.
 - `src/content/docs/start-here/writing-instructions.md`: the research-backed guide to writing instructions LLMs follow, published at `/start-here/writing-instructions/`.
 
 ## Writing rules
@@ -37,7 +39,7 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 6. Examples only where a format or shape matters, such as templates, and then a few consistent ones.
 7. Keep each instruction file under about 8 KB, and the sets within the budgets in `devbook.manifest.json` (the always tier 9 KB, a typical website 35 KB). Budgets only go down: `check-budget.mjs` fails a raised budget unless the same change commits `evals/results/` showing no pass-rate loss against the last `main` or `stable` result.
 8. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
-9. Base rules on primary sources (official docs, standards, recognised guidelines) and list them in the file's `sources:` frontmatter. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
+9. Base rules on primary sources (official docs, standards, recognised guidelines) and add them, with URLs, to `sources.json`; `node scripts/sync-sources.mjs` writes the file's `sources:` frontmatter. Set `lastVerified` when you check a file against its sources. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
 10. Frontmatter: a `title`, a 120–160 character `description`, `sidebar.order` and, for instructions, `sources:`. No H1 in the body; the title is the heading.
 11. Stack-agnostic instructions name no framework. Framework details go in `stacks/`.
 

@@ -2,6 +2,8 @@
 title: TypeScript
 description: TypeScript notes - strict compiler flags, types from schemas, boundary validation, lint setup and import style for any TypeScript project.
 lastVerified: 2026-10-22
+sources:
+  - TypeScript TSConfig reference
 ---
 
 Check the current TSConfig reference before changing compiler options.

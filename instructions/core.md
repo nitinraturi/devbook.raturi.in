@@ -7,6 +7,7 @@ sources:
   - Functional core, imperative shell (Gary Bernhardt)
   - Documenting Architecture Decisions (Michael Nygard)
   - Conventional Commits 1.0
+lastVerified: 2026-11-02
 ---
 
 The project's `AGENTS.md` overrides Devbook only where it says so; the user's direct request overrides both. Cite rule IDs, such as `CORE-02`, in reports.

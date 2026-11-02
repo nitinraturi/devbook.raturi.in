@@ -9,6 +9,7 @@ sources:
   - SQL Antipatterns (Bill Karwin)
   - Designing Data-Intensive Applications (Martin Kleppmann)
   - RFC 9562 (UUIDs)
+lastVerified: 2026-11-02
 # Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
 paths:
   - "**/migrations/**"

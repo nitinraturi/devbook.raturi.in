@@ -2,6 +2,8 @@
 title: Cloudflare
 description: Cloudflare hosting notes - Workers static assets or Pages, security headers, redirects, previews, environments, secrets and domains. Check current docs.
 lastVerified: 2026-11-02
+sources:
+  - Cloudflare Workers static assets and Previews documentation
 ---
 
 Check current Cloudflare docs before configuring. Keep the hosting the project already uses unless asked to migrate.

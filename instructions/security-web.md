@@ -8,6 +8,7 @@ sources:
   - OWASP Password Storage Cheat Sheet
   - NIST SP 800-63B
   - MDN Web Docs on HTTP headers and cookies
+lastVerified: 2026-11-02
 # Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
 paths:
   - "**/*.html"

@@ -1,0 +1,217 @@
+# Scheduled reviews. Claude runs with maintainer/review.md on the owner's subscription (CLAUDE_CODE_OAUTH_TOKEN) and
+# can only open pull requests and comment on issues; it never merges. Claude never runs on pull_request_target or
+# fork pull requests, so secrets never meet untrusted code.
+#
+#   weekly    up to three open `source-changed` issues, oldest first, one at a time
+#   monthly   the modelled eval of stable against the last committed result; an issue on any regression
+#   quarterly a rotation review of a quarter of the files, the staleness check, and the eval matrix
+#   dispatch  any of the above, or `evals` with a model (rerun when a new Claude model is released)
+#
+# Evals are modelled (free) unless the MEASURED_EVALS variable is 'true', which spends subscription usage.
+name: Review
+
+on:
+  schedule:
+    - cron: '17 5 * * 2' # weekly, Tuesdays
+    - cron: '29 5 1 * *' # monthly, the 1st
+    - cron: '43 5 2 1,4,7,10 *' # quarterly
+  workflow_dispatch:
+    inputs:
+      job:
+        description: Which review to run
+        type: choice
+        options: [sources, monthly, quarterly, evals]
+        default: sources
+      model:
+        description: Model for measured evals (evals job)
+        type: string
+        default: claude-sonnet-5-5
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review
+  cancel-in-progress: false
+
+jobs:
+  pick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: read
+    outputs:
+      issues: ${{ steps.pick.outputs.issues }}
+    steps:
+      - name: Oldest open source-changed issues (at most three)
+        id: pick
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.event.schedule == '17 5 * * 2' || inputs.job == 'sources' }}
+        run: |
+          if [ "$RUN" != "true" ]; then echo "issues=[]" >> "$GITHUB_OUTPUT"; exit 0; fi
+          issues=$(gh issue list -R "$GITHUB_REPOSITORY" --label source-changed --state open --search "sort:created-asc" --limit 3 --json number --jq '[.[].number]')
+          echo "issues=$issues" >> "$GITHUB_OUTPUT"
+
+  sources:
+    needs: pick
+    if: needs.pick.outputs.issues != '[]' && needs.pick.outputs.issues != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        issue: ${{ fromJSON(needs.pick.outputs.issues) }}
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci && npx playwright install --with-deps chromium
+
+      - uses: anthropics/claude-code-action@5eb090f3c3afd701a0672cd32981197ca27688f6 # v1.0.253
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: |
+            Read maintainer/review.md and follow it for issue #${{ matrix.issue }} in ${{ github.repository }}.
+          claude_args: >-
+            --max-turns 60
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebFetch,Bash(npm run *),Bash(node *),Bash(git checkout *),Bash(git switch *),Bash(git add *),Bash(git commit *),Bash(git push origin fix/*),Bash(git push origin chore/*),Bash(git diff *),Bash(git status *),Bash(git log *),Bash(gh issue view *),Bash(gh issue comment *),Bash(gh issue close *),Bash(gh pr create *)"
+
+  monthly:
+    if: github.event.schedule == '29 5 1 * *' || inputs.job == 'monthly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Modelled eval of stable against the last committed result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch -q origin stable || { echo "No stable branch yet" >> "$GITHUB_STEP_SUMMARY"; exit 0; }
+          node evals/model.mjs --variant stable --out "$RUNNER_TEMP/now" > "$RUNNER_TEMP/summary.md"
+          cat "$RUNNER_TEMP/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          base=$(ls -t evals/results/*-stable-modelled.json evals/results/*-main-modelled.json 2>/dev/null | head -n1)
+          if ! node evals/report.mjs --compare "$base" "$RUNNER_TEMP"/now/*-stable-modelled.json > "$RUNNER_TEMP/compare.txt"; then
+            gh label create eval-regression --color D93F0B --force
+            gh issue create --label eval-regression --title "Eval regression on stable ($(date -u +%F))" \
+              --body "$(printf 'The monthly modelled eval of stable regressed against %s:\n\n```\n%s\n```' "$base" "$(cat "$RUNNER_TEMP/compare.txt")")"
+          fi
+
+  quarterly:
+    if: github.event.schedule == '43 5 2 1,4,7,10 *' || inputs.job == 'quarterly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci && npx playwright install --with-deps chromium
+
+      - name: Stale files
+        id: stale
+        continue-on-error: true
+        run: node scripts/maintenance.mjs stale | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Rotation batch
+        id: rotation
+        run: |
+          {
+            echo "files<<EOF"
+            node scripts/maintenance.mjs rotation
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: anthropics/claude-code-action@5eb090f3c3afd701a0672cd32981197ca27688f6 # v1.0.253
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: |
+            Read maintainer/review.md and do a rotation review of these files in ${{ github.repository }}:
+            ${{ steps.rotation.outputs.files }}
+          claude_args: >-
+            --max-turns 80
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebFetch,Bash(npm run *),Bash(node *),Bash(git checkout *),Bash(git switch *),Bash(git add *),Bash(git commit *),Bash(git push origin chore/*),Bash(git push origin fix/*),Bash(git diff *),Bash(git status *),Bash(git log *),Bash(gh pr create *)"
+
+      - name: Eval matrix
+        env:
+          MEASURED: ${{ vars.MEASURED_EVALS }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ "$MEASURED" = "true" ]; then
+            npm i -g @anthropic-ai/claude-code@2.1.303
+            node evals/run.mjs --variant none,main --models claude-haiku-5-5,claude-sonnet-5-5,claude-opus-5-5 --repeat 1 --yes --credential oauth
+          else
+            node evals/model.mjs --variant none,main --out "$RUNNER_TEMP/matrix"
+          fi | tee -a "$GITHUB_STEP_SUMMARY"
+
+  evals:
+    if: inputs.job == 'evals'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Rerun the evals for a model
+        env:
+          MEASURED: ${{ vars.MEASURED_EVALS }}
+          MODEL: ${{ inputs.model }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ "$MEASURED" = "true" ]; then
+            npm i -g @anthropic-ai/claude-code@2.1.303
+            node evals/run.mjs --variant none,main --models "$MODEL" --repeat 1 --yes --credential oauth
+          else
+            node evals/model.mjs --variant none,main --out "$RUNNER_TEMP/evals"
+          fi | tee -a "$GITHUB_STEP_SUMMARY"

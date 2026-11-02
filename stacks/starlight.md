@@ -2,6 +2,8 @@
 title: Starlight
 description: Starlight stack notes for documentation sites - content layout, frontmatter, sidebar, components, overrides and plugins. Verify against current Starlight docs.
 lastVerified: 2026-10-22
+sources:
+  - Starlight documentation
 ---
 
 Check the current Starlight docs for exact APIs.

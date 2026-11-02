@@ -2,6 +2,16 @@
 
 Notable changes to Devbook, newest first. Devbook is developed on `main` and released to the `stable` branch; each release raises `VERSION` and has a GitHub Release. Each entry is in the first release on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-02: Sources with URLs, checked every week
+
+### Added
+- **`sources.json`** lists every source behind the instructions, stack notes and skills, with its URLs, how often it changes and the rule IDs it supports. Each file's `sources:` frontmatter is now generated from it.
+- Every instruction file and stack note has `lastVerified`, and stack notes list their sources.
+- Behind the scenes, a weekly watcher flags changed sources and scheduled reviews propose fixes as pull requests for the owner to review. Nothing in projects changes.
+
+### Changed
+- Three source titles are shorter (OWASP Secrets Management Cheat Sheet, The Practical Test Pyramid, Software Engineering at Google); the sources are the same.
+
 ## 2026-11-02: A stable release channel
 
 ### Added
