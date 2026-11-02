@@ -3,7 +3,7 @@
 # fork pull requests, so secrets never meet untrusted code.
 #
 #   weekly    up to three open `source-changed` issues, oldest first, one at a time
-#   monthly   the modelled eval of stable against the last committed result; an issue on any regression
+#   monthly   the modelled eval of main against the last committed result; an issue on any regression
 #   quarterly a rotation review of a quarter of the files, the staleness check, and the eval matrix
 #   dispatch  any of the above, or `evals` with a model (rerun when a new Claude model is released)
 #
@@ -112,18 +112,17 @@ jobs:
 
       - run: npm ci
 
-      - name: Modelled eval of stable against the last committed result
+      - name: Modelled eval of main against the last committed result
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch -q origin stable || { echo "No stable branch yet" >> "$GITHUB_STEP_SUMMARY"; exit 0; }
-          node evals/model.mjs --variant stable --out "$RUNNER_TEMP/now" > "$RUNNER_TEMP/summary.md"
+          node evals/model.mjs --variant local --out "$RUNNER_TEMP/now" > "$RUNNER_TEMP/summary.md"
           cat "$RUNNER_TEMP/summary.md" >> "$GITHUB_STEP_SUMMARY"
-          base=$(ls -t evals/results/*-stable-modelled.json evals/results/*-main-modelled.json 2>/dev/null | head -n1)
-          if ! node evals/report.mjs --compare "$base" "$RUNNER_TEMP"/now/*-stable-modelled.json > "$RUNNER_TEMP/compare.txt"; then
+          base=$(ls -t evals/results/*-local-modelled.json evals/results/*-main-modelled.json 2>/dev/null | head -n1)
+          if ! node evals/report.mjs --compare "$base" "$RUNNER_TEMP"/now/*-local-modelled.json > "$RUNNER_TEMP/compare.txt"; then
             gh label create eval-regression --color D93F0B --force
-            gh issue create --label eval-regression --title "Eval regression on stable ($(date -u +%F))" \
-              --body "$(printf 'The monthly modelled eval of stable regressed against %s:\n\n```\n%s\n```' "$base" "$(cat "$RUNNER_TEMP/compare.txt")")"
+            gh issue create --label eval-regression --title "Eval regression on main ($(date -u +%F))" \
+              --body "$(printf 'The monthly modelled eval of main regressed against %s:\n\n```\n%s\n```' "$base" "$(cat "$RUNNER_TEMP/compare.txt")")"
           fi
 
   quarterly:

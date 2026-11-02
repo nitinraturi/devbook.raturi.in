@@ -2,7 +2,7 @@
 // Compares the project's Devbook version with the newest on a channel and prints, as Markdown, the changelog entries
 // in between and their Upgrade notes. Changes nothing. Node only, no dependencies.
 //
-//   node .devbook/skills/devbook-upgrade/scripts/compare.mjs [--channel stable|main] [--root <dir>] [--source <url-or-dir>]
+//   node .devbook/skills/devbook-upgrade/scripts/compare.mjs [--root <dir>] [--source <url-or-dir>]
 //
 // The first line is machine-readable: `status: up-to-date`, `status: behind` or `status: unknown`.
 // --source is for tests and mirrors: a base URL or a local folder holding VERSION and CHANGELOG.md.
@@ -65,17 +65,12 @@ async function fetchText(source, channel, file) {
 	return res.text();
 }
 
-export async function compare({ root, channel = 'stable', source = REPO_RAW }) {
+export async function compare({ root, channel = 'main', source = REPO_RAW }) {
 	const devbook = join(root, '.devbook');
 	const read = (f) => (existsSync(join(devbook, f)) ? readFileSync(join(devbook, f), 'utf8') : null);
 	const current = read('VERSION')?.trim() || null;
-	let used = channel;
-	let newest = (await fetchText(source, channel, 'VERSION'))?.trim();
-	// Until the first release creates the stable branch, main is the only channel.
-	if (!newest && channel === 'stable') {
-		used = 'main';
-		newest = (await fetchText(source, 'main', 'VERSION'))?.trim();
-	}
+	const used = channel;
+	const newest = (await fetchText(source, channel, 'VERSION'))?.trim();
 	if (!newest || !VERSION.test(newest)) return { status: 'unknown', current, newest: null, channel: used, entries: [] };
 	const behind = !current || !VERSION.test(current) || compareVersions(newest, current) > 0;
 	if (!behind) return { status: 'up-to-date', current, newest, channel: used, entries: [] };
@@ -91,11 +86,10 @@ export async function compare({ root, channel = 'stable', source = REPO_RAW }) {
 	return { status: 'behind', current, newest, channel: used, entries: newEntries(remote, read('CHANGELOG.md'), since) };
 }
 
-export function markdown(result, requested) {
+export function markdown(result) {
 	const lines = [`status: ${result.status}`, ''];
-	const fellBack = requested === 'stable' && result.channel === 'main' ? ' (no stable channel yet, so main)' : '';
 	lines.push(`- Current: ${result.current ?? 'none (a copy from before version numbers)'}`);
-	lines.push(`- Newest on ${result.channel}${fellBack}: ${result.newest ?? 'unknown (offline or unreachable)'}`);
+	lines.push(`- Newest on ${result.channel}: ${result.newest ?? 'unknown (offline or unreachable)'}`);
 	if (result.status !== 'behind') return `${lines.join('\n')}\n`;
 	lines.push('', `## Changes (${result.entries.length})`, '');
 	for (const e of result.entries) lines.push(`- ${e.heading}`);
@@ -109,18 +103,13 @@ export function markdown(result, requested) {
 if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
 	const { values } = parseArgs({
 		options: {
-			channel: { type: 'string', default: 'stable' },
 			root: { type: 'string', default: '.' },
 			source: { type: 'string', default: REPO_RAW },
 		},
 	});
-	if (!['stable', 'main'].includes(values.channel)) {
-		console.error('--channel must be stable or main');
-		process.exit(2);
-	}
 	try {
-		const result = await compare({ root: resolve(values.root), channel: values.channel, source: values.source });
-		process.stdout.write(markdown(result, values.channel));
+		const result = await compare({ root: resolve(values.root), source: values.source });
+		process.stdout.write(markdown(result));
 	} catch (error) {
 		console.log('status: unknown');
 		console.error(`Could not reach the Devbook source: ${error.message}`);

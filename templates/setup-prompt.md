@@ -1,8 +1,8 @@
 Set up Devbook instructions in this project. Do the setup; don't just describe it.
 Method: submodule
-(Method: "submodule" adds Devbook as a git submodule that tracks the
-stable branch, "copy" commits plain files. Either way you get the latest
-release, and .devbook/VERSION records its version number.)
+(Method: "submodule" adds Devbook as a git submodule that tracks main,
+"copy" commits plain files. Either way you get the latest release, and
+.devbook/VERSION records its version number.)
 
 1. Add Devbook to .devbook/
 - If .devbook/ already exists, keep its method (a submodule has a
@@ -11,9 +11,9 @@ release, and .devbook/VERSION records its version number.)
   Then do steps 1 to 3 of .devbook/skills/devbook-upgrade/SKILL.md, so
   setup runs on the newest version, and go to step 2.
 - Submodule: run:
-  git submodule add -b stable https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
+  git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
 - Copy: from the repository root, run:
-  P=devbook.raturi.in-stable && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/stable | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
+  P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
   On Windows PowerShell, use the PowerShell command from
   https://devbook.raturi.in/start-here/setup/ instead.
   Don't edit the copied files. Put project rules in AGENTS.md instead.

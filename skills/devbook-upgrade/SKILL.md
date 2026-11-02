@@ -1,6 +1,6 @@
 ---
 name: devbook-upgrade
-description: "Checks whether a newer Devbook is out on the stable channel and, once the user agrees, upgrades .devbook/ and applies the changelog's Upgrade notes. Use when asked whether Devbook is up to date, or to upgrade or update Devbook."
+description: "Checks whether a newer Devbook version is on main and, once the user agrees, upgrades .devbook/ and applies the changelog's Upgrade notes. Use when asked whether Devbook is up to date, or to upgrade or update Devbook."
 license: CC-BY-4.0
 ---
 
@@ -10,11 +10,10 @@ Upgrading changes what steers the assistant, so explain the changes and wait for
 
 ## 1. Compare versions
 
-Run `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`. It prints `status: up-to-date`, `behind` or `unknown`, the current and newest versions on the `stable` channel (Devbook's releases), and the changelog entries and **Upgrade** notes in between. It changes nothing.
+Run `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`. It prints `status: up-to-date`, `behind` or `unknown`, the current and newest versions (`VERSION` on Devbook's `main`), and the changelog entries and **Upgrade** notes in between. It changes nothing.
 
 - `up-to-date`: say so and stop.
 - `unknown`: you're offline or GitHub is unreachable; say so and stop.
-- If the project follows `main` instead (`.gitmodules` has `branch = main`), add `--channel main`.
 
 ## 2. Explain and ask
 
@@ -22,7 +21,7 @@ Tell the user, in a few lines, what changes for them and each **Upgrade** note t
 
 ## 3. Upgrade
 
-- Submodule (a `.devbook/.git` file exists): `git -C .devbook fetch -q origin stable && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`. Fetch `main` instead when the project follows it, or when `compare.mjs` said there is no stable channel yet.
+- Submodule (a `.devbook/.git` file exists): `git -C .devbook fetch -q origin main && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`.
 - Copy: rerun the copy command from `.devbook/templates/setup-prompt.md`.
 - Apply each **Upgrade** note. Keep the project's own content in `AGENTS.md`, and ask before removing anything.
 - Run `node .devbook/skills/devbook-setup/scripts/link.mjs --assistants <list>` to refresh links and generated files, with the list from the Assistants line in `AGENTS.md` (default `claude,copilot`), then `verify.mjs` with the same list until it exits 0.

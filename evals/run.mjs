@@ -38,7 +38,7 @@ if (opts.help) {
 	console.log(`Usage: node evals/run.mjs [options]
 
   --task <ids>            comma-separated task ids (default: all)
-  --variant <names>       none, main, stable, local or ref:<git-ref>, comma-separated (default: none,main)
+  --variant <names>       none, main, local or ref:<git-ref>, comma-separated (default: none,main)
   --repeat <n>            runs per task, variant and model (default: 3)
   --models <ids>          comma-separated models (default: claude-sonnet-5-5); --model <id> is the same for one
   --credential <kind>     auto, oauth (CLAUDE_CODE_OAUTH_TOKEN) or api-key (ANTHROPIC_API_KEY); auto prefers oauth

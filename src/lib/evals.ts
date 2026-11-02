@@ -18,7 +18,7 @@ export interface EvalResult {
 	tasks: Record<string, TaskResult>;
 }
 
-const ORDER = ['none', 'ref:9504d10', 'main', 'stable', 'local'];
+const ORDER = ['none', 'ref:9504d10', 'main', 'local'];
 const files = import.meta.glob<EvalResult>('../../evals/results/*.json', { eager: true, import: 'default' });
 
 /** The newest result per variant, for one method, in a fixed order. */

@@ -27,6 +27,6 @@ You get one of these, named in the run's prompt:
    - what changed and the rule IDs;
    - the eval delta (pass rate and mean tokens, `main` → `local`) and the byte delta of each changed file;
    - `Closes #<issue>`.
-7. Never merge, push to `main` or `stable`, tag or release. The owner reviews every pull request.
+7. Never merge, push to `main` or release. The owner reviews every pull request.
 
 Stop after one issue or one rotation batch.

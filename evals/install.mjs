@@ -75,15 +75,8 @@ export async function prepareFixture(fixture, root, { setup = true } = {}) {
 	return dir;
 }
 
-/** The git ref a variant name stands for: `main`, `stable` (local branch, else origin's), or `ref:<git-ref>`. */
-async function variantRef(name) {
-	if (name.startsWith('ref:')) return name.slice(4);
-	if (name !== 'stable') return name;
-	for (const ref of ['stable', 'origin/stable']) {
-		if ((await sh(`git rev-parse -q --verify '${ref}^{commit}'`, { cwd: repo })).code === 0) return ref;
-	}
-	throw new Error('variant "stable": no stable branch yet (it is created by the first release)');
-}
+/** The git ref a variant name stands for: `main`, or `ref:<git-ref>`. */
+const variantRef = async (name) => (name.startsWith('ref:') ? name.slice(4) : name);
 
 /** Materialise a Devbook variant's files into `root/variants/<name>`. Returns { dir, label, commit } or null for `none`. */
 export async function prepareVariant(name, root) {

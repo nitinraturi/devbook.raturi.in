@@ -37,7 +37,7 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 4. Normal tone. No capitals, "CRITICAL" or "MUST" for emphasis, because current models over-apply it.
 5. Each rule lives in one file. Link to it instead of restating it, so copies can't drift into contradictions.
 6. Examples only where a format or shape matters, such as templates, and then a few consistent ones.
-7. Keep each instruction file under about 8 KB, and the sets within the budgets in `devbook.manifest.json` (the always tier 9 KB, a typical website 35 KB). Budgets only go down: `check-budget.mjs` fails a raised budget unless the same change commits `evals/results/` showing no pass-rate loss against the last `main` or `stable` result.
+7. Keep each instruction file under about 8 KB, and the sets within the budgets in `devbook.manifest.json` (the always tier 9 KB, a typical website 35 KB). Budgets only go down: `check-budget.mjs` fails a raised budget unless the same change commits `evals/results/` showing no pass-rate loss against the last committed `main` result.
 8. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
 9. Base rules on primary sources (official docs, standards, recognised guidelines) and add them, with URLs, to `sources.json`; `node scripts/sync-sources.mjs` writes the file's `sources:` frontmatter. Set `lastVerified` when you check a file against its sources. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
 10. Frontmatter: a `title`, a 120–160 character `description`, `sidebar.order` and, for instructions, `sources:`. No H1 in the body; the title is the heading.
@@ -53,4 +53,4 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
 - [ ] Never rename or delete a file in `instructions/`, `stacks/`, `skills/` or `templates/`, because projects import and link them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
 - [ ] `instructions/`, `stacks/`, `skills/` and the `start-here/` guides are CC BY 4.0; `templates/`, `kit/` and code are MIT-0. Never move text between them without updating `/license/`.
-- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`. Don't edit `VERSION`, create tags or push to `stable`: the Release workflow does that when shipped files change and the gates pass (`DEPLOY.md`).
+- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`. Don't edit `VERSION` or create tags: the Release workflow raises `VERSION` on `main` when shipped files change and the gates pass (`DEPLOY.md`).

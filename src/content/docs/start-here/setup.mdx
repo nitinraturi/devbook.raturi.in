@@ -15,15 +15,15 @@ The [setup prompt](/#setup) does all of this for you. The steps below show the s
 
 ## 1. Choose how to add Devbook
 
-Both methods put the latest release, from the `stable` branch, in `.devbook/`, so the rest of the setup is the same. `.devbook/VERSION` holds its version number, such as `2026.11.02.1`, and Devbook changes in your project only when you update. Pick a tab.
+Both methods put the latest release, from `main`, in `.devbook/`, so the rest of the setup is the same. `.devbook/VERSION` holds its version number, such as `2026.11.02.1`, and Devbook changes in your project only when you update. Pick a tab.
 
 <Tabs syncKey="method">
 <TabItem label="Submodule (tracks updates)">
 
-Adds Devbook as a submodule that tracks `stable`, the release branch. You update with one command, and every update shows up as a reviewable change. To follow every change before it is released, use `-b main` instead (the edge channel).
+Adds Devbook as a submodule that tracks `main`. You update with one command, and every update shows up as a reviewable change.
 
 ```sh
-git submodule add -b stable https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
+git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
 ```
 
 </TabItem>
@@ -32,16 +32,16 @@ git submodule add -b stable https://github.com/nitinraturi/devbook.raturi.in .de
 Downloads the latest release as plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-P=devbook.raturi.in-stable && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/stable | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
+P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
 ```
 
 On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
 
 ```powershell
-$p = "devbook.raturi.in-stable"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/stable" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0" "$p/VERSION" "$p/CHANGELOG.md" "$p/devbook.manifest.json"; Remove-Item devbook.tar.gz
+$p = "devbook.raturi.in-main"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0" "$p/VERSION" "$p/CHANGELOG.md" "$p/devbook.manifest.json"; Remove-Item devbook.tar.gz
 ```
 
-Without a terminal, download the [ZIP of `stable`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/stable.zip). Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0`, `VERSION`, `CHANGELOG.md` and `devbook.manifest.json` files into `.devbook/`.
+Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0`, `VERSION`, `CHANGELOG.md` and `devbook.manifest.json` files into `.devbook/`.
 
 </TabItem>
 </Tabs>
@@ -122,15 +122,15 @@ Start a new chat and ask which Devbook files the assistant is following. [Use De
 
 ## Update, clone or remove
 
-Before you update, read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/stable/CHANGELOG.md) entries added since your version, or run `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`, which lists them. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
+Before you update, read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries added since your version, or run `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`, which lists them. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
 
 <Tabs syncKey="method">
 <TabItem label="Submodule (tracks updates)">
 
 ```sh
 cat .devbook/VERSION                                                                       # the version you use
-curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/stable/VERSION  # the newest release
-git -C .devbook fetch origin stable                                                        # fetch the latest release
+curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION    # the newest release
+git -C .devbook fetch origin main                                                          # fetch the latest release
 git -C .devbook diff HEAD FETCH_HEAD -- CHANGELOG.md                                       # what changed since yours
 git -C .devbook checkout -q FETCH_HEAD && git add .devbook                                 # update, then commit
 git clone --recurse-submodules <your-repo>                                                 # clone a project that uses Devbook

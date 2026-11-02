@@ -3,10 +3,7 @@
 import { latestResults, pct, taskCount, tokens } from '../lib/evals';
 
 const results = latestResults();
-const v1 =
-	results.find((r) => r.variant === 'local') ??
-	results.find((r) => r.variant === 'stable') ??
-	results.find((r) => r.variant === 'main');
+const v1 = results.find((r) => r.variant === 'local') ?? results.find((r) => r.variant === 'main');
 const before = results.find((r) => r.variant === 'ref:9504d10');
 ---
 

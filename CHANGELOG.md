@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to Devbook, newest first. Devbook is developed on `main` and released to the `stable` branch; each release raises `VERSION` and has a GitHub Release. Each entry is in the first release on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
+Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with each release. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update. Read the entries newer than your `.devbook/VERSION` before you update.
 
 ## 2026-11-02: Swift stack note for iOS and macOS apps
 
@@ -11,10 +11,10 @@ Notable changes to Devbook, newest first. Devbook is developed on `main` and rel
 
 ## 2026-11-02: Devbook v1
 
-Devbook is a set of short rule files that AI coding assistants load from your project: core, security and testing in every chat (9 KB), the rest only when a matching file or task needs them, and skills for multi-step jobs. v1 is the first public release on the `stable` channel. It brings everything in the entries below: a smaller always-loaded tier, browser and sign-in rules in `security-web.md`, setup and upgrade scripts, adapters for Cursor, Codex and Copilot code review, release gates, and sources that are checked every week. The [evals page](https://devbook.raturi.in/evals/) shows what was measured.
+Devbook is a set of short rule files that AI coding assistants load from your project: core, security and testing in every chat (9 KB), the rest only when a matching file or task needs them, and skills for multi-step jobs. v1 is the first public release. It brings everything in the entries below: a smaller always-loaded tier, browser and sign-in rules in `security-web.md`, setup and upgrade scripts, adapters for Cursor, Codex and Copilot code review, versions that rise only with real releases, and sources that are checked every week. The [evals page](https://devbook.raturi.in/evals/) shows what was measured.
 
 **Upgrade from any earlier version:**
-1. Move to `stable`. **Submodule:** `git config -f .gitmodules submodule..devbook.branch stable && git -C .devbook fetch -q origin stable && git -C .devbook checkout -q FETCH_HEAD`. **Copy:** rerun the copy command from the [setup page](https://devbook.raturi.in/start-here/setup/). A project pinned to the `v2026.11.02` tag moves the same way.
+1. Update `.devbook/`. **Submodule:** `git -C .devbook fetch -q origin main && git -C .devbook checkout -q FETCH_HEAD`. **Copy:** rerun the copy command from the [setup page](https://devbook.raturi.in/start-here/setup/). A project pinned to the `v2026.11.02` tag moves the same way, and should set `git config -f .gitmodules submodule..devbook.branch main`.
 2. Replace the Devbook section of `AGENTS.md` with the one in `.devbook/templates/AGENTS.md`, keeping the "read when" lines for the files you use. Delete any "At the start of each session" paragraph, and add the `security-web.md` line if the project has pages, an API for browsers or its own sign-in. Add the `Assistants` line to the Project section.
 3. Run `node .devbook/skills/devbook-setup/scripts/link.mjs --assistants <yours>`, then `verify.mjs` with the same list until it exits 0.
 4. Run `node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs`, review the diff, commit and start a new chat.
@@ -31,17 +31,13 @@ Or ask your assistant "Is Devbook up to date?", and it walks through these steps
 ### Changed
 - Three source titles are shorter (OWASP Secrets Management Cheat Sheet, The Practical Test Pyramid, Software Engineering at Google); the sources are the same.
 
-## 2026-11-02: A stable release channel
+## 2026-11-02: Versions only for real releases
 
 ### Added
-- **`stable` branch.** Projects install and upgrade from `stable`; `main` is the edge channel. A release happens only when shipped files change and the gates pass (`npm run check`, a new changelog entry, and no eval regression against `stable`). Each release raises `VERSION`, is tagged `v<VERSION>` and has a GitHub Release with its changelog entries.
-- **`kit/ci/devbook-version.yml`**, a weekly job for any assistant that compares `.devbook/VERSION` with `stable` and warns in the job summary. It never fails the build.
+- **Release gates.** `VERSION` goes up only when the files projects load change and the gates pass: `npm run check`, a new changelog entry, and no eval regression against the last release. A site, eval or CI change no longer raises it, so projects are told to upgrade only when something they load changed. There are still no tags; `main` and `VERSION` are all you need.
+- **`kit/ci/devbook-version.yml`**, a weekly job for any assistant that compares `.devbook/VERSION` with `main` and warns in the job summary. It never fails the build.
 
-### Changed
-- `VERSION` no longer goes up on every commit, only on releases, so a site or eval change no longer tells projects to upgrade.
-- The setup prompt, the copy command, `devbook-upgrade`, `compare.mjs` and the kit's version hook read `stable`. Until the first release creates it, `compare.mjs` and the hook fall back to `main`.
-
-**Upgrade:** projects that track `main` keep working. To follow releases instead: **submodule:** `git config -f .gitmodules submodule..devbook.branch stable && git -C .devbook fetch -q origin stable && git -C .devbook checkout -q FETCH_HEAD && git add .gitmodules .devbook`; **copy:** rerun the copy command from the setup page, which now downloads `stable`. To stay on the edge, keep `branch = main` and pass `--channel main` to `compare.mjs`.
+**Upgrade:** nothing to change; projects keep following `main`.
 
 ## 2026-11-02: Adapters for Cursor, Codex and Copilot code review
 
@@ -64,7 +60,7 @@ Or ask your assistant "Is Devbook up to date?", and it walks through these steps
 ### Added
 - **`skills/devbook-setup/scripts/link.mjs`** creates the path-rule and skill links from `devbook.manifest.json` and the files `AGENTS.md` lists. It is idempotent, copies files with a "Generated by Devbook" header where symlinks don't work, refreshes those copies on the next run, never overwrites a file it didn't make, and reports (or with `--prune` removes) links that are no longer chosen.
 - **`skills/devbook-setup/scripts/verify.mjs`** checks every `@` and "read when" path in `AGENTS.md`, `CLAUDE.md`'s import, every link and every generated copy, and exits 1 with the list of problems.
-- **`skills/devbook-upgrade/scripts/compare.mjs`** prints the current and newest versions and the changelog entries and **Upgrade** notes in between. It reads the `stable` channel, and `main` until the first release creates it.
+- **`skills/devbook-upgrade/scripts/compare.mjs`** prints the current and newest versions and the changelog entries and **Upgrade** notes in between. It reads `VERSION` and `CHANGELOG.md` on `main`.
 - **Report templates** (`references/report-template.md`) for the security review, SEO audit and release check, each with one canonical finding.
 - `devbook.manifest.json` now ships with Devbook (the copy command fetches it), because `link.mjs` reads it.
 

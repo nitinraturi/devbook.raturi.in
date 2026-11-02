@@ -87,7 +87,7 @@ export function digest(now = new Date()) {
 		gh('run', 'list', '--workflow', 'review.yml', '--limit', '50', '--json', 'conclusion,createdAt,url') || '[]',
 	).filter((r) => r.createdAt >= since);
 	const results = readdirSync(join(root, 'evals/results'))
-		.filter((n) => n.endsWith('.json') && /-(main|stable)-/.test(n))
+		.filter((n) => n.endsWith('.json') && /-(main|local)-/.test(n))
 		.map((n) => JSON.parse(readFileSync(join(root, 'evals/results', n), 'utf8')))
 		.sort((a, b) => a.startedAt.localeCompare(b.startedAt))
 		.slice(-4);

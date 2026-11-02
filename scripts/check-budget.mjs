@@ -5,7 +5,7 @@
 // Also checks loading metadata: path-tier instructions carry identical `paths` and `applyTo`
 // globs, and skills follow the Agent Skills format.
 // Budgets only go down (the ratchet): a budget may rise only when the same change commits eval results in
-// evals/results/ that show no pass-rate loss against the base's main or stable result. The base is BUDGET_BASE,
+// evals/results/ that show no pass-rate loss against the base's main result. The base is BUDGET_BASE,
 // else the merge base with origin/main, else the previous commit.
 import { execFileSync } from 'node:child_process';
 import { readFile, readdir, stat } from 'node:fs/promises';
@@ -139,7 +139,7 @@ else {
 		const reference = (r) =>
 			baseFiles
 				.map((f) => JSON.parse(git('show', `${base}:${f}`)))
-				.filter((b) => ['main', 'stable'].includes(b.variant) && b.method === r.method && b.model === r.model)
+				.filter((b) => ['main', 'local'].includes(b.variant) && b.method === r.method && b.model === r.model)
 				.sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0];
 		const evidence = [];
 		for (const f of changed) {

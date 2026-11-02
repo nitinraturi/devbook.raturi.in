@@ -1,5 +1,5 @@
 # Devbook version check for any assistant. Copy to .github/workflows/devbook-version.yml. It compares
-# .devbook/VERSION with the newest release on Devbook's stable branch and writes a warning to the job summary when
+# .devbook/VERSION with the newest version on Devbook's main and writes a warning to the job summary when
 # a newer one is out. It never fails the build. To upgrade, ask the assistant "Is Devbook up to date?".
 name: Devbook version
 
@@ -21,11 +21,11 @@ jobs:
           persist-credentials: false
           submodules: true
 
-      - name: Compare with stable
+      - name: Compare with main
         continue-on-error: true
         run: |
           current=$(cat .devbook/VERSION 2>/dev/null || echo "none")
-          newest=$(curl -fsSL --max-time 10 https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/stable/VERSION || true)
+          newest=$(curl -fsSL --max-time 10 https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION || true)
           if [ -z "$newest" ]; then
             echo "Could not read the newest Devbook version; skipped." >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -35,5 +35,5 @@ jobs:
             echo "Devbook $current is up to date." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "::warning::Devbook $newest is out; this project uses $current. Ask your assistant: Is Devbook up to date?"
-            echo "Devbook $newest is out; this project uses $current. See https://github.com/nitinraturi/devbook.raturi.in/blob/stable/CHANGELOG.md" >> "$GITHUB_STEP_SUMMARY"
+            echo "Devbook $newest is out; this project uses $current. See https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md" >> "$GITHUB_STEP_SUMMARY"
           fi

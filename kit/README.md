@@ -16,7 +16,7 @@ The hooks need Node.js 18 or later on the `PATH`, and run from `.devbook/kit/`, 
 
 - `block-git-push.mjs` blocks `git push` in any form (`git -C dir push`, after `&&`, inside `sh -c`). The agent tells the user the branch is ready instead.
 - `protect-env.mjs` blocks edits to `.env`, `.env.local` and similar files through the edit tools and shell redirects, `sed -i`, `cp`, `mv` and `rm`. `.env.example`, `.env.sample` and `.env.template` stay editable. Reading is not blocked.
-- `check-version.mjs` runs when a session starts. It compares `.devbook/VERSION` with the `VERSION` file on Devbook's `stable` branch (or `main`, before the first release), and when it is newer, asks the agent to tell you and offer the `devbook-upgrade` skill. It checks the network at most once a day, caches the answer in the temp folder, and prints nothing when up to date or offline.
+- `check-version.mjs` runs when a session starts. It compares `.devbook/VERSION` with the `VERSION` file on Devbook's `main`, and when it is newer, asks the agent to tell you and offer the `devbook-upgrade` skill. It checks the network at most once a day, caches the answer in the temp folder, and prints nothing when up to date or offline.
 - `guard-rm.mjs` blocks `rm -r` whose target resolves outside the project, or that uses a variable it can't check. The temp folder is allowed.
 
 The hooks are guardrails against mistakes, not a sandbox: a determined agent can still write a script that does the same thing. For hard limits, also use [permission rules](https://code.claude.com/docs/en/permissions) and run untrusted work in a container. If `.devbook/` is missing, for example in a cloud checkout without submodules, the hooks report an error and let the call through.

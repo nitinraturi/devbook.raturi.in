@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-// The release gate, run by .github/workflows/release.yml before main is promoted to stable:
-//   1. something shipped changed since stable (instructions, stacks, skills, templates, kit, the licence, the
+// The release gate, run by .github/workflows/release.yml before VERSION is raised on main. The base is the last
+// release: the newest commit that changed VERSION (or --base).
+//   1. something shipped changed since the base (instructions, stacks, skills, templates, kit, the licence, the
 //      changelog or the manifest); otherwise there is nothing to release;
-//   2. CHANGELOG.md has an entry that stable's changelog doesn't;
-//   3. the modelled evaluation of the working tree shows no task whose pass rate fell against stable (or, before the
-//      first release, against the newest committed main result). Modelled runs are deterministic, so the tolerance is 0.
-// Writes the new changelog entries to --notes <file> for the GitHub Release. Exit 0 to release, 1 to block,
-// 3 when nothing shipped changed.
+//   2. CHANGELOG.md has an entry that the base's changelog doesn't;
+//   3. the modelled evaluation of the working tree shows no task whose pass rate fell against the base. Modelled
+//      runs are deterministic, so the tolerance is 0.
+// Writes the new changelog entries to --notes <file> for the job summary. Exit 0 to release, 1 to block, 3 when
+// nothing shipped changed.
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -41,7 +42,7 @@ export const shippedChanges = (base) =>
 	(git('diff', '--name-only', base, 'HEAD', '--', ...SHIPPED) ?? '').split('\n').filter(Boolean);
 
 const { values } = parseArgs({ options: { notes: { type: 'string' }, base: { type: 'string' } } });
-const base = values.base ?? (git('rev-parse', '-q', '--verify', 'origin/stable') ? 'origin/stable' : null);
+const base = values.base ?? (git('log', '-1', '--format=%H', '--', 'VERSION') || null);
 const problems = [];
 
 // 1. Anything to release?
@@ -52,7 +53,7 @@ if (base) {
 		process.exit(3);
 	}
 	console.log(`Shipped changes since ${base}: ${changed.length} file(s)`);
-} else console.log('No stable branch yet: this is the first release.');
+} else console.log('No earlier release found: this is the first release.');
 
 // 2. A new changelog entry.
 const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf8');
@@ -83,7 +84,7 @@ try {
 	const next = read('local');
 	const reference = base
 		? read(slug(baseVariant))
-		: (await loadResults()).find((r) => r.method === 'modelled' && r.variant === 'main');
+		: (await loadResults()).find((r) => r.method === 'modelled' && ['main', 'local'].includes(r.variant));
 	if (!reference) problems.push('no reference result to compare with; commit a modelled main result first');
 	else {
 		const worse = regressions(reference, next, TOLERANCE);

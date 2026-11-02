@@ -1,9 +1,9 @@
-# Releases Devbook: when shipped files change on main and every gate passes, raises VERSION, fast-forwards the
-# stable branch (what projects install and upgrade to) to that commit, and publishes a GitHub Release tagged
-# v<VERSION>. Site, eval and CI changes never release.
+# Releases Devbook: when shipped files change on main and every gate passes, raises VERSION on main. Projects
+# install and upgrade from main and compare VERSION numbers; there are no tags. Site, eval and CI changes never
+# release, so they never raise VERSION.
 #
 # Pushes use a GitHub App installation token (actions/create-github-app-token), scoped to this repository with
-# Contents: write. The App is the only bypass actor on the main and stable rulesets. Set it up as DEPLOY.md
+# Contents: write, and a bypass actor on the main ruleset. Set it up as DEPLOY.md
 # describes: the RELEASE_APP_CLIENT_ID variable and the RELEASE_APP_PRIVATE_KEY secret.
 name: Release
 
@@ -67,7 +67,7 @@ jobs:
       - name: Full check
         run: npm run check
 
-      # Shipped changes since stable, a new changelog entry, and no modelled eval regression against stable.
+      # Shipped changes since the last release, a new changelog entry, and no modelled eval regression against it.
       - name: Release gate
         id: gate
         run: |
@@ -79,23 +79,12 @@ jobs:
           if [ "$code" != 0 ]; then exit "$code"; fi
           echo "release=true" >> "$GITHUB_OUTPUT"
 
-      - name: Raise VERSION, fast-forward stable, tag
-        id: version
+      - name: Raise VERSION
         if: steps.gate.outputs.release == 'true'
         run: |
           git config user.name "devbook-release[bot]"
           git config user.email "devbook-release[bot]@users.noreply.github.com"
           version=$(node scripts/bump-version.mjs)
           git commit -qam "chore(release): $version"
-          git tag "v$version"
           git push -q origin HEAD:main
-          git push -q origin HEAD:refs/heads/stable "v$version"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "Released $version to stable" >> "$GITHUB_STEP_SUMMARY"
-
-      - name: GitHub Release
-        if: steps.gate.outputs.release == 'true'
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
-          VERSION: ${{ steps.version.outputs.version }}
-        run: gh release create "v$VERSION" --title "Devbook $VERSION" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
+          { echo "Released $version"; echo; cat "$RUNNER_TEMP/notes.md"; } >> "$GITHUB_STEP_SUMMARY"

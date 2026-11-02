@@ -13,4 +13,4 @@
 - [ ] SEO: `skills/devbook-seo-audit/SKILL.md` run against `dist/` (pages, layouts, config or `public/` changed)
 - [ ] Content (page text, guides or changelog changed)
 - [ ] Rule IDs kept; removed IDs in `retiredRuleIds`; no budget raised without eval evidence
-- [ ] `CHANGELOG.md` entry (shipped files changed); the Release workflow raises `VERSION` and promotes to `stable` after merge
+- [ ] `CHANGELOG.md` entry (shipped files changed); the Release workflow raises `VERSION` after merge

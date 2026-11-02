@@ -29,7 +29,7 @@ Nothing here ships to projects. The fixtures contain no `AGENTS.md` or `CLAUDE.m
 
 ## Variants
 
-`none` (only the project section), `main`, `stable` (the release branch, once it exists), `local` (the working tree) and `ref:<git-ref>` (any commit, such as `ref:9504d10`, the last commit before the prune). Each Devbook variant gets `.devbook/` from that version, an `AGENTS.md` built from that version's own template with the lines this fixture uses, and the links the setup skill makes. A task with `install: bare` gets `.devbook/` only, as a project looks before setup.
+`none` (only the project section), `main`, `local` (the working tree) and `ref:<git-ref>` (any commit, such as `ref:9504d10`, the last commit before the prune). Each Devbook variant gets `.devbook/` from that version, an `AGENTS.md` built from that version's own template with the lines this fixture uses, and the links the setup skill makes. A task with `install: bare` gets `.devbook/` only, as a project looks before setup.
 
 ## Modelled runs
 

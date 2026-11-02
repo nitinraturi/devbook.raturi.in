@@ -267,7 +267,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.me
 		console.log(`Usage: node evals/model.mjs [options]
 
   --task <ids>            comma-separated task ids (default: all)
-  --variant <names>       none, main, stable, local or ref:<git-ref>, comma-separated (default: none,main)
+  --variant <names>       none, main, local or ref:<git-ref>, comma-separated (default: none,main)
   --count-tokens <model>  count tokens exactly with Anthropic's free token-counting endpoint (needs ANTHROPIC_API_KEY)
   --no-save               print the summary without writing evals/results/
   --out <dir>             write the results to <dir> instead of evals/results/ (the release gate uses this)

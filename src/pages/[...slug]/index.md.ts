@@ -94,10 +94,7 @@ async function generated(tag: string): Promise<string | undefined> {
 	}
 	if (tag === '<EvalClaim />') {
 		const results = latestResults();
-		const v1 =
-			results.find((r) => r.variant === 'local') ??
-			results.find((r) => r.variant === 'stable') ??
-			results.find((r) => r.variant === 'main');
+		const v1 = results.find((r) => r.variant === 'local') ?? results.find((r) => r.variant === 'main');
 		const before = results.find((r) => r.variant === 'ref:9504d10');
 		return v1 && before
 			? `In modelled evals on ${taskCount()} tasks, Devbook puts the rules each task needs in front of the assistant in ${pct(v1.overall.passRate)} of tasks, using ${tokens(v1.overall.meanInputTokens)} tokens per task, against ${pct(before.overall.passRate)} at ${tokens(before.overall.meanInputTokens)} tokens before the prune. [What was measured, and what wasn't](/evals/)`

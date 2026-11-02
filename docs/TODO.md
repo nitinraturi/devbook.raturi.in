@@ -1,10 +1,11 @@
 # Owner TODOs and known gaps
 
 ## v1 launch (owner)
-Done on 2026-11-02: `main` pushed, `stable` created at the first v1 release with a GitHub Release, issue labels created, auto-merge and private vulnerability reporting turned on. Until the steps below are done, the Release and Sources workflows and the Claude reviews are skipped, not failed.
-- [ ] **Release App:** create the GitHub App, set the `RELEASE_APP_CLIENT_ID` variable and `RELEASE_APP_PRIVATE_KEY` secret, and make the App the bypass actor on the `main` ruleset and a new `stable` ruleset (`DEPLOY.md`, Releases). Releases after the first one then run on their own.
+v1 (`2026.11.02.5`) is released on `main`. Until the steps below are done, the Release and Sources workflows and the Claude reviews are skipped, not failed.
+- [ ] **Release App:** create the GitHub App, set the `RELEASE_APP_CLIENT_ID` variable and `RELEASE_APP_PRIVATE_KEY` secret, and make the App a bypass actor on the `main` ruleset (`DEPLOY.md`, Releases). Later releases then run on their own.
 - [ ] **Old token:** delete the `VERSION_PUSH_TOKEN` secret and revoke the token.
 - [ ] **Claude reviews:** run `claude setup-token`, save the token as the `CLAUDE_CODE_OAUTH_TOKEN` secret (paste it into `gh secret set`, never as an argument), then set the `CLAUDE_REVIEWS` variable to `true`. Leave `MEASURED_EVALS` unset to keep evals modelled.
+- [ ] **Settings:** turn on private vulnerability reporting (Security → Settings) and "Allow auto-merge" (General), and create the `rule-wrong`, `rule-ignored`, `suggest-source` and `make-eval` labels.
 - [ ] **Deploy the site** (`npm run deploy`) if Workers Builds isn't connected, and check `/evals/` and `/stacks/swift/`.
 - [ ] **Measured baseline (optional):** `node evals/run.mjs --task django-search --variant main --repeat 3 --yes` to see real usage per run before a full baseline.
 

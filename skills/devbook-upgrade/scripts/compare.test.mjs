@@ -66,7 +66,7 @@ test('reports behind with the new entries and their upgrade notes', async () => 
 	const { root, source } = setup();
 	const result = await compare({ root, source });
 	assert.equal(result.status, 'behind');
-	const md = markdown(result, 'stable');
+	const md = markdown(result);
 	assert.match(md, /^status: behind/);
 	assert.match(md, /- 2026-11-03: Newer/);
 	assert.doesNotMatch(md, /- 2026-11-02: Older/);
@@ -79,7 +79,7 @@ test('reports up to date, and treats a missing VERSION as behind', async () => {
 	const none = setup({ current: null, local: null });
 	const result = await compare(none);
 	assert.equal(result.status, 'behind');
-	assert.match(markdown(result, 'stable'), /from before version numbers/);
+	assert.match(markdown(result), /from before version numbers/);
 });
 
 test('the CLI prints status first and exits 0', () => {
