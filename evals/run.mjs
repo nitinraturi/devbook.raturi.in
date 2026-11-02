@@ -6,7 +6,8 @@
 // then run the task's checks against the final files and the transcript. Writes report.json and
 // report.md under evals/results/<timestamp>/.
 import { spawn } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,7 +17,16 @@ import { parseTranscript, sh } from './lib.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = join(here, '..');
-const DEVBOOK_PATHS = ['instructions', 'stacks', 'templates', 'LICENSE-CC-BY-4.0'];
+const DEVBOOK_PATHS = ['instructions', 'stacks', 'templates', 'skills', 'LICENSE-CC-BY-4.0'];
+// Skills the setup skill links, by the instruction file that brings them (null: every project).
+const SKILLS = {
+	'devbook-security-review': null,
+	'devbook-release-check': null,
+	'devbook-feature-doc': 'instructions/feature-docs.md',
+	'devbook-api-endpoint': 'instructions/api-data.md',
+	'devbook-db-migration': 'instructions/database.md',
+	'devbook-seo-audit': 'instructions/seo.md',
+};
 
 const { values: opts } = parseArgs({
 	options: {
@@ -122,14 +132,18 @@ async function prepareVariant(name, root) {
 	const dir = join(root, 'variants', name.replace(/[^\w.-]/g, '_'));
 	await mkdir(dir, { recursive: true });
 	if (name === 'local') {
-		for (const p of DEVBOOK_PATHS) await cp(join(repo, p), join(dir, p), { recursive: true });
+		for (const p of DEVBOOK_PATHS.filter((p) => existsSync(join(repo, p))))
+			await cp(join(repo, p), join(dir, p), { recursive: true });
 		const { stdout } = await sh('git rev-parse --short HEAD', { cwd: repo });
 		return { dir, label: `working tree (HEAD ${stdout.trim()})` };
 	}
 	const ref = name.startsWith('ref:') ? name.slice(4) : name;
 	const { code, stdout, stderr } = await sh(`git rev-parse --short '${ref}^{commit}'`, { cwd: repo });
 	if (code !== 0) throw new Error(`unknown git ref "${ref}": ${stderr}`);
-	const archive = await sh(`git archive '${ref}' ${DEVBOOK_PATHS.join(' ')} | tar -x -C '${dir}'`, { cwd: repo });
+	// Older versions lack some folders (skills/ arrived with the loading tiers), so archive only what exists.
+	const present = new Set((await sh(`git ls-tree --name-only '${ref}'`, { cwd: repo })).stdout.split('\n'));
+	const paths = DEVBOOK_PATHS.filter((p) => present.has(p)).join(' ');
+	const archive = await sh(`git archive '${ref}' ${paths} | tar -x -C '${dir}'`, { cwd: repo });
 	if (archive.code !== 0) throw new Error(`git archive failed for ${ref}: ${archive.stderr}`);
 	return { dir, label: `${ref} (${stdout.trim()})` };
 }
@@ -143,14 +157,37 @@ async function agentsMd(fixture, variant) {
 	if (!variant) return `# AGENTS.md\n\n${fixture.project.trim()}\n`;
 	const template = await readFile(join(variant.dir, 'templates/AGENTS.md'), 'utf8');
 	const devbook = template.slice(template.indexOf('## Devbook'));
-	const wanted = new Set([...fixture.devbook, ...fixture.stacks].map((p) => `@.devbook/${p}`));
+	const wanted = [...fixture.devbook, ...fixture.stacks];
+	// Templates before the loading tiers list every file as an `@` line; later ones keep `@` lines for
+	// the always tier and a "- `.devbook/<path>`: when" list for the rest.
+	const listed = (line) => line.match(/^(?:@|- `)\.devbook\/([^\s`]+)/)?.[1];
 	const lines = devbook
 		.split('\n')
 		.filter((line) => !/^<!--.*-->$/.test(line.trim()))
-		.filter((line) => !line.startsWith('@.devbook/') || wanted.has(line.trim()));
+		.filter((line) => !listed(line) || wanted.includes(listed(line)));
 	while (lines.at(-1)?.trim() === '') lines.pop();
-	for (const path of wanted) if (!lines.includes(path)) lines.push(path);
+	const readList = /^- `\.devbook\//m.test(devbook);
+	for (const path of wanted.filter((p) => !lines.some((line) => listed(line) === p))) {
+		const topic = path.split('/').pop().replace(/\.md$/, '');
+		lines.push(readList ? `- \`.devbook/${path}\`: work that touches ${topic}` : `@.devbook/${path}`);
+	}
 	return `# AGENTS.md\n\n${fixture.project.trim()}\n\n${lines.join('\n').trim()}\n`;
+}
+
+/** Create the links the setup skill creates: path-scoped instructions into .claude/rules, skills into .claude/skills. */
+async function linkVariant(fixture, dir) {
+	for (const path of fixture.devbook) {
+		const text = await readFile(join(dir, '.devbook', path), 'utf8');
+		if (!/^---\n[\s\S]*?^paths:/m.test(text)) continue;
+		await mkdir(join(dir, '.claude/rules'), { recursive: true });
+		const name = path.split('/').pop();
+		await symlink(`../../.devbook/${path}`, join(dir, '.claude/rules', `devbook-${name}`));
+	}
+	for (const [skill, needs] of Object.entries(SKILLS)) {
+		if (!existsSync(join(dir, '.devbook/skills', skill)) || (needs && !fixture.devbook.includes(needs))) continue;
+		await mkdir(join(dir, '.claude/skills'), { recursive: true });
+		await symlink(`../../.devbook/skills/${skill}`, join(dir, '.claude/skills', skill));
+	}
 }
 
 async function installRun({ task, fixture, variant, prepared, dir }) {
@@ -159,8 +196,11 @@ async function installRun({ task, fixture, variant, prepared, dir }) {
 		await mkdir(dirname(join(dir, path)), { recursive: true });
 		await writeFile(join(dir, path), content);
 	}
-	if (variant)
-		for (const p of DEVBOOK_PATHS) await cp(join(variant.dir, p), join(dir, '.devbook', p), { recursive: true });
+	if (variant) {
+		for (const p of DEVBOOK_PATHS.filter((p) => existsSync(join(variant.dir, p))))
+			await cp(join(variant.dir, p), join(dir, '.devbook', p), { recursive: true });
+		await linkVariant(fixture, dir);
+	}
 	await writeFile(join(dir, 'AGENTS.md'), await agentsMd(fixture, variant));
 	const claudeMd = variant ? await readFile(join(variant.dir, 'templates/CLAUDE.md'), 'utf8') : '@AGENTS.md\n';
 	await writeFile(join(dir, 'CLAUDE.md'), claudeMd);
