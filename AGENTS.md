@@ -9,7 +9,7 @@ Devbook is a small set of instruction files that other projects load into Claude
 ```bash
 npm ci
 npm run dev      # local preview
-npm run check    # typecheck, descriptions, contrast, build (link validation), Playwright + axe
+npm run check    # format, lint, typecheck, descriptions, contrast, build (link validation), Playwright + axe
 npm run lhci     # Lighthouse budgets
 ```
 

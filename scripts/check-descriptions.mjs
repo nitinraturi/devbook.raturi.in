@@ -29,11 +29,20 @@ for (const file of (await files(root)).sort()) {
 	const fm = (await readFile(file, 'utf8')).match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
 	const title = field(fm, 'title');
 	const description = field(fm, 'description');
-	if (!title) (errors++, console.error(`ERROR ${rel}: missing title`));
-	else if (title.length > 60) (warnings++, console.warn(`WARN  ${rel}: title is ${title.length} chars (> 60)`));
-	if (!description) (errors++, console.error(`ERROR ${rel}: missing description`));
-	else if (description.length < 70 || description.length > 170)
-		(warnings++, console.warn(`WARN  ${rel}: description is ${description.length} chars (want 70–170)`));
+	if (!title) {
+		errors++;
+		console.error(`ERROR ${rel}: missing title`);
+	} else if (title.length > 60) {
+		warnings++;
+		console.warn(`WARN  ${rel}: title is ${title.length} chars (> 60)`);
+	}
+	if (!description) {
+		errors++;
+		console.error(`ERROR ${rel}: missing description`);
+	} else if (description.length < 70 || description.length > 170) {
+		warnings++;
+		console.warn(`WARN  ${rel}: description is ${description.length} chars (want 70–170)`);
+	}
 }
 console.log(`Descriptions: ${errors} error(s), ${warnings} warning(s)`);
 if (errors) process.exit(1);

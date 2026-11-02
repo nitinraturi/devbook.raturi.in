@@ -23,13 +23,13 @@ const CONSENT_REGIONS = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE',
 				window.dataLayer = window.dataLayer || [];
 				function gtag(){dataLayer.push(arguments);}
 				window.gtag = gtag;
-				var denied = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' };
+				const denied = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' };
 				gtag('consent', 'default', Object.assign({ analytics_storage: 'denied', region: CONSENT_REGIONS }, denied));
 				gtag('consent', 'default', Object.assign({ analytics_storage: 'granted' }, denied));
 				try {
-					var choice = localStorage.getItem('dvb-consent');
+					const choice = localStorage.getItem('dvb-consent');
 					if (choice === 'granted' || choice === 'denied') gtag('consent', 'update', { analytics_storage: choice });
-				} catch (e) {}
+				} catch {}
 				gtag('js', new Date());
 				gtag('config', GA_ID);
 			</script>
