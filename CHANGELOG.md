@@ -2,6 +2,13 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-11-02: PBKDF2 for FIPS-140, and accurate loading notes
+
+### Changed
+- Security: where FIPS-140 validation is required, hash passwords with PBKDF2-HMAC-SHA-256 at 600,000 iterations or more, as the OWASP Password Storage Cheat Sheet says. Argon2id stays the default.
+- How Devbook works: says exactly how Codex, Cursor and Gemini CLI load `AGENTS.md`, instead of saying they read the same file list. Gemini CLI reads `GEMINI.md` unless you set `context.fileName`. The cost table reflects current sizes.
+- The "View Markdown" version of the home, setup and license pages is now plain Markdown, with no MDX components, and includes the licence text.
+
 ## 2026-10-24: Ready for public use
 
 ### Added

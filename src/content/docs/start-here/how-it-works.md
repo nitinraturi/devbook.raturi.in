@@ -78,10 +78,10 @@ Every rule takes up part of the context window in every chat, so Devbook keeps i
 
 | Project type | Files | Size | About |
 |---|---|---|---|
-| Any project | Core, security, testing | 14 KB | 3,600 tokens |
-| Public website | + performance, design, SEO, content | 36 KB | 9,000 tokens |
+| Any project | Core, security, testing | 15 KB | 3,700 tokens |
+| Public website | + performance, design, SEO, content | 36 KB | 9,100 tokens |
 | API service | + performance, REST APIs, databases | 32 KB | 7,900 tokens |
-| Web app | + performance, REST APIs, databases, design, feature docs | 43 KB | 10,900 tokens |
+| Web app | + performance, REST APIs, databases, design, feature docs | 44 KB | 10,900 tokens |
 
 That is a small share of a modern context window, and it is the same in every chat, so providers can cache it.
 

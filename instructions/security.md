@@ -19,7 +19,7 @@ Mandatory for every project. Covers the OWASP Top 10 risks, with password rules 
 ## Auth and sessions
 - Use the framework's or a proven provider's auth instead of custom password hashing or session crypto. Offer passkeys (WebAuthn) where practical.
 - Passwords: at least 8 characters (15 when the password is the only factor), allow at least 64 characters and paste, and block known-breached passwords. Use no composition rules or forced periodic changes, because they push people to weaker, predictable passwords.
-- Hash passwords with Argon2id, or scrypt if it is unavailable. Use bcrypt only in legacy systems, handle its 72-byte input limit, and plan a migration.
+- Hash passwords with Argon2id, or scrypt if it is unavailable. Where FIPS-140 validation is required, use PBKDF2-HMAC-SHA-256 with at least 600,000 iterations instead, because Argon2id and scrypt are not FIPS-approved. Use bcrypt only in legacy systems, handle its 72-byte input limit, and plan a migration.
 - Session cookies are `Secure`, `HttpOnly` and `SameSite=Lax` or `Strict`, with the `__Host-` prefix where possible so subdomains can't overwrite them. Rotate the session on login and privilege change to prevent fixation, and expire idle sessions.
 - Rate-limit login, sign-up and reset. Give the same response whether or not an account exists. Offer MFA, at least for admins.
 - Every cookie-authenticated, state-changing request has CSRF protection.
