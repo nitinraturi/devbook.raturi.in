@@ -351,6 +351,103 @@ nav.sidebar .large {
 	font-size: var(--sl-text-sm);
 }
 
+/* How it works: numbered steps and loading tiers. */
+.sl-markdown-content .dvb-flow-steps {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+	gap: var(--dvb-space-3);
+	margin: var(--dvb-space-3) 0 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: none;
+}
+.sl-markdown-content .dvb-flow-steps li {
+	position: relative;
+	margin: 0;
+	padding-top: var(--dvb-space-3);
+	border-top: 2px solid var(--dvb-ink-strong);
+}
+.sl-markdown-content .dvb-flow-num {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translateY(-50%);
+	display: inline-grid;
+	place-items: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: 50%;
+	background: var(--dvb-accent-wash);
+	border: 2px solid var(--dvb-accent);
+	color: var(--dvb-accent-text);
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+}
+.sl-markdown-content .dvb-flow-steps h3,
+.sl-markdown-content .dvb-flow-tiers h3,
+.sl-markdown-content .dvb-flow-tiers h4 {
+	margin: 0 0 var(--dvb-space-1);
+	font-size: var(--sl-text-h5);
+}
+.sl-markdown-content .dvb-flow-steps p,
+.sl-markdown-content .dvb-flow-tiers p {
+	margin: 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-flow-subhead {
+	margin: var(--dvb-space-6) 0 0;
+	font-size: var(--sl-text-h4);
+}
+.sl-markdown-content .dvb-flow-tiers {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+	gap: var(--dvb-space-2);
+	margin-top: var(--dvb-space-2);
+}
+.sl-markdown-content .dvb-flow-tiers article {
+	margin: 0;
+	padding: var(--dvb-space-2);
+	background: var(--dvb-surface-raised);
+	border: 1px solid var(--dvb-rule);
+	border-left: 3px solid var(--dvb-accent);
+	border-radius: var(--dvb-radius-sm);
+}
+.sl-markdown-content .dvb-flow-tiers .dvb-flow-tier-label {
+	margin: 0 0 var(--dvb-space-1);
+	color: var(--dvb-accent-text);
+	font-size: var(--dvb-label);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.sl-markdown-content .dvb-skill-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+	gap: 0 var(--dvb-space-3);
+	margin: var(--dvb-space-2) 0 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--dvb-ink-strong);
+}
+.sl-markdown-content .dvb-skill-list li {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	margin: 0;
+	padding: var(--dvb-space-1) 0;
+	border-bottom: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content .dvb-skill-list li > span {
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-skill-note {
+	margin-top: var(--dvb-space-2);
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+
 /* Instruction index: a ruled table of contents. */
 .sl-markdown-content .dvb-index {
 	margin: 0;

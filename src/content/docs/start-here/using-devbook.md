@@ -7,6 +7,18 @@ sidebar:
 
 After [setup](/start-here/setup/), you keep working in your assistant as before. The difference is in how it works: it reads before it edits, asks when something is unclear, runs your checks and tells you what it did not do.
 
+## After setup at a glance
+
+| You want to | Do this | Section |
+|---|---|---|
+| Build or fix something | Ask as usual. The rules load on their own. | [Ask for work](#ask-for-work-in-a-way-that-gets-results) |
+| Run a review, release check, migration or other multi-step job | Ask for it, or type its skill name. | [Use the skills](#use-the-skills) |
+| Know exactly what to type for a skill, or what a rule file changes | Look it up per file. | [Use each skill and instruction](/start-here/skills-and-instructions/) |
+| Teach the assistant something about your project | Add a line to the Project section of `AGENTS.md`. | [Add your own rules](#add-your-own-rules) |
+| Turn a file or skill on or off | Edit the "read" list or the links. | [Add or remove instruction files](#add-or-remove-instruction-files) |
+| Confirm it's loaded | Ask the check question in a new chat. | [Check that it's working](#check-that-its-working) |
+| Get a newer Devbook | Run `/devbook-upgrade`, or move the tag yourself. | [Keep it up to date](#keep-it-up-to-date) |
+
 ## What to expect from the assistant
 
 - **Questions first.** When a request is ambiguous, it restates the goal and asks, instead of guessing.
@@ -29,6 +41,42 @@ and npm run check passes. Ask me if anything is unclear.
 
 You don't need to repeat Devbook's rules in the request. For more on writing prompts and rules that models follow, see [Writing instructions](/start-here/writing-instructions/).
 
+## Use the skills
+
+Instruction files are rules the assistant always applies. Skills are step-by-step procedures for jobs that need a fixed order, such as a security review or a schema change. Setup links the ones that fit your project into `.claude/skills/`, which both Claude Code and VS Code Copilot read.
+
+### How a skill runs
+
+1. **At the start of a chat**, the assistant sees only each skill's name and one-line description.
+2. **When your request matches a description**, it loads the full procedure.
+3. **It follows the steps in order**, using the rules in the instruction files, and stops where the skill says to ask you, for example before a breaking API change or a migration.
+4. **It ends with a report**: what it checked, what it found and what it didn't do.
+
+### Two ways to start one
+
+- **Ask in plain words.** "Review this branch for security problems" matches `devbook-security-review`. This works when your wording is close to the skill's description, so it may not trigger for a request that only turns out to need one.
+- **Name it.** In Claude Code, type `/devbook-security-review` and then your request. In Copilot, write "use the devbook-security-review skill". Name the skill whenever you want to be sure it runs.
+
+Even when no skill triggers, the rules still apply: an API change still follows the REST API rules because they load with the matching files. What a skill adds is the order of steps and the stops for your approval.
+
+### Which skill to use
+
+| Skill | Use it when |
+|---|---|
+| `devbook-api-endpoint` | Adding, changing or removing an endpoint, route or webhook |
+| `devbook-db-migration` | Adding or changing tables, columns, indexes or constraints |
+| `devbook-feature-doc` | Documenting a feature, or planning one with business rules |
+| `devbook-security-review` | Before merging sensitive work, or for a full review |
+| `devbook-release-check` | Before a release or deploy |
+| `devbook-seo-audit` | Before launching or migrating a public site |
+| `devbook-upgrade` | Checking for or moving to a newer Devbook |
+
+[Use each skill and instruction](/start-here/skills-and-instructions/) gives the exact request to type for each one, what it does, where it stops for you and what it reports. To re-run setup, paste the [setup prompt](/start-here/setup/) again; `devbook-setup` isn't linked as a skill.
+
+### Choose which skills are linked
+
+Every linked skill's description loads in every chat, so link only the ones you use. To add one, link its folder: `ln -s ../../.devbook/skills/devbook-seo-audit .claude/skills/devbook-seo-audit`. To remove one, delete the link. Then commit and start a new chat.
+
 ## Add your own rules
 
 Put project facts and rules in the **Project** section of `AGENTS.md`, not in `.devbook/`. Updates replace `.devbook/`, and your Project section stays yours.
@@ -42,7 +90,7 @@ Keep the section short. Every line loads in every chat, and long files are follo
 
 ## Add or remove instruction files
 
-Edit the "read" list in the Devbook section of `AGENTS.md`, adding or deleting a line per file, then start a new chat. For a path-scoped file (design, REST APIs, databases, SEO, content, mobile), also add or delete its two links, as on the [setup page](/start-here/setup/#2-connect-your-assistants). For a skill, add or delete its link in `.claude/skills/`. [How Devbook works](/start-here/how-it-works/#mandatory-and-optional-files) lists when each file applies. For a technology without a stack note, add the rules to your Project section.
+Edit the "read" list in the Devbook section of `AGENTS.md`, adding or deleting a line per file, then start a new chat. For a path-scoped file (design, REST APIs, databases, SEO, content, mobile), also add or delete its two links, as on the [setup page](/start-here/setup/#2-connect-your-assistants). For a skill, see [Choose which skills are linked](#choose-which-skills-are-linked). [How Devbook works](/start-here/how-it-works/#mandatory-and-optional-files) lists when each file applies. For a technology without a stack note, add the rules to your Project section.
 
 ## Document complex features
 
