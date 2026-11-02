@@ -26,6 +26,8 @@ export default defineConfig({
 			social: [{ icon: 'github', label: 'GitHub', href: REPO }],
 			lastUpdated: true,
 			credits: false,
+			// The 404 page is src/pages/404.astro.
+			disable404Route: true,
 			customCss: ['./src/styles/custom.css'],
 			components: {
 				Head: './src/components/Head.astro',
@@ -48,7 +50,7 @@ export default defineConfig({
 					projectName: 'Devbook',
 					details:
 						'Devbook is a small set of instruction files for AI coding assistants. Projects add it at .devbook, as a git submodule or copied files, and import the files from AGENTS.md. Core, security and testing are mandatory; other instructions load when they apply; stack notes add tool specifics; project rules in AGENTS.md override both.',
-					exclude: ['404', 'privacy'],
+					exclude: ['privacy'],
 				}),
 			],
 			sidebar: [

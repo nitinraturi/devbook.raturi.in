@@ -9,7 +9,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 const templates = import.meta.glob<string>('/templates/*.md', { query: '?raw', import: 'default', eager: true });
 
 export const getStaticPaths = (async () => {
-	const docs = await getCollection('docs', (e) => e.id !== '404');
+	const docs = await getCollection('docs');
 	return docs.map((entry) => ({ params: { slug: entry.id === 'index' ? undefined : entry.id }, props: { entry } }));
 }) satisfies GetStaticPaths;
 
