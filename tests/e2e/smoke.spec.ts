@@ -8,6 +8,7 @@ const PAGES = [
 	'/start-here/how-it-works/',
 	'/start-here/setup/',
 	'/start-here/using-devbook/',
+	'/start-here/skills-and-instructions/',
 	'/start-here/enforcement-kit/',
 	'/about/',
 	'/start-here/writing-instructions/',

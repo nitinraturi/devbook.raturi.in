@@ -79,7 +79,7 @@ Some checks are heuristics, such as the regular expression over the final report
 
 ## Add a task
 
-1. Add `tasks/<id>.yaml` with `id` (same as the file name), `fixture`, `behaviour`, `prompt` and at least one check. Use `files` to put the fixture in a specific state first.
+1. Add `tasks/<id>.yaml` with `id` (same as the file name), `fixture`, `behaviour`, `prompt` and at least one check. Use `files` to put the fixture in a specific state first. Write a made-up key as `{{FAKE_SECRET}}`; the runner swaps in a random one, so secret scanners have nothing to flag.
 2. Prefer checks that test behaviour (run the code, call the endpoint) over checks that match text. Include a check that the work was done, so an agent that does nothing can't pass.
 3. Add a check in `checks/` only if none fits. It exports a default async function that takes `{ dir, fixture, transcript, params, initialCommit }` and returns `{ pass, detail }`.
 4. Run `node evals/run.mjs --validate` and a dry run of the task.
