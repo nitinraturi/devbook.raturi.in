@@ -9,6 +9,18 @@ sources:
   - SQL Antipatterns (Bill Karwin)
   - Designing Data-Intensive Applications (Martin Kleppmann)
   - RFC 9562 (UUIDs)
+# Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
+paths:
+  - "**/migrations/**"
+  - "**/models.py"
+  - "**/models/**"
+  - "**/*.sql"
+  - "**/schema.prisma"
+  - "**/prisma/**"
+  - "**/drizzle/**"
+  - "**/db/**"
+  - "**/*.entity.ts"
+applyTo: "**/migrations/**,**/models.py,**/models/**,**/*.sql,**/schema.prisma,**/prisma/**,**/drizzle/**,**/db/**,**/*.entity.ts"
 ---
 
 Load for any relational database, through SQL or an ORM. Check your engine's docs for exact types and syntax. Password hashing, secrets and retention are in the security instructions.

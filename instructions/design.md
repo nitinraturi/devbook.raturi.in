@@ -9,6 +9,19 @@ sources:
   - Apple Human Interface Guidelines and Material Design 3
   - Dieter Rams' ten principles of good design
   - Refactoring UI (Wathan and Schoger)
+# Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
+paths:
+  - "**/*.css"
+  - "**/*.scss"
+  - "**/*.sass"
+  - "**/*.less"
+  - "**/*.html"
+  - "**/*.astro"
+  - "**/*.jsx"
+  - "**/*.tsx"
+  - "**/*.vue"
+  - "**/*.svelte"
+applyTo: "**/*.css,**/*.scss,**/*.sass,**/*.less,**/*.html,**/*.astro,**/*.jsx,**/*.tsx,**/*.vue,**/*.svelte"
 ---
 
 Load for any project with a user interface. The project's own look lives in `docs/design-system.md`.

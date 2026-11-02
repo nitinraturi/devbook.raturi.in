@@ -10,6 +10,21 @@ sources:
   - Google API Improvement Proposals, Microsoft Azure REST API Guidelines, Zalando RESTful API Guidelines, Stripe API
   - OWASP API Security Top 10 (2023)
   - Standard Webhooks
+# Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
+paths:
+  - "**/api/**"
+  - "**/routes/**"
+  - "**/controllers/**"
+  - "**/handlers/**"
+  - "**/views.py"
+  - "**/views/**"
+  - "**/serializers.py"
+  - "**/urls.py"
+  - "**/webhooks/**"
+  - "**/openapi*.yaml"
+  - "**/openapi*.yml"
+  - "**/openapi*.json"
+applyTo: "**/api/**,**/routes/**,**/controllers/**,**/handlers/**,**/views.py,**/views/**,**/serializers.py,**/urls.py,**/webhooks/**,**/openapi*.yaml,**/openapi*.yml,**/openapi*.json"
 ---
 
 Load for any backend or API. Where the sources differ, pick one option, record it in the API's design doc and apply it everywhere. Access control, input validation, rate limits and URL allowlists are in the security instructions; database rules are in the database instructions.

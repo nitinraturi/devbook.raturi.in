@@ -6,6 +6,19 @@ sidebar:
 sources:
   - Google Search Essentials
   - Google Search Central documentation
+# Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
+paths:
+  - "**/pages/**"
+  - "**/layouts/**"
+  - "**/app/**/page.*"
+  - "**/app/**/layout.*"
+  - "**/*.html"
+  - "**/robots.txt"
+  - "**/sitemap*"
+  - "**/_redirects"
+  - "**/astro.config.*"
+  - "**/next.config.*"
+applyTo: "**/pages/**,**/layouts/**,**/app/**/page.*,**/app/**/layout.*,**/*.html,**/robots.txt,**/sitemap*,**/_redirects,**/astro.config.*,**/next.config.*"
 ---
 
 Load for any public website. Rank with a fast, crawlable site and genuinely useful pages; no trick replaces them. Check the docs before using any feature with a date or "supported" status.

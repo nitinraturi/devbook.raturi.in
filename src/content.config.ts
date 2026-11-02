@@ -11,6 +11,9 @@ export const collections = {
 				lastVerified: z.coerce.date().optional(),
 				// Instruction files list their primary sources here; PageTitle renders them.
 				sources: z.array(z.string()).optional(),
+				// Path scoping for conditional instructions, read by Claude Code (paths) and Copilot (applyTo).
+				paths: z.array(z.string()).optional(),
+				applyTo: z.string().optional(),
 			}),
 		}),
 	}),

@@ -6,6 +6,14 @@ sidebar:
 sources:
   - Apple Human Interface Guidelines and App Store Review Guidelines
   - Google Material guidance and Google Play policies
+# Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
+paths:
+  - "**/*.swift"
+  - "**/*.kt"
+  - "**/*.dart"
+  - "**/ios/**"
+  - "**/android/**"
+applyTo: "**/*.swift,**/*.kt,**/*.dart,**/ios/**,**/android/**"
 ---
 
 Load for iOS, Android, React Native and Flutter apps, together with the core, security, testing, performance and design instructions.

@@ -1,13 +1,16 @@
 // Checks devbook.manifest.json against disk and enforces the size budgets from AGENTS.md.
-// Fails if a file in instructions/, stacks/ or templates/ is missing from the manifest, a
+// Fails if a file in instructions/, stacks/, templates/ or skills/ is missing from the manifest, a
 // listed file is missing on disk, or a budget is exceeded. Overages listed under
 // `pendingOverBudget` only warn, and fail once they fit, so the list can't go stale.
+// Also checks loading metadata: path-tier instructions carry identical `paths` and `applyTo`
+// globs, and skills follow the Agent Skills format.
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { parse as parseYaml } from 'yaml';
 
 const root = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('devbook.manifest.json', root), 'utf8'));
 const { budgets, pendingOverBudget = {}, files } = manifest;
-const KINDS = { instructions: 'instruction', stacks: 'stack', templates: 'template' };
+const KINDS = { instructions: 'instruction', stacks: 'stack', templates: 'template', skills: 'skill' };
 const TIERS = new Set(['always', 'path', 'task']);
 
 let errors = 0;
@@ -16,9 +19,38 @@ const kb = (bytes) => `${(bytes / 1000).toFixed(1)} KB, ~${Math.round(bytes / 4)
 
 const listed = new Map(files.map((f) => [f.path, f]));
 for (const dir of Object.keys(KINDS)) {
-	for (const name of (await readdir(new URL(`${dir}/`, root))).filter((n) => n.endsWith('.md'))) {
-		if (!listed.has(`${dir}/${name}`)) error(`${dir}/${name} is not listed in devbook.manifest.json`);
-	}
+	const entries = await readdir(new URL(`${dir}/`, root), { withFileTypes: true });
+	const paths =
+		dir === 'skills'
+			? entries.filter((e) => e.isDirectory()).map((e) => `${dir}/${e.name}/SKILL.md`)
+			: entries.filter((e) => e.name.endsWith('.md')).map((e) => `${dir}/${e.name}`);
+	for (const path of paths) if (!listed.has(path)) error(`${path} is not listed in devbook.manifest.json`);
+}
+
+const frontmatter = async (path) =>
+	parseYaml((await readFile(new URL(path, root), 'utf8')).match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '') ?? {};
+
+for (const f of files.filter((f) => f.kind === 'instruction')) {
+	const fm = await frontmatter(f.path).catch(() => ({}));
+	if (f.tier === 'path') {
+		const applyTo = String(fm.applyTo ?? '')
+			.split(',')
+			.filter(Boolean);
+		if (!fm.paths?.length) error(`${f.path}: path-tier instruction needs paths: globs`);
+		else if (fm.paths.join(',') !== applyTo.join(',')) error(`${f.path}: paths and applyTo must list the same globs`);
+	} else if (fm.paths || fm.applyTo) error(`${f.path}: only path-tier instructions carry paths/applyTo`);
+}
+
+let skillDescriptionChars = 0;
+for (const f of files.filter((f) => f.kind === 'skill')) {
+	const folder = f.path.split('/')[1];
+	const text = await readFile(new URL(f.path, root), 'utf8').catch(() => '');
+	const fm = await frontmatter(f.path).catch(() => ({}));
+	if (fm.name !== folder) error(`${f.path}: name must be "${folder}", the folder name`);
+	if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(fm.name ?? '') || fm.name.length > 64) error(`${f.path}: invalid name`);
+	if (!fm.description || fm.description.length > 1024) error(`${f.path}: description must be 1–1024 characters`);
+	if (text.split('\n').length >= 500) error(`${f.path}: body must stay under 500 lines`);
+	if (f.linked !== false) skillDescriptionChars += fm.description?.length ?? 0;
 }
 
 const size = new Map();
@@ -42,6 +74,8 @@ const always = files.filter((f) => f.tier === 'always').map((f) => f.path);
 const sum = (paths) => paths.reduce((n, p) => n + (size.get(p) ?? 0), 0);
 budget('always', sum(always), budgets.alwaysBytes);
 budget('website', sum([...always, ...budgets.websiteSet]), budgets.websiteBytes);
+// Every linked skill's description loads in every chat, so their total is budgeted like the always tier.
+budget('skill descriptions', skillDescriptionChars, budgets.skillDescriptionChars);
 
 for (const { name, bytes, limit } of results) {
 	const over = bytes > limit;
@@ -49,7 +83,7 @@ for (const { name, bytes, limit } of results) {
 	if (over && pendingOverBudget[name]) console.warn(`WARN  ${line}. Known: ${pendingOverBudget[name]}`);
 	else if (over) error(line);
 	else if (pendingOverBudget[name]) error(`${name} is now within budget; remove it from pendingOverBudget`);
-	else if (name === 'always' || name === 'website') console.log(`OK    ${line}`);
+	else if (!name.includes('/')) console.log(`OK    ${line}`);
 }
 for (const name of Object.keys(pendingOverBudget)) {
 	if (!results.some((r) => r.name === name)) error(`pendingOverBudget lists unknown budget "${name}"`);

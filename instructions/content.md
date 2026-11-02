@@ -5,6 +5,17 @@ sidebar:
   order: 9
 sources:
   - Google Search Central, Creating helpful, reliable, people-first content
+# Path scoping: Claude Code reads paths, Copilot reads applyTo. Keep both lists the same.
+paths:
+  - "**/*.mdx"
+  - "**/content/**"
+  - "**/docs/**/*.md"
+  - "**/blog/**"
+  - "**/posts/**"
+  - "**/locales/**"
+  - "**/i18n/**"
+  - "README.md"
+applyTo: "**/*.mdx,**/content/**,**/docs/**/*.md,**/blog/**,**/posts/**,**/locales/**,**/i18n/**,README.md"
 ---
 
 Load for any public website, docs site or blog. Applies to site copy, docs, blog posts, UI text and release notes.
