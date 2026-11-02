@@ -40,11 +40,11 @@ npm run dev
 npm run check
 ```
 
-Contributor rules are in [`AGENTS.md`](AGENTS.md), and every instruction change follows the [writing guide](src/content/docs/start-here/writing-instructions.md). Deployment is in [`DEPLOY.md`](DEPLOY.md) and changes are in [`CHANGELOG.md`](CHANGELOG.md).
+To measure whether a change to the instructions helps, use the evals in [`evals/`](evals/README.md). Contributor rules are in [`AGENTS.md`](AGENTS.md), and every instruction change follows the [writing guide](src/content/docs/start-here/writing-instructions.md). Deployment is in [`DEPLOY.md`](DEPLOY.md) and changes are in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## License
 
 - `instructions/`, `stacks/` and the site's guides in `src/content/docs/start-here/`: [CC BY 4.0](LICENSE-CC-BY-4.0). Reuse and change them with credit. Keeping `.devbook/` with its license file counts as credit.
-- `templates/` and the site code: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
+- `templates/`, the site code and the evals in `evals/`: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
 
 See the [license page](https://devbook.raturi.in/license/) for how to give credit.

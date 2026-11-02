@@ -19,6 +19,7 @@ npm run lhci     # Lighthouse budgets
 - `stacks/*.md`: short notes for one technology each, also rendered through a symlink.
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md`, `copilot-instructions.md` and `FEATURE.md`. Pages import them with `?raw`; never copy template text into a page.
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
+- `evals/`: the evaluation harness (fixtures, tasks, checks, `run.mjs`) that measures whether a Devbook version changes what an agent does. See `evals/README.md`; never run it without `--dry-run` unless the user approves the spend.
 - `src/content/docs/start-here/writing-instructions.md`: the research-backed guide to writing instructions LLMs follow, published at `/start-here/writing-instructions/`.
 
 ## Writing rules
