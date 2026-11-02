@@ -26,13 +26,13 @@ Paste [`templates/setup-prompt.md`](templates/setup-prompt.md) into Claude Code 
 2. Create or merge a root `AGENTS.md`. It has your project section, then `@.devbook/...` lines for the files that apply.
 3. Create a `CLAUDE.md` containing `@AGENTS.md`, and a `.github/copilot-instructions.md` that tells Copilot to read the files `AGENTS.md` lists.
 
-To update a submodule, run `git submodule update --remote .devbook`. For a copy, rerun the download command on the setup page. Project rules in `AGENTS.md` override Devbook. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps.
+To update a submodule, run `git submodule update --remote .devbook`. For a copy, rerun the download command on the setup page. Project rules in `AGENTS.md` override Devbook only where they say so explicitly, and your direct request overrides both. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps.
 
 New to instruction files? Read [How Devbook works](https://devbook.raturi.in/start-here/how-it-works/) for the terms, loading, precedence, cost and limits. Then read [Use Devbook day to day](https://devbook.raturi.in/start-here/using-devbook/) for your own rules, checks, updates and troubleshooting, and [Writing instructions](https://devbook.raturi.in/start-here/writing-instructions/) for writing rules and prompts that models follow.
 
 ## Develop the site
 
-Requires Node.js 22.23.4 or later.
+Requires Node.js 22 or later; CI uses the version in `.nvmrc`.
 
 ```bash
 npm ci

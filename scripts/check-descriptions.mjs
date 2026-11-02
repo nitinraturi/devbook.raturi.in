@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Checks every page under src/content/docs for a title and a meta description.
 // Fails on a missing title or description; warns when a description is outside
-// 70–170 characters or a title is over 60. Page text is never changed here.
+// 120–160 characters or a title is over 60. Page text is never changed here.
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
@@ -39,9 +39,9 @@ for (const file of (await files(root)).sort()) {
 	if (!description) {
 		errors++;
 		console.error(`ERROR ${rel}: missing description`);
-	} else if (description.length < 70 || description.length > 170) {
+	} else if (description.length < 120 || description.length > 160) {
 		warnings++;
-		console.warn(`WARN  ${rel}: description is ${description.length} chars (want 70–170)`);
+		console.warn(`WARN  ${rel}: description is ${description.length} chars (want 120–160)`);
 	}
 }
 console.log(`Descriptions: ${errors} error(s), ${warnings} warning(s)`);
