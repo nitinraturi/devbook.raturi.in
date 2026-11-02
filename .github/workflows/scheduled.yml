@@ -40,12 +40,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # instructions/ and stacks/ name their sources without URLs today, so the guides,
-      # templates and README are checked too.
+      # templates and README are checked too. LinkedIn answers bots with 429/999.
       - name: External links
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           args: >-
-            --no-progress --max-retries 3 --scheme https --scheme http
+            --no-progress --max-retries 3 --scheme https --scheme http --exclude 'linkedin\.com'
             'instructions/*.md' 'stacks/*.md' 'templates/*.md' README.md
             'src/content/docs/*.md' 'src/content/docs/*.mdx' 'src/content/docs/start-here/*.md' 'src/content/docs/start-here/*.mdx'
           fail: true
