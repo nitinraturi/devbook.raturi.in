@@ -1,9 +1,10 @@
 // Runs each hook the way Claude Code does: JSON on stdin, exit code 2 and stderr to block.
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { after, test } from 'node:test';
+import { after, describe, test } from 'node:test';
+import { compareTags } from './lib.mjs';
 import assert from 'node:assert/strict';
 
 // Outside the temp folder, because guard-rm allows deletes there.
@@ -136,9 +137,77 @@ test('hooks report broken input without blocking', () => {
 
 test('the example settings run every hook script, and each script exists', () => {
 	const settings = JSON.parse(readFileSync(new URL('../settings.json', import.meta.url), 'utf8'));
-	const scripts = settings.hooks.PreToolUse.flatMap((group) =>
-		group.hooks.map((h) => h.command.match(/hooks\/([\w-]+\.mjs)/)[1]),
-	);
+	const scripts = Object.values(settings.hooks)
+		.flat()
+		.flatMap((group) => group.hooks.map((h) => h.command.match(/hooks\/([\w-]+\.mjs)/)[1]));
 	for (const name of scripts) assert.ok(existsSync(new URL(name, import.meta.url)), name);
-	assert.deepEqual([...new Set(scripts)].sort(), ['block-git-push.mjs', 'guard-rm.mjs', 'protect-env.mjs']);
+	assert.deepEqual([...new Set(scripts)].sort(), [
+		'block-git-push.mjs',
+		'check-version.mjs',
+		'guard-rm.mjs',
+		'protect-env.mjs',
+	]);
+});
+
+test('compareTags orders dated releases', () => {
+	assert.ok(compareTags('v2026.11.02', 'v2026.11.10') < 0);
+	assert.ok(compareTags('v2026.11.02.1', 'v2026.11.02') > 0);
+	assert.ok(compareTags('v2026.11.02.10', 'v2026.11.02.9') > 0);
+	assert.equal(compareTags('v2026.12.01', 'v2026.12.01'), 0);
+});
+
+describe('check-version', () => {
+	// A local "upstream" with tags, so the test needs no network.
+	const root = realpathSync(mkdtempSync(join(tmpdir(), 'devbook-version-')));
+	after(() => rmSync(root, { recursive: true, force: true }));
+	const upstream = join(root, 'upstream');
+	const sh = (args, cwd) => spawnSync('git', args, { cwd, encoding: 'utf8' });
+	sh(['init', '-q', upstream]);
+	sh(['-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '--allow-empty', '-m', 'one'], upstream);
+	sh(['tag', 'v2026.11.02'], upstream);
+	sh(['tag', 'v2026.11.02.1'], upstream);
+
+	let n = 0;
+	const check = (version) => {
+		const project = join(root, `p${n++}`);
+		mkdirSync(join(project, '.devbook'), { recursive: true });
+		if (version) writeFileSync(join(project, '.devbook', 'VERSION'), `${version}\n`);
+		const result = spawnSync('node', [new URL('check-version.mjs', import.meta.url).pathname], {
+			env: {
+				...process.env,
+				CLAUDE_PROJECT_DIR: project,
+				DEVBOOK_REPO: upstream,
+				DEVBOOK_CACHE_DIR: join(root, 'cache'),
+			},
+			encoding: 'utf8',
+		});
+		assert.equal(result.status, 0, result.stderr);
+		return result.stdout;
+	};
+
+	test('asks the agent to offer the upgrade when a newer tag exists', () => {
+		const out = check('v2026.11.02');
+		assert.match(out, /uses v2026\.11\.02, and v2026\.11\.02\.1 is the newest release/);
+		assert.match(out, /devbook-upgrade/);
+	});
+
+	test('stays silent when up to date, following main, or without a version', () => {
+		assert.equal(check('v2026.11.02.1'), '');
+		assert.equal(check('main'), '');
+		assert.equal(check(undefined), '');
+	});
+
+	test('stays silent when the upstream is unreachable', () => {
+		const result = spawnSync('node', [new URL('check-version.mjs', import.meta.url).pathname], {
+			env: {
+				...process.env,
+				CLAUDE_PROJECT_DIR: join(root, 'p0'),
+				DEVBOOK_REPO: join(root, 'missing'),
+				DEVBOOK_CACHE_DIR: join(root, 'cache2'),
+			},
+			encoding: 'utf8',
+		});
+		assert.equal(result.status, 0);
+		assert.equal(result.stdout, '');
+	});
 });

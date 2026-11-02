@@ -1,4 +1,4 @@
-// Shared helpers for the Devbook PreToolUse hooks. No dependencies, so the hooks run with plain Node.
+// Shared helpers for the Devbook hooks. No dependencies, so the hooks run with plain Node.
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { basename, dirname, isAbsolute, join, resolve, sep } from 'node:path';
@@ -151,3 +151,20 @@ export const realish = (path) => {
 
 /** True when `path` is strictly inside `root` (not the root itself). */
 export const isInside = (path, root) => path.startsWith(root.endsWith(sep) ? root : root + sep);
+
+/** A dated Devbook release tag, such as v2026.11.02 or v2026.11.02.1. */
+export const TAG = /^v(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$/;
+
+/** Compare two release tags; negative when a is older than b. */
+export const compareTags = (a, b) => {
+	const pa = a
+		.match(TAG)
+		.slice(1)
+		.map((n) => Number(n ?? 0));
+	const pb = b
+		.match(TAG)
+		.slice(1)
+		.map((n) => Number(n ?? 0));
+	for (let i = 0; i < pa.length; i++) if (pa[i] !== pb[i]) return pa[i] - pb[i];
+	return 0;
+};
