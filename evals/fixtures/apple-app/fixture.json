@@ -1,0 +1,16 @@
+{
+  "description": "A small SwiftUI notes app for iOS and macOS with a local Swift package. Sources only: the eval checks the code, it does not build it.",
+  "setup": [],
+  "test": "true",
+  "testPattern": "swift test|xcodebuild",
+  "devbook": [
+    "instructions/core.md",
+    "instructions/security.md",
+    "instructions/testing.md",
+    "instructions/design.md",
+    "instructions/mobile.md",
+    "instructions/licensing.md"
+  ],
+  "stacks": ["stacks/swift.md"],
+  "allowedTools": ["Read", "Edit", "Write", "Glob", "Grep", "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)"]
+}

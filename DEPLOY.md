@@ -46,6 +46,8 @@ The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https:
 4. Run the Release workflow once by hand (Actions → Release → Run workflow). It creates `stable` and the first GitHub Release. Do this before deploying the site, because the setup commands now point at `stable`.
 5. Delete the old `VERSION_PUSH_TOKEN` secret and revoke that token.
 
+Until step 2 is done, the Release and Sources workflows are skipped, not failed. The scheduled Claude reviews and triage also stay off until you save `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) as a secret and set the `CLAUDE_REVIEWS` variable to `true`. The monthly modelled eval and the digest need neither.
+
 For a change to shipped files:
 
 1. In the same PR, add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something, and commit the modelled results (`npm run evals:model -- --variant main,local`).

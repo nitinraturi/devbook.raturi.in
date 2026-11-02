@@ -1,6 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { due, extractText, hash, lineDiff, robotsDisallows } from './watch-sources.mjs';
+import {
+	doccJsonUrl,
+	doccText,
+	due,
+	extractText,
+	hash,
+	lineDiff,
+	pageText,
+	robotsDisallows,
+} from './watch-sources.mjs';
 
 test('extractText keeps the main content and drops scripts, styles and chrome', () => {
 	const html = `<html><head><style>x{}</style></head><body><nav>Menu</nav><main><h1>Title</h1>
@@ -31,4 +40,39 @@ test('due honours the cadence with half a day of slack', () => {
 	assert.ok(due(undefined, 7, now));
 	assert.ok(due({ checkedAt: '2026-11-02T06:00:00Z' }, 7, now));
 	assert.ok(!due({ checkedAt: '2026-11-05T00:00:00Z' }, 7, now));
+});
+
+test('DocC pages are read through their JSON', async () => {
+	assert.equal(
+		doccJsonUrl('https://developer.apple.com/documentation/security/app-sandbox'),
+		'https://developer.apple.com/tutorials/data/documentation/security/app-sandbox.json',
+	);
+	assert.equal(
+		doccJsonUrl('https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/dataracesafety'),
+		'https://www.swift.org/migration/data/documentation/swift-6-concurrency-migration-guide/dataracesafety.json',
+	);
+	assert.equal(doccJsonUrl('https://owasp.org/Top10/'), null);
+	const json = {
+		abstract: [{ type: 'text', text: 'Restrict access.' }],
+		primaryContentSections: [
+			{
+				content: [
+					{
+						type: 'paragraph',
+						inlineContent: [
+							{ type: 'text', text: 'Use ' },
+							{ type: 'codeVoice', code: 'notarytool' },
+							{ type: 'text', text: '.' },
+						],
+					},
+				],
+			},
+		],
+		references: { x: { type: 'text', text: 'ignored' } },
+	};
+	assert.equal(doccText(json), 'Restrict access.\nUse notarytool.');
+	await assert.rejects(
+		pageText('https://example.com/', async () => '<html><body><script>app()</script></body></html>'),
+		/no text extracted/,
+	);
 });

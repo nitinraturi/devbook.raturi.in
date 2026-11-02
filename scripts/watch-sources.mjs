@@ -57,6 +57,54 @@ export function extractText(html) {
 		.slice(0, MAX_TEXT);
 }
 
+/**
+ * The JSON behind a DocC page (Apple's developer docs and swift.org's guides render their text with JavaScript,
+ * so the HTML holds none). Returns null for other URLs.
+ */
+export function doccJsonUrl(url) {
+	const u = new URL(url);
+	const path = u.pathname.replace(/\/$/, '');
+	if (u.hostname === 'developer.apple.com' && /^\/(documentation|design)\//.test(path))
+		return `${u.origin}/tutorials/data${path}.json`;
+	const m = path.match(/^(\/[\w-]+)\/documentation\/(.+)$/);
+	if (u.hostname === 'www.swift.org' && m) return `${u.origin}${m[1]}/data/documentation/${m[2]}.json`;
+	return null;
+}
+
+/** The prose of a DocC JSON page: abstract and content sections, one block per line. */
+export function doccText(json) {
+	const out = [];
+	const walk = (x, line) => {
+		if (Array.isArray(x)) return x.forEach((v) => walk(v, line));
+		if (!x || typeof x !== 'object') return;
+		if (x.type === 'text' && typeof x.text === 'string') return line.push(x.text);
+		if (x.type === 'codeVoice' && typeof x.code === 'string') return line.push(x.code);
+		for (const [k, v] of Object.entries(x)) {
+			if (k === 'references') continue;
+			if (k === 'inlineContent') {
+				const next = [];
+				walk(v, next);
+				out.push(next.join(''));
+			} else walk(v, line);
+		}
+	};
+	// The abstract is inline content without the wrapper, so wrap it.
+	walk([{ inlineContent: json.abstract ?? [] }, json.primaryContentSections ?? []], []);
+	return out
+		.map((l) => l.replace(/\s+/g, ' ').trim())
+		.filter(Boolean)
+		.join('\n')
+		.slice(0, MAX_TEXT);
+}
+
+/** The watched text of a URL: DocC JSON where there is one, else the page's readable HTML text. */
+export async function pageText(url, fetchText) {
+	const docc = doccJsonUrl(url);
+	const text = docc ? doccText(JSON.parse(await fetchText(docc))) : extractText(await fetchText(url));
+	if (!text) throw new Error('no text extracted (the page may render with JavaScript)');
+	return text;
+}
+
 export const hash = (text) => createHash('sha256').update(text).digest('hex');
 
 /** Disallowed path prefixes for our user agent (or *) in a robots.txt. */
@@ -201,7 +249,7 @@ export async function watch({ all = false, id, issues = false, dryRun = false } 
 			const checkedAt = new Date().toISOString();
 			try {
 				if (!(await allowed(url))) throw new Error('disallowed by robots.txt');
-				const text = extractText(await get(url));
+				const text = await pageText(url, get);
 				const h = hash(text);
 				if (prev && prev.hash !== h) {
 					changes.push({ ...source, url, checkedAt, diff: lineDiff(prev.text ?? '', text) });

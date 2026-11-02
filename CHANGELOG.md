@@ -2,6 +2,13 @@
 
 Notable changes to Devbook, newest first. Devbook is developed on `main` and released to the `stable` branch; each release raises `VERSION` and has a GitHub Release. Each entry is in the first release on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-02: Swift stack note for iOS and macOS apps
+
+### Added
+- **`stacks/swift.md`** for iOS and macOS apps in Swift: the Swift 6 language mode and module-by-module migration, thin SwiftUI views over testable packages, Swift Testing alongside XCTest UI tests, privacy manifests, Swift Package Manager with a committed `Package.resolved`, signing secrets kept out of the repository, App Sandbox entitlements for the Mac App Store, and Developer ID signing, the Hardened Runtime and notarization outside it. iOS apps also follow the mobile instructions.
+
+**Upgrade:** for a Swift app, add `- \`.devbook/stacks/swift.md\`: work on the iOS or macOS app` to the Devbook section of `AGENTS.md`. With Cursor, rerun `link.mjs --assistants <yours>` to generate its rule.
+
 ## 2026-11-02: Devbook v1
 
 Devbook is a set of short rule files that AI coding assistants load from your project: core, security and testing in every chat (9 KB), the rest only when a matching file or task needs them, and skills for multi-step jobs. v1 is the first public release on the `stable` channel. It brings everything in the entries below: a smaller always-loaded tier, browser and sign-in rules in `security-web.md`, setup and upgrade scripts, adapters for Cursor, Codex and Copilot code review, release gates, and sources that are checked every week. The [evals page](https://devbook.raturi.in/evals/) shows what was measured.

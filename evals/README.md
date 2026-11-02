@@ -45,7 +45,7 @@ For each task and variant, the model follows Claude Code's documented loading:
 - **Reachable:** `.devbook/` files the loaded text points to by path, such as the "read when" list or a skill's "Read …" step. The assistant has to decide to open them.
 - **Trigger model:** content-word overlap between the prompt and each skill's name and description, firing the best skill above a fixed threshold. It is lexical, so it misses synonyms; a trigger failure says the description lacks the words a user would type.
 
-A task passes when every rule it tests is loaded or reachable and the skill expectation holds. Mean input tokens are what Devbook adds for the task: the loaded text plus the smallest reachable file for each rule that isn't loaded. Tokens are estimated as bytes / 4, like the budgets, unless `--count-tokens` is given.
+A task passes when every rule and stack note it tests (`rules` and `covers`) is loaded or reachable and the skill expectation holds. Mean input tokens are what Devbook adds for the task: the loaded text plus the smallest reachable file for each rule that isn't loaded. Tokens are estimated as bytes / 4, like the budgets, unless `--count-tokens` is given.
 
 What it can't tell you: whether the assistant follows a rule it can see. Read a modelled pass as "the rule is there, at this cost"; measured runs answer the rest.
 

@@ -229,6 +229,13 @@
       "adapters": ["cursor-mdc"]
     },
     {
+      "path": "stacks/swift.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project is an iOS or macOS app written in Swift.",
+      "adapters": ["cursor-mdc"]
+    },
+    {
       "path": "stacks/typescript.md",
       "kind": "stack",
       "tier": "task",

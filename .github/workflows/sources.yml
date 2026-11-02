@@ -22,6 +22,8 @@ concurrency:
 
 jobs:
   watch:
+    # Pushes snapshots with the release App; skipped until it is set up (DEPLOY.md).
+    if: vars.RELEASE_APP_CLIENT_ID != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

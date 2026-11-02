@@ -89,13 +89,19 @@
     "stacks/astro.md#checks": "@astrojs/sitemap",
     "stacks/astro.md#csp": "CSP support",
     "stacks/astro.md#images": "astro:assets",
-    "stacks/astro.md#islands": "client:visible|islands",
-    "stacks/cloudflare.md#headers": "_headers",
-    "stacks/cloudflare.md#redirects": "_redirects",
+    "stacks/astro.md#islands": "client:visible",
+    "stacks/cloudflare.md#headers": "security headers and cache rules",
+    "stacks/cloudflare.md#redirects": "one canonical host",
     "stacks/cloudflare.md#workers": "not_found_handling|404-page",
-    "stacks/django.md#money": "DecimalField",
+    "stacks/django.md#money": "Use .DecimalField. for money",
     "stacks/django.md#production": "SECRET_KEY. from the environment|secure cookies",
     "stacks/django.md#versions": "LTS release|supported release",
-    "DES-04": "360 ?px"
+    "DES-04": "360 ?px",
+    "stacks/swift.md#privacy": "PrivacyInfo\\.xcprivacy",
+    "stacks/swift.md#concurrency": "Swift 6 language mode",
+    "stacks/swift.md#testing": "Swift Testing",
+    "stacks/swift.md#notarize": "notarytool",
+    "MOB-06": "privacy labels",
+    "CORE-10": "pure functions"
   }
 }

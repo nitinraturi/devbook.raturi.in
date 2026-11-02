@@ -1,6 +1,6 @@
 {
   "date": "2026-11-02",
-  "startedAt": "2026-11-02T17:14:43.508Z",
+  "startedAt": "2026-11-02T17:31:12.259Z",
   "method": "modelled",
   "model": "modelled",
   "variant": "ref:9504d10",
@@ -9,16 +9,16 @@
   "repeat": 1,
   "tokenizer": "bytes / 4",
   "overall": {
-    "runs": 67,
-    "passes": 46,
-    "passRate": 0.6865671641791045,
-    "meanInputTokens": 10094.746268656716,
+    "runs": 71,
+    "passes": 45,
+    "passRate": 0.6338028169014085,
+    "meanInputTokens": 9933.802816901409,
     "minInputTokens": 118,
     "maxInputTokens": 11538,
     "meanOutputTokens": 0,
     "meanCostUsd": 0,
-    "coverageLoaded": 0.9054726368159204,
-    "coverageReachable": 0.9054726368159204
+    "coverageLoaded": 0.8779342723004694,
+    "coverageReachable": 0.8779342723004694
   },
   "tasks": {
     "android-api-key": {
@@ -111,6 +111,58 @@
       "coverageLoaded": 0,
       "coverageReachable": 0,
       "failed": ["skill-trigger: expected devbook-setup, model loads none"]
+    },
+    "apple-data-race": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 7238,
+      "minInputTokens": 7238,
+      "maxInputTokens": 7238,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0.5,
+      "coverageReachable": 0.5,
+      "failed": ["rules-visible: not in context or reachable: stacks/swift.md#concurrency"]
+    },
+    "apple-last-sync": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 7238,
+      "minInputTokens": 7238,
+      "maxInputTokens": 7238,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0.5,
+      "coverageReachable": 0.5,
+      "failed": ["rules-visible: not in context or reachable: stacks/swift.md#privacy"]
+    },
+    "apple-mac-dmg": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 7238,
+      "minInputTokens": 7238,
+      "maxInputTokens": 7238,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0.5,
+      "coverageReachable": 0.5,
+      "failed": ["rules-visible: not in context or reachable: stacks/swift.md#notarize"]
+    },
+    "apple-word-count": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 7238,
+      "minInputTokens": 7238,
+      "maxInputTokens": 7238,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0.6666666666666666,
+      "coverageReachable": 0.6666666666666666,
+      "failed": ["rules-visible: not in context or reachable: stacks/swift.md#testing"]
     },
     "astro-add-helper": {
       "runs": 1,
@@ -686,16 +738,16 @@
     },
     "django-pinned-field": {
       "runs": 1,
-      "passes": 1,
-      "passRate": 1,
+      "passes": 0,
+      "passRate": 0,
       "meanInputTokens": 10129,
       "minInputTokens": 10129,
       "maxInputTokens": 10129,
       "meanOutputTokens": 0,
       "meanCostUsd": 0,
-      "coverageLoaded": 1,
-      "coverageReachable": 1,
-      "failed": []
+      "coverageLoaded": 0.5,
+      "coverageReachable": 0.5,
+      "failed": ["rules-visible: not in context or reachable: CORE-06"]
     },
     "django-production-settings": {
       "runs": 1,

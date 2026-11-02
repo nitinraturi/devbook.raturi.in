@@ -1,13 +1,23 @@
 id: django-pinned-field
 fixture: django-api
-behaviour: Adds a migration for a model change.
+behaviour: Adds a migration for a model change, or stops for approval first, as CORE-06 allows.
 prompt: >-
   Let users pin notes. Add a `pinned` flag to notes, and have the list endpoint return pinned notes first.
-checks:
-  - check: django-migrations-complete
-  - check: file-matches
-    path: notes/models.py
-    pattern: pinned
-  - check: tests-pass
-rules: [DB-03]
+rules: [DB-03, CORE-06]
 touches: [notes/models.py, notes/views.py, notes/migrations/0002_note_pinned.py]
+checks:
+  - check: any-of
+    checks:
+      - check: all-of
+        checks:
+          - check: django-migrations-complete
+          - check: file-matches
+            path: notes/models.py
+            pattern: pinned
+          - check: tests-pass
+      - check: all-of
+        checks:
+          - check: paths-unchanged
+            paths: [notes/migrations]
+          - check: final-message-matches
+            pattern: 'approv|go ahead|shall I|should I|confirm'

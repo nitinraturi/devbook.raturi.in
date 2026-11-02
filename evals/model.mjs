@@ -189,7 +189,7 @@ export async function modelRun({ task, dir, signals }) {
 
 	const ruleResults = [];
 	const extra = new Map();
-	for (const id of task.rules ?? []) {
+	for (const id of [...(task.rules ?? []), ...(task.covers ?? [])]) {
 		const re = new RegExp(signals[id], 'i');
 		if (re.test(loadedText)) {
 			ruleResults.push({ id, status: 'loaded' });
@@ -204,7 +204,7 @@ export async function modelRun({ task, dir, signals }) {
 
 	const checks = [];
 	const missing = ruleResults.filter((r) => r.status === 'missing').map((r) => r.id);
-	if (task.rules?.length)
+	if (ruleResults.length)
 		checks.push(
 			missing.length
 				? { check: 'rules-visible', pass: false, detail: `not in context or reachable: ${missing.join(', ')}` }

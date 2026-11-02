@@ -1,6 +1,6 @@
 {
   "date": "2026-11-02",
-  "startedAt": "2026-11-02T17:14:43.508Z",
+  "startedAt": "2026-11-02T17:31:12.259Z",
   "method": "modelled",
   "model": "modelled",
   "variant": "none",
@@ -9,10 +9,10 @@
   "repeat": 1,
   "tokenizer": "bytes / 4",
   "overall": {
-    "runs": 67,
+    "runs": 71,
     "passes": 0,
     "passRate": 0,
-    "meanInputTokens": 125.49253731343283,
+    "meanInputTokens": 125.97183098591549,
     "minInputTokens": 118,
     "maxInputTokens": 134,
     "meanOutputTokens": 0,
@@ -112,6 +112,58 @@
       "coverageReachable": 0,
       "failed": ["skill-trigger: expected devbook-setup, model loads none"]
     },
+    "apple-data-race": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 134,
+      "minInputTokens": 134,
+      "maxInputTokens": 134,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0,
+      "coverageReachable": 0,
+      "failed": ["rules-visible: not in context or reachable: CORE-02, stacks/swift.md#concurrency"]
+    },
+    "apple-last-sync": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 134,
+      "minInputTokens": 134,
+      "maxInputTokens": 134,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0,
+      "coverageReachable": 0,
+      "failed": ["rules-visible: not in context or reachable: MOB-06, stacks/swift.md#privacy"]
+    },
+    "apple-mac-dmg": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 134,
+      "minInputTokens": 134,
+      "maxInputTokens": 134,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0,
+      "coverageReachable": 0,
+      "failed": ["rules-visible: not in context or reachable: SEC-03, stacks/swift.md#notarize"]
+    },
+    "apple-word-count": {
+      "runs": 1,
+      "passes": 0,
+      "passRate": 0,
+      "meanInputTokens": 134,
+      "minInputTokens": 134,
+      "maxInputTokens": 134,
+      "meanOutputTokens": 0,
+      "meanCostUsd": 0,
+      "coverageLoaded": 0,
+      "coverageReachable": 0,
+      "failed": ["rules-visible: not in context or reachable: TEST-01, CORE-10, stacks/swift.md#testing"]
+    },
     "astro-add-helper": {
       "runs": 1,
       "passes": 0,
@@ -191,7 +243,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: PERF-12"]
+      "failed": ["rules-visible: not in context or reachable: PERF-12, stacks/cloudflare.md#headers"]
     },
     "astro-contact-form-fields": {
       "runs": 1,
@@ -230,7 +282,9 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEC-05"]
+      "failed": [
+        "rules-visible: not in context or reachable: SEC-05, stacks/astro.md#csp, stacks/cloudflare.md#headers"
+      ]
     },
     "astro-devbook-up-to-date": {
       "runs": 1,
@@ -269,7 +323,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: PERF-05, PERF-06, SEO-19"]
+      "failed": ["rules-visible: not in context or reachable: PERF-05, PERF-06, SEO-19, stacks/astro.md#images"]
     },
     "astro-launch-google": {
       "runs": 1,
@@ -337,7 +391,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEO-09, SEO-08"]
+      "failed": ["rules-visible: not in context or reachable: SEO-09, SEO-08, stacks/cloudflare.md#redirects"]
     },
     "astro-new-post-meta": {
       "runs": 1,
@@ -363,7 +417,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEO-01"]
+      "failed": ["rules-visible: not in context or reachable: SEO-01, stacks/cloudflare.md#workers"]
     },
     "astro-reading-time": {
       "runs": 1,
@@ -447,7 +501,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEC-18, SEC-05"]
+      "failed": ["rules-visible: not in context or reachable: SEC-18, SEC-05, stacks/cloudflare.md#headers"]
     },
     "astro-self-host-font": {
       "runs": 1,
@@ -502,7 +556,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEO-07, SEC-04"]
+      "failed": ["rules-visible: not in context or reachable: SEO-07, SEC-04, stacks/astro.md#checks"]
     },
     "astro-subscribe-endpoint": {
       "runs": 1,
@@ -554,7 +608,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: PERF-03, DES-19, DES-31"]
+      "failed": ["rules-visible: not in context or reachable: PERF-03, DES-19, DES-31, stacks/astro.md#islands"]
     },
     "django-bump-version": {
       "runs": 1,
@@ -681,7 +735,7 @@
       "coverageLoaded": 0,
       "coverageReachable": 0,
       "failed": [
-        "rules-visible: not in context or reachable: DB-11, API-18",
+        "rules-visible: not in context or reachable: DB-11, API-18, stacks/django.md#money",
         "skill-trigger: expected devbook-db-migration, model loads none"
       ]
     },
@@ -725,7 +779,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: DB-03"]
+      "failed": ["rules-visible: not in context or reachable: DB-03, CORE-06"]
     },
     "django-production-settings": {
       "runs": 1,
@@ -738,7 +792,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEC-03"]
+      "failed": ["rules-visible: not in context or reachable: SEC-03, stacks/django.md#production"]
     },
     "django-rate-limit": {
       "runs": 1,
@@ -806,7 +860,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: SEC-16, SEC-09, SEC-13"]
+      "failed": ["rules-visible: not in context or reachable: SEC-16, SEC-09, SEC-13, stacks/django.md#production"]
     },
     "django-setup": {
       "runs": 1,
@@ -909,7 +963,7 @@
       "meanCostUsd": 0,
       "coverageLoaded": 0,
       "coverageReachable": 0,
-      "failed": ["rules-visible: not in context or reachable: CORE-08"]
+      "failed": ["rules-visible: not in context or reachable: CORE-08, stacks/django.md#versions"]
     },
     "django-validation-not-review": {
       "runs": 1,

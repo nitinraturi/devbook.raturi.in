@@ -8,6 +8,7 @@
 #   dispatch  any of the above, or `evals` with a model (rerun when a new Claude model is released)
 #
 # Evals are modelled (free) unless the MEASURED_EVALS variable is 'true', which spends subscription usage.
+# Claude steps run only when the CLAUDE_REVIEWS variable is 'true' (set it once CLAUDE_CODE_OAUTH_TOKEN exists).
 name: Review
 
 on:
@@ -55,7 +56,7 @@ jobs:
 
   sources:
     needs: pick
-    if: needs.pick.outputs.issues != '[]' && needs.pick.outputs.issues != ''
+    if: vars.CLAUDE_REVIEWS == 'true' && needs.pick.outputs.issues != '[]' && needs.pick.outputs.issues != ''
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -162,6 +163,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - uses: anthropics/claude-code-action@5eb090f3c3afd701a0672cd32981197ca27688f6 # v1.0.253
+        if: vars.CLAUDE_REVIEWS == 'true'
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}

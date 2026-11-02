@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   eval-from-report:
-    if: github.event.label.name == 'make-eval' && contains(github.event.issue.labels.*.name, 'rule-ignored')
+    if: vars.CLAUDE_REVIEWS == 'true' && github.event.label.name == 'make-eval' && contains(github.event.issue.labels.*.name, 'rule-ignored')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

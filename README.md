@@ -17,7 +17,7 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 | `instructions/mobile.md` | mobile-app rules | mobile app |
 | `instructions/licensing.md` | project licence, SPDX, dependency and asset licences, notices, copied code | published or distributed project, or third-party code and assets |
 | `instructions/feature-docs.md` | when to write a feature doc, where it lives, EARS rules with IDs, flow, file map, keeping it in sync | app or service with business rules |
-| `stacks/*.md` | Astro, Starlight, Cloudflare, TypeScript, Django, GA4, three.js | you use that technology |
+| `stacks/*.md` | Astro, Starlight, Cloudflare, TypeScript, Django, GA4, three.js, Swift (iOS and macOS) | you use that technology |
 | `skills/*/SKILL.md` | security review, release check, Devbook upgrade, feature doc, API endpoint, database migration, SEO audit, setup | the task needs it (loaded on demand) |
 
 Core, security and testing load in every chat. Web security, design, REST APIs, databases, SEO, content and mobile load only when the assistant opens a matching file, through links in `.claude/rules/` and `.github/instructions/`. The rest are listed in `AGENTS.md` to read when a task needs them.

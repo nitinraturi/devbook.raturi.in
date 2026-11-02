@@ -1,6 +1,10 @@
 {
   "$comment": "Primary sources for every instruction, stack note and skill. scripts/sync-sources.mjs writes each instruction's and stack note's sources: frontmatter from the titles here (npm run check fails when they drift). scripts/watch-sources.mjs fetches each watched URL when its cadence is due and opens an issue when the text changes. cadence: weekly (fast-moving tool docs), monthly (framework docs), quarterly (standards). watch: false for fixed works such as books, papers and published RFCs, which the quarterly review still reads. rules lists the rule IDs a source supports; PREFIX-* means the whole file.",
-  "cadences": { "weekly": 7, "monthly": 30, "quarterly": 91 },
+  "cadences": {
+    "weekly": 7,
+    "monthly": 30,
+    "quarterly": 91
+  },
   "sources": [
     {
       "id": "fcis",
@@ -273,7 +277,10 @@
     {
       "id": "hig-material",
       "title": "Apple Human Interface Guidelines and Material Design 3",
-      "urls": ["https://developer.apple.com/design/human-interface-guidelines/", "https://m3.material.io/"],
+      "urls": [
+        "https://developer.apple.com/design/human-interface-guidelines/",
+        "https://developer.android.com/develop/ui/compose/designsystems/material3"
+      ],
       "cadence": "monthly",
       "files": ["instructions/design.md"],
       "rules": ["DES-19", "DES-20", "DES-21", "DES-22", "DES-23", "DES-24", "DES-25"]
@@ -470,6 +477,30 @@
       "urls": ["https://www.typescriptlang.org/tsconfig/"],
       "cadence": "monthly",
       "files": ["stacks/typescript.md"],
+      "rules": []
+    },
+    {
+      "id": "swift-concurrency",
+      "title": "Swift 6 concurrency migration guide",
+      "urls": [
+        "https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/dataracesafety",
+        "https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/migrationstrategy"
+      ],
+      "cadence": "monthly",
+      "files": ["stacks/swift.md"],
+      "rules": []
+    },
+    {
+      "id": "apple-app-platform",
+      "title": "Apple documentation on privacy manifests, App Sandbox, notarization and Swift Testing",
+      "urls": [
+        "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files",
+        "https://developer.apple.com/documentation/security/app-sandbox",
+        "https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution",
+        "https://developer.apple.com/documentation/testing"
+      ],
+      "cadence": "monthly",
+      "files": ["stacks/swift.md"],
       "rules": []
     },
     {
