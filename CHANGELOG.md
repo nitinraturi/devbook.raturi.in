@@ -2,6 +2,19 @@
 
 Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM.DD`); each entry is in the first release tagged after it. Read the entries after your current version before you upgrade.
 
+## 2026-11-02: Find out when a newer Devbook is out
+
+### Added
+- **`devbook-upgrade` skill.** It compares your pinned tag with the newest release, summarises the changelog entries and **Upgrade** notes in between, and upgrades `.devbook/` only after you agree.
+- **Version check hook** in the kit: `kit/claude-code/hooks/check-version.mjs` runs when a Claude Code session starts. When a newer release exists, the assistant tells you and asks whether to upgrade. It checks at most once a day and adds nothing to the chat when you are up to date.
+- The `AGENTS.md` template lists the skill, so Copilot, Codex and Cursor can follow it when you ask whether Devbook is up to date.
+
+**Upgrade:**
+1. Update `.devbook/`.
+2. Link the skill: `ln -s ../../.devbook/skills/devbook-upgrade .claude/skills/devbook-upgrade`.
+3. Add the `devbook-upgrade` line from `.devbook/templates/AGENTS.md` to your `AGENTS.md`.
+4. If you use the kit's hooks, add the `SessionStart` entry from `.devbook/kit/claude-code/settings.json` to `.claude/settings.json`.
+
 ## 2026-11-02: Optional enforcement kit
 
 ### Added

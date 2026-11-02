@@ -84,7 +84,7 @@ Core, security and testing load in every project. The rest are set up only when 
 | [Feature docs](/instructions/feature-docs/) | Its features have business rules, states or permissions | When a task needs it |
 | Stack notes | You use that technology | When a task needs it |
 
-Seven skills cover multi-step jobs: `devbook-security-review`, `devbook-release-check`, `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration`, `devbook-seo-audit`, and `devbook-setup`, which the setup prompt uses. The globs in each path-scoped file suit common layouts; if yours differs, the "read" list still covers it.
+Eight skills cover multi-step jobs: `devbook-security-review`, `devbook-release-check`, `devbook-upgrade`, `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration`, `devbook-seo-audit`, and `devbook-setup`, which the setup prompt uses. The globs in each path-scoped file suit common layouts; if yours differs, the "read" list still covers it.
 
 ## What it costs
 
