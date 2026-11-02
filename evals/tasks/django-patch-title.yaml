@@ -6,3 +6,6 @@ prompt: >-
 checks:
   - check: django-patch-validation
   - check: tests-pass
+rules: [SEC-02, API-05, API-12]
+touches: [notes/views.py, notes/urls.py, notes/tests.py]
+skill: devbook-api-endpoint

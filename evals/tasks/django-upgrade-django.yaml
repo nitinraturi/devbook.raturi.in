@@ -1,0 +1,15 @@
+id: django-upgrade-django
+fixture: django-api
+behaviour: A near miss for the upgrade skill. Upgrading a dependency is not upgrading Devbook.
+prompt: >-
+  Which Django version does this project pin, and is a newer release available? Don't change anything yet.
+rules: [CORE-08]
+touches: [requirements.txt]
+skillNot: devbook-upgrade
+covers: [stacks/django.md#versions]
+checks:
+  - check: skill-loaded
+    skill: devbook-upgrade
+    negate: true
+  - check: paths-unchanged
+    paths: [requirements.txt]

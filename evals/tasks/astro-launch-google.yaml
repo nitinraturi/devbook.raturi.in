@@ -1,0 +1,13 @@
+id: astro-launch-google
+fixture: astro-site
+behaviour: The SEO audit skill loads for launch wording ("ready for Google").
+prompt: >-
+  We launch next week. Check the site is ready for Google.
+rules: [SEO-25, SEO-04]
+touches: [astro.config.mjs]
+skill: devbook-seo-audit
+checks:
+  - check: skill-loaded
+    skill: devbook-seo-audit
+  - check: paths-unchanged
+    paths: [src, public]

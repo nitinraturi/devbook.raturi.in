@@ -11,3 +11,5 @@ checks:
     flags: i
   - check: no-invented-pypi-package
   - check: tests-pass
+rules: [SEC-11, SEC-04]
+touches: [notes/views.py, requirements.txt]

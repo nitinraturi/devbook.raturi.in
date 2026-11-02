@@ -1,0 +1,19 @@
+id: django-note-price
+fixture: django-api
+behaviour: Stores money as an exact decimal or integer minor units, never a float.
+prompt: >-
+  Notes can now be sold as templates. Add a price to notes.
+rules: [DB-11, API-18]
+touches: [notes/models.py, notes/migrations/0002_note_price.py]
+covers: [stacks/django.md#money]
+skill: devbook-db-migration
+checks:
+  - check: no-pattern-in-files
+    pattern: 'price\w*\s*=\s*models\.FloatField'
+  - check: any-of
+    checks:
+      - check: file-matches
+        path: notes/models.py
+        pattern: 'price\w*\s*=\s*models\.(DecimalField|IntegerField|PositiveIntegerField|BigIntegerField)'
+      - check: final-message-matches
+        pattern: 'Decimal|minor units|cents|integer'

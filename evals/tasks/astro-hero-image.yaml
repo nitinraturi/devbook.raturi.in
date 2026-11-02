@@ -6,3 +6,6 @@ prompt: >-
 checks:
   - check: astro-hero-image
   - check: tests-pass
+rules: [PERF-05, PERF-06, SEO-19]
+touches: [src/pages/index.astro]
+covers: [stacks/astro.md#images]

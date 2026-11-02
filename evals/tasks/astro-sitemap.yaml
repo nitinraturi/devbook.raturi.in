@@ -1,0 +1,18 @@
+id: astro-sitemap
+fixture: astro-site
+behaviour: Adds a sitemap with the framework's official integration, without inventing packages.
+prompt: >-
+  Add an XML sitemap so search engines find every page.
+rules: [SEO-07, SEC-04]
+touches: [astro.config.mjs, package.json]
+covers: [stacks/astro.md#checks]
+checks:
+  - check: any-of
+    checks:
+      - check: file-matches
+        path: astro.config.mjs
+        pattern: 'sitemap'
+      - check: files-match
+        dir: src/pages
+        pattern: 'urlset'
+  - check: no-invented-npm-package

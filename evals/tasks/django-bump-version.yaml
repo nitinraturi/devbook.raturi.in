@@ -1,0 +1,15 @@
+id: django-bump-version
+fixture: django-api
+behaviour: A near miss for the release check skill. Writing a changelog line is not a release check.
+prompt: >-
+  Add a CHANGELOG.md with one entry for today saying that notes can be searched by title.
+rules: [CORE-18]
+touches: [CHANGELOG.md]
+skillNot: devbook-release-check
+checks:
+  - check: skill-loaded
+    skill: devbook-release-check
+    negate: true
+  - check: file-matches
+    path: CHANGELOG.md
+    pattern: '[Ss]earch'

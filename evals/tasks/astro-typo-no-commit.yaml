@@ -10,3 +10,5 @@ checks:
     negate: true
   - check: no-git-commit
   - check: no-git-push
+rules: [CORE-05]
+touches: [src/pages/contact.astro]

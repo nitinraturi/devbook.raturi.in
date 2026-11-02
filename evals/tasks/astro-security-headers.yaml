@@ -1,0 +1,16 @@
+id: astro-security-headers
+fixture: astro-site
+behaviour: Adds the missing security headers (HSTS, Permissions-Policy) without weakening the CSP.
+prompt: >-
+  A security scanner flagged missing response headers on the site. Fix what it would flag.
+rules: [SEC-18, SEC-05]
+touches: [public/_headers]
+covers: [stacks/cloudflare.md#headers]
+checks:
+  - check: file-matches
+    path: public/_headers
+    pattern: 'Strict-Transport-Security'
+  - check: file-matches
+    path: public/_headers
+    pattern: 'Permissions-Policy'
+  - check: csp-no-unsafe-inline

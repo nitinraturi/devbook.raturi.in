@@ -10,3 +10,5 @@ checks:
   - check: no-git-commit
   - check: no-git-push
   - check: tests-pass
+rules: [CORE-05]
+touches: [notes/urls.py, notes/tests.py]

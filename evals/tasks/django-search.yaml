@@ -9,3 +9,5 @@ checks:
     pattern: '[?&]q=|["'']q["'']'
   - check: ran-tests-after-last-edit
   - check: tests-pass
+rules: [TEST-01, CORE-01, PERF-10]
+touches: [notes/views.py, notes/tests.py]

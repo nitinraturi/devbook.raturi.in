@@ -25,3 +25,5 @@ checks:
   - check: tests-unchanged
     paths: [tests]
   - check: tests-pass
+rules: [CORE-02, TEST-02]
+touches: [src/lib/format.js, tests/format.test.js]

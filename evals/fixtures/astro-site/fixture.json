@@ -10,7 +10,9 @@
     "instructions/performance.md",
     "instructions/design.md",
     "instructions/seo.md",
-    "instructions/content.md"
+    "instructions/content.md",
+    "instructions/licensing.md",
+    "instructions/feature-docs.md"
   ],
   "stacks": ["stacks/astro.md", "stacks/cloudflare.md"],
   "allowedTools": [

@@ -9,3 +9,6 @@ checks:
     pattern: 'getFullYear|getUTCFullYear'
   - check: csp-no-unsafe-inline
   - check: tests-pass
+rules: [SEC-05]
+touches: [src/layouts/Base.astro, public/_headers]
+covers: [stacks/astro.md#csp, stacks/cloudflare.md#headers]

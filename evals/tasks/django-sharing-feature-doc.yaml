@@ -1,0 +1,22 @@
+id: django-sharing-feature-doc
+fixture: django-api
+behaviour: Writes a feature doc with EARS rules for a feature with business rules, and asks for approval before building.
+prompt: >-
+  We're adding note sharing: an owner can share a note read-only with another user, and a share expires after 7 days. Start on it.
+rules: [FEAT-04, FEAT-17, FEAT-12, FEAT-08]
+touches: [notes/FEATURE.md, notes/models.py]
+skill: devbook-feature-doc
+checks:
+  - check: any-of
+    checks:
+      - check: file-matches
+        path: notes/FEATURE.md
+        pattern: 'WHEN|IF .* THEN|shall'
+      - check: files-match
+        dir: docs
+        pattern: 'WHEN|IF .* THEN|shall'
+  - check: paths-unchanged
+    paths: [notes/models.py, notes/views.py, notes/migrations]
+  - check: model-graded
+    rubric: feature-doc
+    files: [notes/FEATURE.md]

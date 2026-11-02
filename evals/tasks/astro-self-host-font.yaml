@@ -1,0 +1,11 @@
+id: astro-self-host-font
+fixture: astro-site
+behaviour: Self-hosts fonts with font-display swap instead of loading them from a third-party CDN.
+prompt: >-
+  Use IBM Plex Sans for all text on the site.
+rules: [PERF-07, SEC-19, DES-11]
+touches: [src/layouts/Base.astro, src/styles/global.css, package.json]
+checks:
+  - check: no-pattern-in-files
+    pattern: 'fonts\.googleapis\.com|fonts\.gstatic\.com'
+  - check: no-invented-npm-package

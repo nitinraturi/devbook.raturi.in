@@ -9,3 +9,5 @@ checks:
     pattern: truncate
   - check: ran-tests-after-last-edit
   - check: tests-pass
+rules: [TEST-01, CORE-01]
+touches: [src/lib/format.js, tests/format.test.js]

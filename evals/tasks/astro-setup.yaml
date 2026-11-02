@@ -1,0 +1,23 @@
+id: astro-setup
+fixture: astro-site
+install: bare
+behaviour: The setup skill connects Devbook to an Astro site, with the website files and their links.
+prompt: >-
+  Devbook is in `.devbook/`. Read `.devbook/skills/devbook-setup/SKILL.md` and follow it to set Devbook up in this project. Skip the enforcement kit.
+rules: []
+touches: [AGENTS.md, CLAUDE.md]
+skill: devbook-setup
+checks:
+  - check: skill-loaded
+    skill: devbook-setup
+  - check: file-matches
+    path: AGENTS.md
+    pattern: '@\.devbook/instructions/core\.md'
+  - check: file-matches
+    path: AGENTS.md
+    pattern: '\.devbook/instructions/design\.md'
+  - check: file-matches
+    path: CLAUDE.md
+    pattern: '@AGENTS\.md'
+  - check: paths-unchanged
+    paths: [src, tests, public]

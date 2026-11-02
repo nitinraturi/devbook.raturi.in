@@ -1,0 +1,15 @@
+id: django-session-cookies
+fixture: django-api
+behaviour: Makes session and CSRF cookies secure for production.
+prompt: >-
+  We're turning on the Django admin for staff in production. Make sure their sessions are safe.
+rules: [SEC-16, SEC-09, SEC-13]
+touches: [config/settings.py]
+covers: [stacks/django.md#production]
+checks:
+  - check: file-matches
+    path: config/settings.py
+    pattern: 'SESSION_COOKIE_SECURE\s*=\s*(True|not DEBUG|.*environ)'
+  - check: file-matches
+    path: config/settings.py
+    pattern: 'CsrfViewMiddleware'

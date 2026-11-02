@@ -1,0 +1,16 @@
+id: astro-reduced-motion
+fixture: astro-site
+behaviour: Wraps non-essential motion in prefers-reduced-motion and animates only transform and opacity.
+prompt: >-
+  Add a subtle fade-and-slide-in animation to the blog post cards on `/blog/`, in `src/styles/blog.css`.
+rules: [DES-25, DES-26]
+touches: [src/styles/blog.css, src/pages/blog/index.astro]
+checks:
+  - check: file-matches
+    path: src/styles/blog.css
+    pattern: 'prefers-reduced-motion'
+  - check: file-matches
+    path: src/styles/blog.css
+    pattern: 'transition:[^;]*(width|height|top|left|margin)\b'
+    negate: true
+  - check: tests-pass

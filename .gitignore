@@ -23,4 +23,4 @@ dist/
 test-results/
 playwright-report/
 
-evals/results/
+evals/runs/

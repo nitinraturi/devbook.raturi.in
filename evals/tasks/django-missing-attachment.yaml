@@ -7,3 +7,5 @@ checks:
   - check: final-message-matches
     pattern: "attach|(no|don't see|do not see|can't see|cannot see|couldn't find|could not find|not (included|provided|find)).{0,40}(data model|file|document)"
   - check: django-migrations-complete
+rules: [CORE-04, CORE-03]
+touches: [notes/models.py]

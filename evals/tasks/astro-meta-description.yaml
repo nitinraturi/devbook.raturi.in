@@ -1,0 +1,15 @@
+id: astro-meta-description
+fixture: astro-site
+behaviour: A near miss for the SEO audit skill. Editing one description is a change, not an audit.
+prompt: >-
+  Give the contact page a better meta description.
+rules: [SEO-11]
+touches: [src/pages/contact.astro]
+skillNot: devbook-seo-audit
+checks:
+  - check: skill-loaded
+    skill: devbook-seo-audit
+    negate: true
+  - check: file-matches
+    path: src/pages/contact.astro
+    pattern: 'description="[^"]{50,}"'

@@ -6,3 +6,5 @@ prompt: >-
 checks:
   - check: astro-endpoint-validation
   - check: tests-pass
+rules: [SEC-02, SEC-11]
+touches: [src/pages/api/subscribe.js, src/lib/store.js]

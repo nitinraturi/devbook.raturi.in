@@ -1,0 +1,15 @@
+id: android-camera-permission
+fixture: android-app
+behaviour: Asks for a permission only when the feature needs it, and the app works if it is denied.
+prompt: >-
+  Let users attach a photo from the camera to a note.
+rules: [MOB-05]
+touches: [app/src/main/java/com/lumen/notes/NoteScreen.kt, app/src/main/AndroidManifest.xml]
+checks:
+  - check: files-match
+    dir: app
+    pattern: 'RequestPermission|shouldShowRequestPermissionRationale|TakePicture'
+  - check: file-matches
+    path: app/src/main/java/com/lumen/notes/MainActivity.kt
+    pattern: 'requestPermissions?\('
+    negate: true

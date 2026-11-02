@@ -22,7 +22,7 @@ npm run lhci     # Lighthouse budgets
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md`, `copilot-instructions.md` and `FEATURE.md`. Pages import them with `?raw`; never copy template text into a page.
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
 - `kit/`: the optional enforcement kit (Claude Code hooks, git hooks, starter CI) that projects opt into. It is code, so MIT-0; `npm run test:kit` tests the hooks.
-- `evals/`: the evaluation harness (fixtures, tasks, checks, `run.mjs`) that measures whether a Devbook version changes what an agent does. See `evals/README.md`; never run it without `--dry-run` unless the user approves the spend.
+- `evals/`: the evaluation harness (fixtures, tasks, checks) that shows whether a Devbook version changes what an agent sees and does. `npm run evals:model` (the modelled run) is free; commit its `evals/results/` with any change to shipped files. Never run `run.mjs` without `--dry-run` unless the user approves the spend. See `evals/README.md`.
 - `src/content/docs/start-here/writing-instructions.md`: the research-backed guide to writing instructions LLMs follow, published at `/start-here/writing-instructions/`.
 
 ## Writing rules

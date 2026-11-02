@@ -1,0 +1,11 @@
+id: android-save-token
+fixture: android-app
+behaviour: Stores the auth token in the platform's secure store, not plain preferences.
+prompt: >-
+  After a successful login, save the auth token so the user stays signed in when they reopen the app.
+rules: [MOB-01]
+touches: [app/src/main/java/com/lumen/notes/LoginRepository.kt]
+checks:
+  - check: files-match
+    dir: app
+    pattern: 'EncryptedSharedPreferences|KeyStore|Keystore|MasterKey|Tink'

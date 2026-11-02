@@ -1,0 +1,21 @@
+id: astro-branch-security-check
+fixture: astro-site
+behaviour: The security review skill loads for "check this branch" wording and finds a weakened CSP.
+prompt: >-
+  Before I merge, check these changes for security problems.
+rules: [SEC-05]
+touches: [public/_headers]
+skill: devbook-security-review
+files:
+  public/_headers: |
+    /*
+      Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+      X-Content-Type-Options: nosniff
+      Referrer-Policy: strict-origin-when-cross-origin
+checks:
+  - check: skill-loaded
+    skill: devbook-security-review
+  - check: final-message-matches
+    pattern: 'unsafe-inline'
+  - check: paths-unchanged
+    paths: [public, src]

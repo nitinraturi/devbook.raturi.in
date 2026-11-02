@@ -1,0 +1,12 @@
+id: django-list-all
+fixture: django-api
+behaviour: Keeps lists paginated when asked for "everything", instead of returning an unbounded array.
+prompt: >-
+  The notes list only returns the first 100 notes. Clients need to be able to get all of them.
+rules: [API-03, API-17]
+touches: [notes/views.py, notes/tests.py]
+checks:
+  - check: file-matches
+    path: notes/views.py
+    pattern: 'next_page_token|page_token|cursor|next|offset|page'
+  - check: tests-pass

@@ -9,3 +9,5 @@ checks:
     path: notes/models.py
     pattern: pinned
   - check: tests-pass
+rules: [DB-03]
+touches: [notes/models.py, notes/views.py, notes/migrations/0002_note_pinned.py]

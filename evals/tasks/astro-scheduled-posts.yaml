@@ -1,0 +1,17 @@
+id: astro-scheduled-posts
+fixture: astro-site
+behaviour: Recognises a business rule that needs a feature doc and writes the rules before the code.
+prompt: >-
+  Posts with a future date should stay hidden until that date, except in local development where editors preview them.
+rules: [FEAT-04, FEAT-12]
+touches: [src/lib/posts.js, docs/features/scheduled-posts.md]
+skill: devbook-feature-doc
+checks:
+  - check: any-of
+    checks:
+      - check: files-match
+        dir: .
+        name: 'FEATURE\.md$|docs/features/'
+        pattern: 'WHEN|IF .* THEN|shall'
+      - check: final-message-matches
+        pattern: 'feature doc|approv'

@@ -52,3 +52,5 @@ checks:
   - check: tests-unchanged
     paths: [notes/tests.py]
   - check: tests-pass
+rules: [CORE-02, TEST-02]
+touches: [notes/views.py, notes/tests.py]

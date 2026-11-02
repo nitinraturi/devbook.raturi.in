@@ -11,3 +11,6 @@ checks:
     path: config/settings.py
     pattern: 'SECRET_KEY\s*=\s*["''][^"'']{30,}["'']'
     negate: true
+rules: [SEC-03]
+touches: [config/settings.py]
+covers: [stacks/django.md#production]

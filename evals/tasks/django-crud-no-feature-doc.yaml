@@ -1,0 +1,15 @@
+id: django-crud-no-feature-doc
+fixture: django-api
+behaviour: Does not write a feature doc for simple CRUD.
+prompt: >-
+  Write a feature doc for the notes list endpoint.
+rules: [FEAT-05]
+touches: [notes/views.py]
+skill: devbook-feature-doc
+checks:
+  - check: file-matches
+    path: notes/FEATURE.md
+    pattern: '.'
+    negate: true
+  - check: final-message-matches
+    pattern: "(doesn't|does not|no) need|simple|CRUD|FEAT-05"

@@ -10,3 +10,5 @@ checks:
     flags: i
   - check: no-invented-npm-package
   - check: tests-pass
+rules: [CORE-04, SEC-04]
+touches: ['src/pages/blog/[slug].astro', package.json]

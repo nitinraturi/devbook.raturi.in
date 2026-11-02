@@ -9,7 +9,9 @@
     "instructions/testing.md",
     "instructions/performance.md",
     "instructions/api-data.md",
-    "instructions/database.md"
+    "instructions/database.md",
+    "instructions/licensing.md",
+    "instructions/feature-docs.md"
   ],
   "stacks": ["stacks/django.md"],
   "allowedTools": [
