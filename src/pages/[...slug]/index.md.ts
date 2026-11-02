@@ -103,7 +103,8 @@ function toMarkdown(body: string, filePath: string | undefined) {
 }
 
 export const GET: APIRoute<{ entry: CollectionEntry<'docs'> }> = ({ props }) => {
-	const { title, description } = props.entry.data;
-	const md = `# ${title}\n\n> ${description}\n\n${toMarkdown(props.entry.body ?? '', props.entry.filePath)}\n`;
+	const { title, description, sources } = props.entry.data;
+	const cited = sources?.length ? `Sources: ${sources.join('; ')}.\n\n` : '';
+	const md = `# ${title}\n\n> ${description}\n\n${cited}${toMarkdown(props.entry.body ?? '', props.entry.filePath)}\n`;
 	return new Response(md, { headers: { 'Content-Type': 'text/markdown; charset=utf-8' } });
 };
