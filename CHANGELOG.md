@@ -27,7 +27,7 @@ Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM
 
 The kit is MIT-0, like the templates.
 
-**Upgrade:** nothing changes unless you opt in. To add the kit, update `.devbook/` (rerun the copy command, which now includes `kit/`), then follow [Add the enforcement kit](https://devbook.raturi.in/start-here/setup/#3-optional-add-the-enforcement-kit).
+**Upgrade:** nothing changes unless you opt in. To add the kit, update `.devbook/` (rerun the copy command, which now includes `kit/`), then follow [Use the enforcement kit](https://devbook.raturi.in/start-here/enforcement-kit/).
 
 ## 2026-11-02: Dated releases you can pin
 

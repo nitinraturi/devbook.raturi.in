@@ -90,19 +90,13 @@ Without a terminal, open the [list of releases](https://github.com/nitinraturi/d
 
 ## 3. Optional: add the enforcement kit
 
-Instructions are context, so an assistant can still miss a rule. The kit in `.devbook/kit/` turns a few of them into checks that tools run. The setup prompt asks before installing any part, and you can add it later. The [kit README](https://github.com/nitinraturi/devbook.raturi.in/blob/main/kit/README.md) lists which rule each check covers, and what it can't stop.
+Instructions are context, so an assistant can still miss a rule. The kit in `.devbook/kit/` turns a few of them into checks that tools run. The setup prompt asks before installing any part, and you can add it later:
 
-- **Claude Code hooks** block `git push`, edits to `.env` files and recursive `rm` outside the project, and tell the agent what to do instead. Merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`. They need Node.js.
-- **Git hooks** scan staged changes for secrets with [gitleaks](https://github.com/gitleaks/gitleaks) and check that commit messages follow Conventional Commits:
+- **Claude Code hooks** that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook release exists.
+- **Git hooks** that scan staged changes for secrets with gitleaks and check commit messages.
+- **Starter CI** for GitHub Actions, for Node.js or Python, with every action pinned to a commit SHA.
 
-  ```sh
-  ln -s ../../.devbook/kit/pre-commit/pre-commit .git/hooks/pre-commit
-  ln -s ../../.devbook/kit/pre-commit/commit-msg .git/hooks/commit-msg
-  ```
-
-- **Starter CI** for GitHub Actions, for Node.js or Python: install from the lockfile, format, lint, typecheck, test, build, audit dependencies, and fail on actions not pinned to a commit SHA. Copy `.devbook/kit/ci/node.yml` or `python.yml` to `.github/workflows/ci.yml` and `zizmor.yml` to `.github/zizmor.yml`, then make the jobs required in branch protection.
-
-The kit is MIT-0, so you can copy and change it without credit.
+[Use the enforcement kit](/start-here/enforcement-kit/) has the install steps, what a block looks like and the limits. The kit is MIT-0, so you can copy and change it without credit.
 
 ## How the instructions load
 

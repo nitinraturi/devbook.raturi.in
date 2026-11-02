@@ -1,5 +1,7 @@
 # Devbook enforcement kit
 
+The step-by-step guide is at https://devbook.raturi.in/start-here/enforcement-kit/.
+
 Instruction files are context: an assistant can still miss or skip a rule. The kit turns a few rules into checks that tools run, so breaking them fails loudly. It is optional, and setup never installs it without asking.
 
 | Part | What it does | Install |
