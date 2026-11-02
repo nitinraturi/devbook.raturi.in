@@ -70,12 +70,12 @@ Claude Code asks before writing to `.claude/`. If that write is refused, finish 
 
 `.devbook/kit/` turns a few rules into checks (see `.devbook/kit/README.md`). Ask the user which parts they want, and install only those. If they don't answer, skip it and mention it in the report.
 
-- Claude Code hooks that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook release exists: merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`, keeping existing settings. They need Node.js on the `PATH`.
+- Claude Code hooks that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook version is on `main`: merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`, keeping existing settings. They need Node.js on the `PATH`.
 - A gitleaks secret scan and a Conventional Commits check on each commit: give the user the link commands from the kit README, because `.git/hooks/` is per clone.
 - Starter CI: copy `.devbook/kit/ci/node.yml` or `python.yml` to `.github/workflows/ci.yml` only if the project has no CI. Change the commands to the project's real ones, and copy `zizmor.yml` to `.github/zizmor.yml`.
 
 ## 7. Verify and report
 
 - Confirm every `@` path and "read when" path in `AGENTS.md` exists, and every link resolves (`ls -L .claude/rules .claude/skills .github/instructions`).
-- Report the files you changed, the Devbook version (tag or main), the kit parts installed or declined, the instruction files and skills you chose and why, and any TODOs or questions.
+- Report the files you changed, the Devbook version (from `.devbook/VERSION`), the kit parts installed or declined, the instruction files and skills you chose and why, and any TODOs or questions.
 - Remind the user to commit `.devbook`, `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/`, `.github/instructions/` and any kit files, plus `.gitmodules` for a submodule; to clone with `--recurse-submodules`; and to start a new chat so the instructions load.

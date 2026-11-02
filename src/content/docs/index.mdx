@@ -86,8 +86,8 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
       <p>Only what a task needs is loaded, and the always-loaded part is the same every time, so providers can cache it.</p>
     </article>
     <article>
-      <h3>Pinned and yours</h3>
-      <p>Devbook changes only when you upgrade to a new dated release. Your project rules override it where they say so.</p>
+      <h3>Versioned and yours</h3>
+      <p>Devbook changes only when you update to a newer version from <code>main</code>, and every update is a diff you review. Your project rules override it where they say so.</p>
     </article>
   </div>
 </section>
@@ -107,7 +107,7 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     <li><strong>Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</li>
     <li><strong>Commit.</strong> Commit those files and the <code>devbook-*</code> links in <code>.claude/</code> and <code>.github/instructions/</code>, along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</li>
     <li><strong>Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</li>
-    <li><strong>Stay current.</strong> Setup pins the newest dated release, such as <code>v2026.11.02</code>, so Devbook changes only when you upgrade. With the <a href="/start-here/enforcement-kit/">enforcement kit</a>, Claude Code tells you when a newer one is out. Read the changelog, then move to the new tag as described in <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it up to date</a>.</li>
+    <li><strong>Stay current.</strong> Setup takes the latest <code>main</code>, and <code>.devbook/VERSION</code> records its version number. Devbook changes in your project only when you update. Ask "Is Devbook up to date?" and the assistant compares your version with <code>main</code>, summarises the changelog and updates when you agree. With the <a href="/start-here/enforcement-kit/">enforcement kit</a>, Claude Code tells you when a newer version is out. See <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it up to date</a>.</li>
   </ol>
 </section>
 
@@ -163,7 +163,7 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
     <article>
       <p class="dvb-flow-tier-label">Every so often</p>
       <h3>Upgrade</h3>
-      <p>Ask "Is Devbook up to date?" The assistant reads the changelog and upgrades when you agree. <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it current</a></p>
+      <p>Ask "Is Devbook up to date?" The assistant compares version numbers, reads the changelog and upgrades when you agree. <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it current</a></p>
     </article>
   </div>
 

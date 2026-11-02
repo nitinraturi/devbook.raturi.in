@@ -44,9 +44,11 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 ## Before you finish
 
 - [ ] `npm run check` passes.
+- [ ] The change follows Devbook's own rules, read from `instructions/`: core, security and testing always; `design.md` for UI and styles; `seo.md` for pages, URLs, metadata and site config; `content.md` for any page text, guides or changelog; `performance.md` for pages and scripts. Fix what doesn't pass and say which files you checked.
+- [ ] For any change to pages, layouts, `astro.config.mjs` or `public/`, run `npm run build` and follow `skills/devbook-seo-audit/SKILL.md` against `dist/`. Fix every finding before you commit or merge.
 - [ ] Changed instruction text passes the review checklist in `src/content/docs/start-here/writing-instructions.md`.
 - [ ] If you renamed or added a file (including a skill), update `devbook.manifest.json`, `skills/devbook-setup/SKILL.md`, `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
 - [ ] Never rename or delete a file in `instructions/`, `stacks/`, `skills/` or `templates/`, because projects import and link them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
 - [ ] `instructions/`, `stacks/`, `skills/` and the `start-here/` guides are CC BY 4.0; `templates/`, `kit/` and code are MIT-0. Never move text between them without updating `/license/`.
-- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`.
+- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`. Don't edit `VERSION` or create release tags: CI raises `VERSION` on every push to `main` (`DEPLOY.md`).

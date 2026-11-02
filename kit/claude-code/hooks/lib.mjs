@@ -152,17 +152,17 @@ export const realish = (path) => {
 /** True when `path` is strictly inside `root` (not the root itself). */
 export const isInside = (path, root) => path.startsWith(root.endsWith(sep) ? root : root + sep);
 
-/** A dated Devbook release tag, such as v2026.11.02 or v2026.11.02.1. */
-export const TAG = /^v(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$/;
+/** A Devbook version number from its VERSION file, such as 2026.11.02.1 (an older copy may have a leading v). */
+export const VERSION = /^v?(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$/;
 
-/** Compare two release tags; negative when a is older than b. */
-export const compareTags = (a, b) => {
+/** Compare two version numbers; negative when a is older than b. */
+export const compareVersions = (a, b) => {
 	const pa = a
-		.match(TAG)
+		.match(VERSION)
 		.slice(1)
 		.map((n) => Number(n ?? 0));
 	const pb = b
-		.match(TAG)
+		.match(VERSION)
 		.slice(1)
 		.map((n) => Number(n ?? 0));
 	for (let i = 0; i < pa.length; i++) if (pa[i] !== pb[i]) return pa[i] - pb[i];

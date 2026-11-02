@@ -48,6 +48,9 @@ jobs:
       - name: Rule IDs
         run: npm run check:rule-ids
 
+      - name: Version format
+        run: npm run check:version
+
       - name: Eval tasks
         run: npm run evals:validate
 

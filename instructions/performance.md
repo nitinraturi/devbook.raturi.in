@@ -1,6 +1,6 @@
 ---
 title: Performance and reliability
-description: Core Web Vitals targets, front-end loading, back-end efficiency, caching, timeouts, retries, background jobs, monitoring and deploys for any app, site or service.
+description: Core Web Vitals targets, front-end loading, back-end efficiency, caching, timeouts, retries, background jobs, monitoring and deploys for any app or site.
 sidebar:
   order: 4
 sources:

@@ -30,16 +30,17 @@ The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https:
 
 ## Releases
 
-Projects pin a dated tag, `vYYYY.MM.DD` (UTC date), with `.1`, `.2` and so on for later releases the same day. The setup prompt and setup page find the newest tag with `git ls-remote --sort=-version:refname`, so a pushed tag reaches new projects at once and existing ones when they upgrade. Some projects follow `main` instead, so merge only reviewed changes, and merge before deploying the site when the setup commands change.
+Devbook ships from `main`; there are no release tags. The `VERSION` file at the root holds the version number: the UTC date, `YYYY.MM.DD`, with `.1`, `.2` and so on for later commits the same day. New projects get the latest `main`. Existing ones compare `.devbook/VERSION` with `VERSION` on `main` at the start of each session (the `AGENTS.md` template, the `devbook-upgrade` skill and the kit's version hook) and update when the user agrees. So merge only reviewed changes, and merge before deploying the site when the setup commands change.
 
-To release:
+`VERSION` is raised automatically. On every push to `main`, `.github/workflows/version.yml` runs `scripts/bump-version.mjs` and pushes a `chore: version …` commit. That commit is pushed with `GITHUB_TOKEN`, which doesn't start workflows, so it doesn't bump itself. The `main` ruleset lets the GitHub Actions app bypass it for this push. Don't edit `VERSION` by hand.
 
-1. On an up-to-date `main`, run `npm run check`.
-2. List what changed since the last release: `git log --oneline $(git describe --tags --abbrev=0)..main -- instructions stacks skills templates`. Make sure `CHANGELOG.md` has a dated entry for each change, with an **Upgrade** note where projects must change something, and commit any fix to `main`.
-3. Tag and push: `git tag -a v2026.11.02 -m "Devbook v2026.11.02" && git push origin v2026.11.02`. Never move or delete a pushed tag; release a `.1` instead.
-4. Deploy the site if it changed (`npm run deploy`).
+For a change to `instructions/`, `stacks/`, `skills/`, `templates/`, `kit/` or `LICENSE-CC-BY-4.0`:
 
-The setup commands need at least one tag. Until the first one is pushed, `git ls-remote` prints nothing and the setup prompt falls back to `main`.
+1. In the same PR, add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something.
+2. Merge the PR. CI raises `VERSION`, and projects see the new version in their next session.
+3. Deploy the site if it changed (`npm run deploy`).
+
+The old `v2026.11.02` tag stays so projects pinned to it keep working; don't add new tags.
 
 ## Local checks
 

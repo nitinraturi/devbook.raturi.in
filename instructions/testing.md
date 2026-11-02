@@ -1,6 +1,6 @@
 ---
 title: Testing
-description: Mandatory testing rules for any stack - tests per acceptance criterion, failing test first for bugs, deterministic tests, real boundaries, test data and flaky tests.
+description: Mandatory testing rules for any stack - a test per acceptance criterion, failing test first for bugs, deterministic tests, real boundaries and flaky tests.
 sidebar:
   order: 3
 sources:

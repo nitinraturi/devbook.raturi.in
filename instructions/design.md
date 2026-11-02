@@ -1,6 +1,6 @@
 ---
 title: Design
-description: Distinctive, accessible UI for any interface - design direction, avoiding the template look, layout, type, colour, tokens, states, forms, motion and WCAG 2.2 AA.
+description: Distinctive, accessible UI for any interface - design direction, avoiding the template look, layout, type, colour, tokens, states, forms and WCAG 2.2 AA.
 sidebar:
   order: 7
 lastVerified: 2026-10-24

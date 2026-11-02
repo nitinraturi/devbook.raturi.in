@@ -30,3 +30,5 @@ Before working on the matching kind of change, read the file and follow it. Path
 - `.devbook/instructions/feature-docs.md`: building or changing a feature with business rules
 - `.devbook/stacks/<stack>.md`: work that touches <stack>
 - `.devbook/skills/devbook-upgrade/SKILL.md`: when asked whether Devbook is up to date, or to upgrade it
+
+At the start of each session, before the first task, do step 1 of `.devbook/skills/devbook-upgrade/SKILL.md`. If `main` has a newer version, tell the user in one sentence and ask whether to upgrade; upgrade only after a yes. If the check fails, carry on without mentioning it.

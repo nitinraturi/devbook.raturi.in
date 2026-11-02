@@ -17,7 +17,7 @@ After [setup](/start-here/setup/), you keep working in your assistant as before.
 | Teach the assistant something about your project | Add a line to the Project section of `AGENTS.md`. | [Add your own rules](#add-your-own-rules) |
 | Turn a file or skill on or off | Edit the "read" list or the links. | [Add or remove instruction files](#add-or-remove-instruction-files) |
 | Confirm it's loaded | Ask the check question in a new chat. | [Check that it's working](#check-that-its-working) |
-| Get a newer Devbook | Run `/devbook-upgrade`, or move the tag yourself. | [Keep it up to date](#keep-it-up-to-date) |
+| Get a newer Devbook | Ask "Is Devbook up to date?", or run `/devbook-upgrade`. | [Keep it up to date](#keep-it-up-to-date) |
 
 ## What to expect from the assistant
 
@@ -109,16 +109,21 @@ The answer should name core, security and testing, and mention running checks an
 
 ## Keep it up to date
 
-Devbook releases are dated git tags, such as `v2026.11.02`. Setup pins the newest one, so nothing changes until you move to a newer tag.
+Devbook ships from its `main` branch. The `VERSION` file at its root holds a version number, such as `2026.11.02.1`, that goes up with every commit to `main`. Your copy is fixed at the commit you added, so nothing changes until you update, and `.devbook/VERSION` shows which version you have.
 
-1. Check your version: `git -C .devbook describe --tags` for a submodule, or `.devbook/VERSION` for a copy.
-2. Read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries since then. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
-3. Move to the new tag. **Submodule:** `git -C .devbook fetch --tags`, then `git -C .devbook checkout -q <tag> && git add .devbook`. **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook), which fetches the newest tag.
-4. Review the diff, make any **Upgrade** changes, commit and start a new chat.
+**Automatic:** at the start of each session, the assistant compares your version with `main` and, when `main` is newer, tells you and asks whether to upgrade.
 
-To get every change as soon as it lands, follow `main` instead: add the submodule with `-b main` and update with `git submodule update --remote .devbook`, or download with `REF=main`. You then review each change yourself, without release points to roll back to.
+**On request:** ask "Is Devbook up to date?" or run `/devbook-upgrade`. The assistant compares your version with `main`, summarises the changelog entries in between, and updates only after you say yes.
 
-These files steer your assistant, so treat an update like a dependency upgrade. If a release doesn't suit your project yet, stay on the previous tag or check it out again.
+**By hand:**
+
+1. Check your version: `cat .devbook/VERSION`. No file means you have a release from before version numbers, so update.
+2. Check the newest: `curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION`.
+3. Read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries since your version. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
+4. Update. **Submodule:** `git -C .devbook fetch origin main && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`. **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook).
+5. Review the diff, make any **Upgrade** changes, commit and start a new chat.
+
+These files steer your assistant, so treat an update like a dependency upgrade. If a new version doesn't suit your project yet, don't commit the update; your project keeps the version it has.
 
 ## Troubleshooting
 

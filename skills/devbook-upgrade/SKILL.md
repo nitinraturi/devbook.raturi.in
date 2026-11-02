@@ -1,31 +1,31 @@
 ---
 name: devbook-upgrade
-description: Check whether a newer Devbook release exists and upgrade .devbook/ to it - compare versions, summarise the changelog and its Upgrade notes, and apply them once the user agrees. Use when asked whether Devbook is up to date, or to upgrade or update it.
+description: Check whether a newer Devbook version is on main and upgrade .devbook/ to it - compare VERSION numbers, summarise the changelog and its Upgrade notes, and apply them once the user agrees. Use when asked whether Devbook is up to date, or to upgrade or update it.
 license: CC-BY-4.0
 ---
 
 # Upgrade Devbook
 
-Devbook releases are dated tags, such as `v2026.11.02`. Upgrading changes what steers the assistant, so explain the changes and wait for a yes before applying them. Don't commit, push or deploy.
+Devbook ships from its `main` branch. The `VERSION` file at its root holds the version number, such as `2026.11.02.1`, and goes up with every commit to `main`. Upgrading changes what steers the assistant, so explain the changes and wait for a yes before applying them. Don't commit, push or deploy.
 
 ## 1. Compare versions
 
-- Current version: `git -C .devbook describe --tags --exact-match` for a submodule (a `.devbook/.git` file exists), or `.devbook/VERSION` for a copy. If the submodule is not on a tag, or `VERSION` says `main`, the project follows `main`: run `git submodule update --remote .devbook`, or rerun the copy command with `REF=main`, then go to step 3.
-- Newest release: `git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3`
-- If they match, say Devbook is up to date and stop.
+- Current version: `cat .devbook/VERSION`. If the file is missing, the project uses a release from before version numbers; treat it as out of date.
+- Newest version: `curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION`
+- Compare the dot-separated numbers left to right, ignoring a leading `v`. If the current one is the same or newer, say Devbook is up to date and stop.
 
 ## 2. Explain what changes
 
-- Submodule: `git -C .devbook fetch --tags`, then `git -C .devbook diff HEAD <newest> -- CHANGELOG.md`.
-- Copy: fetch `https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/<tag>/CHANGELOG.md` for both tags; the new entries are the ones only in the newer file.
+- Submodule (a `.devbook/.git` file exists): `git -C .devbook fetch -q origin main`, then `git -C .devbook diff HEAD FETCH_HEAD -- CHANGELOG.md`.
+- Copy: fetch `https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/CHANGELOG.md` and compare it with `.devbook/CHANGELOG.md`; the new entries are the ones missing from the local file. If there is no local changelog, summarise the entries dated after the project's Devbook was last updated (`git log -1 --format=%cs -- .devbook`).
 - Tell the user, in a few lines: what changes for them, and each **Upgrade** note that needs a change in this project, such as a new `AGENTS.md` line or link. Ask whether to upgrade. Stop if they don't agree.
 
 ## 3. Upgrade
 
-- Submodule: `git -C .devbook checkout -q <newest> && git add .devbook`.
-- Copy: rerun the copy command from `.devbook/templates/setup-prompt.md` with `REF=<newest>`.
+- Submodule: `git -C .devbook checkout -q FETCH_HEAD && git add .devbook`. If `.gitmodules` has no `branch = main` for `.devbook`, also run `git config -f .gitmodules submodule..devbook.branch main`.
+- Copy: rerun the copy command from `.devbook/templates/setup-prompt.md`.
 - Apply each **Upgrade** note. Keep the project's own content in `AGENTS.md`, and ask before removing anything.
-- Confirm every `@` path and "read when" path in `AGENTS.md` exists and every link resolves (`ls -L .claude/rules .claude/skills .github/instructions`).
+- Confirm `.devbook/VERSION` shows the newest version, every `@` path and "read when" path in `AGENTS.md` exists, and every link resolves (`ls -L .claude/rules .claude/skills .github/instructions`).
 
 ## 4. Report
 

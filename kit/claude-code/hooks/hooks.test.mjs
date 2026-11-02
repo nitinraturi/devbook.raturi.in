@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync,
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, describe, test } from 'node:test';
-import { compareTags } from './lib.mjs';
+import { compareVersions } from './lib.mjs';
 import assert from 'node:assert/strict';
 
 // Outside the temp folder, because guard-rm allows deletes there.
@@ -149,64 +149,60 @@ test('the example settings run every hook script, and each script exists', () =>
 	]);
 });
 
-test('compareTags orders dated releases', () => {
-	assert.ok(compareTags('v2026.11.02', 'v2026.11.10') < 0);
-	assert.ok(compareTags('v2026.11.02.1', 'v2026.11.02') > 0);
-	assert.ok(compareTags('v2026.11.02.10', 'v2026.11.02.9') > 0);
-	assert.equal(compareTags('v2026.12.01', 'v2026.12.01'), 0);
+test('compareVersions orders version numbers', () => {
+	assert.ok(compareVersions('2026.11.02', '2026.11.10') < 0);
+	assert.ok(compareVersions('2026.11.02.1', '2026.11.02') > 0);
+	assert.ok(compareVersions('2026.11.02.10', '2026.11.02.9') > 0);
+	assert.ok(compareVersions('2026.11.02.1', 'v2026.11.02') > 0);
+	assert.equal(compareVersions('2026.12.01', '2026.12.01'), 0);
 });
 
 describe('check-version', () => {
-	// A local "upstream" with tags, so the test needs no network.
+	// A local VERSION file stands in for main, so the test needs no network.
 	const root = realpathSync(mkdtempSync(join(tmpdir(), 'devbook-version-')));
 	after(() => rmSync(root, { recursive: true, force: true }));
-	const upstream = join(root, 'upstream');
-	const sh = (args, cwd) => spawnSync('git', args, { cwd, encoding: 'utf8' });
-	sh(['init', '-q', upstream]);
-	sh(['-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '--allow-empty', '-m', 'one'], upstream);
-	sh(['tag', 'v2026.11.02'], upstream);
-	sh(['tag', 'v2026.11.02.1'], upstream);
+	const upstream = join(root, 'VERSION');
+	writeFileSync(upstream, '2026.11.02.1\n');
 
 	let n = 0;
-	const check = (version) => {
-		const project = join(root, `p${n++}`);
-		mkdirSync(join(project, '.devbook'), { recursive: true });
-		if (version) writeFileSync(join(project, '.devbook', 'VERSION'), `${version}\n`);
-		const result = spawnSync('node', [new URL('check-version.mjs', import.meta.url).pathname], {
+	const run = (project, source, cache) =>
+		spawnSync('node', [new URL('check-version.mjs', import.meta.url).pathname], {
 			env: {
 				...process.env,
 				CLAUDE_PROJECT_DIR: project,
-				DEVBOOK_REPO: upstream,
-				DEVBOOK_CACHE_DIR: join(root, 'cache'),
+				DEVBOOK_VERSION_SOURCE: source,
+				DEVBOOK_CACHE_DIR: join(root, cache),
 			},
 			encoding: 'utf8',
 		});
+	const check = (version, { installed = true } = {}) => {
+		const project = join(root, `p${n++}`);
+		mkdirSync(join(project, '.devbook', installed ? 'instructions' : ''), { recursive: true });
+		if (version) writeFileSync(join(project, '.devbook', 'VERSION'), `${version}\n`);
+		const result = run(project, upstream, 'cache');
 		assert.equal(result.status, 0, result.stderr);
 		return result.stdout;
 	};
 
-	test('asks the agent to offer the upgrade when a newer tag exists', () => {
-		const out = check('v2026.11.02');
-		assert.match(out, /uses v2026\.11\.02, and v2026\.11\.02\.1 is the newest release/);
+	test('asks the agent to offer the upgrade when main has a newer version', () => {
+		const out = check('2026.11.02');
+		assert.match(out, /uses 2026\.11\.02, and 2026\.11\.02\.1 is the newest/);
 		assert.match(out, /devbook-upgrade/);
 	});
 
-	test('stays silent when up to date, following main, or without a version', () => {
-		assert.equal(check('v2026.11.02.1'), '');
-		assert.equal(check('main'), '');
-		assert.equal(check(undefined), '');
+	test('treats a missing or old-style version as out of date', () => {
+		assert.match(check(undefined), /from before version numbers/);
+		assert.match(check('main'), /from before version numbers/);
+		assert.match(check('v2026.11.02'), /uses v2026\.11\.02/);
 	});
 
-	test('stays silent when the upstream is unreachable', () => {
-		const result = spawnSync('node', [new URL('check-version.mjs', import.meta.url).pathname], {
-			env: {
-				...process.env,
-				CLAUDE_PROJECT_DIR: join(root, 'p0'),
-				DEVBOOK_REPO: join(root, 'missing'),
-				DEVBOOK_CACHE_DIR: join(root, 'cache2'),
-			},
-			encoding: 'utf8',
-		});
+	test('stays silent when up to date or Devbook is not installed', () => {
+		assert.equal(check('2026.11.02.1'), '');
+		assert.equal(check(undefined, { installed: false }), '');
+	});
+
+	test('stays silent when the version source is unreachable', () => {
+		const result = run(join(root, 'p0'), join(root, 'missing'), 'cache2');
 		assert.equal(result.status, 0);
 		assert.equal(result.stdout, '');
 	});

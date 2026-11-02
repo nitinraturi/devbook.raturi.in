@@ -1,6 +1,23 @@
 # Changelog
 
-Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM.DD`); each entry is in the first release tagged after it. Read the entries after your current version before you upgrade.
+Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with every commit to `main`. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
+
+## 2026-11-02: Versions instead of release tags
+
+### Changed
+- **No more release tags.** Setup takes the latest `main`, and the new `VERSION` file records its version number. The copy method now also copies `VERSION` and `CHANGELOG.md` into `.devbook/`.
+- **`devbook-upgrade` skill** compares `.devbook/VERSION` with `VERSION` on `main`, summarises the changelog between them and updates to `main` after you agree.
+- **Version check hook** (`kit/claude-code/hooks/check-version.mjs`) reads `VERSION` on `main` instead of listing tags.
+- **Setup prompt** no longer has a `Version:` line. When `.devbook/` already exists, it updates to the newest version before re-running setup.
+- **`AGENTS.md` template** has the assistant compare `.devbook/VERSION` with `main` at the start of each session, and offer the upgrade when `main` is newer.
+- `VERSION` goes up automatically with every commit to Devbook's `main`.
+
+- Shorter meta descriptions for the api-data, design, performance, security and testing instructions and the Cloudflare stack note, so each is within 160 characters. The rules don't change.
+
+**Upgrade:** projects pinned to the `v2026.11.02` tag keep working. To move to version numbers:
+1. Submodule: `git -C .devbook fetch origin main && git -C .devbook checkout -q FETCH_HEAD && git config -f .gitmodules submodule..devbook.branch main && git add .devbook .gitmodules`. Copy: rerun the copy command from the setup page.
+2. Add the version-check paragraph from `.devbook/templates/AGENTS.md` (under the `devbook-upgrade` line) to the Devbook section of your `AGENTS.md`.
+3. Check that `.devbook/VERSION` exists, then commit and start a new chat.
 
 ## 2026-11-02: Cloudflare preview builds
 

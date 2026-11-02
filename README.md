@@ -25,12 +25,12 @@ Core, security and testing load in every chat. Design, REST APIs, databases, SEO
 
 Paste [`templates/setup-prompt.md`](templates/setup-prompt.md) into Claude Code or Copilot agent mode inside your project. The prompt walks the assistant through these steps:
 
-1. Add Devbook at `.devbook/`. The default is a submodule pinned to the newest release tag (`vYYYY.MM.DD`). Set `Method: copy` to download plain files you commit instead.
+1. Add Devbook at `.devbook/`. The default is a submodule that tracks `main`. Set `Method: copy` to download plain files you commit instead. Either way, `.devbook/VERSION` records the version number.
 2. Create or merge a root `AGENTS.md`. It has your project section, then `@` lines for core, security and testing, and a list of the other files to read when a task needs them.
 3. Create a `CLAUDE.md` containing `@AGENTS.md`, and a `.github/copilot-instructions.md` that tells Copilot to read the files `AGENTS.md` lists.
 4. Link the path-scoped instructions into `.claude/rules/` and `.github/instructions/`, and the skills that fit into `.claude/skills/`.
 
-To upgrade, read the [changelog](CHANGELOG.md) and move to a newer tag (`git -C .devbook fetch --tags && git -C .devbook checkout -q <tag>`), or rerun the copy command on the setup page. Following `main` instead is documented there too. Project rules in `AGENTS.md` override Devbook only where they say so explicitly, and your direct request overrides both. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps.
+To upgrade, ask your assistant "Is Devbook up to date?". It compares `.devbook/VERSION` with `VERSION` on `main`, summarises the [changelog](CHANGELOG.md) and updates when you agree. By hand: `git -C .devbook fetch origin main && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`, or rerun the copy command on the setup page. Project rules in `AGENTS.md` override Devbook only where they say so explicitly, and your direct request overrides both. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps.
 
 New to instruction files? Read [How Devbook works](https://devbook.raturi.in/start-here/how-it-works/) for the terms, loading, precedence, cost and limits. Then read [Use Devbook day to day](https://devbook.raturi.in/start-here/using-devbook/) for your own rules, checks, updates and troubleshooting, and [Writing instructions](https://devbook.raturi.in/start-here/writing-instructions/) for writing rules and prompts that models follow.
 

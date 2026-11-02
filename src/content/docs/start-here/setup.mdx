@@ -1,6 +1,6 @@
 ---
 title: Setup
-description: Add Devbook to a project by hand, pin a release, see how Claude and Copilot load the instructions, and learn how to upgrade or remove it.
+description: Add Devbook to a project by hand, see how Claude and Copilot load the instructions, and learn how to check its version, update or remove it.
 sidebar:
   order: 2
 ---
@@ -15,38 +15,33 @@ The [setup prompt](/#setup) does all of this for you. The steps below show the s
 
 ## 1. Choose how to add Devbook
 
-Both methods put the files in `.devbook/`, so the rest of the setup is the same. Each release is a dated git tag, such as `v2026.11.02` (`v2026.11.02.1` for a second release that day). Pinning a tag means Devbook changes only when you move to a newer one. Pick a tab.
+Both methods put the latest `main` in `.devbook/`, so the rest of the setup is the same. `.devbook/VERSION` holds its version number, such as `2026.11.02.1`, and Devbook changes in your project only when you update. Pick a tab.
 
 <Tabs syncKey="method">
 <TabItem label="Submodule (tracks updates)">
 
-Pins the newest release. You update with a few git commands, and every update shows up as a reviewable change.
+Adds Devbook as a submodule that tracks `main`. You update with one command, and every update shows up as a reviewable change.
 
 ```sh
-TAG=$(git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3)
-git submodule add https://github.com/nitinraturi/devbook.raturi.in .devbook && git -C .devbook checkout -q $TAG && git add .devbook
+git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
 ```
-
-To get every change as soon as it lands instead, follow `main`: `git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook`.
 
 </TabItem>
 <TabItem label="Copy (plain files)">
 
-Downloads the newest release as plain files that you commit, and records its tag in `.devbook/VERSION`. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
+Downloads the latest `main` as plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-REF=$(git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3) && P=devbook.raturi.in-${REF#v} && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$REF | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 && echo $REF > .devbook/VERSION
+P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md
 ```
-
-To download a particular release, or `main` for the latest changes, start with `REF=v2026.11.02` or `REF=main` instead of the `git ls-remote` part.
 
 On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
 
 ```powershell
-$ref = (git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | Select-Object -First 1) -replace '.*/', ''; $p = "devbook.raturi.in-$($ref -replace '^v', '')"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$ref" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0"; Set-Content .devbook/VERSION $ref; Remove-Item devbook.tar.gz
+$p = "devbook.raturi.in-main"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0" "$p/VERSION" "$p/CHANGELOG.md"; Remove-Item devbook.tar.gz
 ```
 
-Without a terminal, open the [list of releases](https://github.com/nitinraturi/devbook.raturi.in/tags) and download the ZIP of the newest tag. Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`, and write the tag name in `.devbook/VERSION`.
+Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0`, `VERSION` and `CHANGELOG.md` files into `.devbook/`.
 
 </TabItem>
 </Tabs>
@@ -92,7 +87,7 @@ Without a terminal, open the [list of releases](https://github.com/nitinraturi/d
 
 Instructions are context, so an assistant can still miss a rule. The kit in `.devbook/kit/` turns a few of them into checks that tools run. The setup prompt asks before installing any part, and you can add it later:
 
-- **Claude Code hooks** that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook release exists.
+- **Claude Code hooks** that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook version is on `main`.
 - **Git hooks** that scan staged changes for secrets with gitleaks and check commit messages.
 - **Starter CI** for GitHub Actions, for Node.js or Python, with every action pinned to a commit SHA.
 
@@ -120,17 +115,15 @@ Before you update, read the [changelog](https://github.com/nitinraturi/devbook.r
 <TabItem label="Submodule (tracks updates)">
 
 ```sh
-git -C .devbook describe --tags                                # the version you use
-git -C .devbook fetch --tags                                   # fetch new releases
-git -C .devbook tag -l 'v*' --sort=-version:refname | head -n5 # list the newest
-git -C .devbook diff HEAD v2026.12.01 -- CHANGELOG.md          # what changed up to that release
-git -C .devbook checkout -q v2026.12.01 && git add .devbook    # move to it, then commit
-git clone --recurse-submodules <your-repo>                     # clone a project that uses Devbook
-git submodule update --init                                    # fetch .devbook in an existing clone
-git rm .devbook                                                # remove; then delete the Devbook section and links
+cat .devbook/VERSION                                                                       # the version you use
+curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION    # the newest version
+git -C .devbook fetch origin main                                                          # fetch the latest main
+git -C .devbook diff HEAD FETCH_HEAD -- CHANGELOG.md                                       # what changed since yours
+git -C .devbook checkout -q FETCH_HEAD && git add .devbook                                 # update, then commit
+git clone --recurse-submodules <your-repo>                                                 # clone a project that uses Devbook
+git submodule update --init                                                                # fetch .devbook in an existing clone
+git rm .devbook                                                                            # remove; then delete the Devbook section and links
 ```
-
-If you follow `main`, update with `git submodule update --remote .devbook` instead. To pin a submodule that follows `main`, run `git config -f .gitmodules --unset submodule..devbook.branch`, then check out a tag as above.
 
 </TabItem>
 <TabItem label="Copy (plain files)">
@@ -142,7 +135,7 @@ To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then 
 </TabItem>
 </Tabs>
 
-Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade. If a release doesn't suit your project yet, stay on the previous tag.
+Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade. If a new version doesn't suit your project yet, don't commit the update.
 
 ## License
 

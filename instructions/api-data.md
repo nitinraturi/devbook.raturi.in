@@ -1,6 +1,6 @@
 ---
 title: REST APIs
-description: REST API design from HTTP standards and big-company guidelines - contract first, URLs, methods, status codes, payloads, errors, pagination, versioning and webhooks.
+description: REST API design from HTTP standards and major API guidelines - contract first, URLs, methods, status codes, errors, pagination, versioning and webhooks.
 sidebar:
   order: 5
 sources:

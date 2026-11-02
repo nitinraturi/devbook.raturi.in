@@ -103,19 +103,19 @@ Every skill below is used the same way:
 ### devbook-upgrade
 
 - **Use it when:** you want to know whether a newer Devbook exists, or to move to it.
-- **Linked in:** every project, and listed in `AGENTS.md`, so a plain question works.
+- **Linked in:** every project. `AGENTS.md` also has the assistant run its version check at the start of each session, so you're told when a newer version is out.
 - **Type:**
   ```text
   /devbook-upgrade
   ```
   or just: "Is Devbook up to date?"
-- **It does:** compares your version with the newest release and summarises the changelog in between, including each **Upgrade** note that needs a change in your project. After you agree, it moves `.devbook/` to the new release and applies those notes.
+- **It does:** compares `.devbook/VERSION` with the version on Devbook's `main` and summarises the changelog in between, including each **Upgrade** note that needs a change in your project. After you agree, it updates `.devbook/` to the latest `main` and applies those notes.
 - **It stops for you:** after the summary, before changing anything.
 - **You get:** the old and new versions, the files changed, the notes applied or skipped, and a reminder to review, commit and start a new chat.
 
 ### devbook-setup
 
-The setup prompt runs this skill. It is not linked into `.claude/skills/`, so there is no slash command. To re-run or repair setup, paste the [setup prompt](/start-here/setup/) again. It keeps your existing method, version and `AGENTS.md` content, and lists any conflicts for you to decide.
+The setup prompt runs this skill. It is not linked into `.claude/skills/`, so there is no slash command. To re-run or repair setup, paste the [setup prompt](/start-here/setup/) again. It keeps your existing method and `AGENTS.md` content, and lists any conflicts for you to decide.
 
 ## Instruction files
 

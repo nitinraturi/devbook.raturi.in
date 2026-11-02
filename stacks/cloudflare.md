@@ -1,6 +1,6 @@
 ---
 title: Cloudflare
-description: Cloudflare hosting notes - Workers static assets or Pages, security headers, redirects, environments, secrets and domains. Verify against current Cloudflare docs.
+description: Cloudflare hosting notes - Workers static assets or Pages, security headers, redirects, previews, environments, secrets and domains. Check current docs.
 lastVerified: 2026-11-02
 ---
 

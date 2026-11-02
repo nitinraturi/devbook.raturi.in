@@ -1,0 +1,47 @@
+name: Version
+
+# Every push to main raises VERSION, so projects can see they're behind. The bump commit is pushed
+# with GITHUB_TOKEN, which doesn't trigger workflows, so it doesn't bump itself again.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: version
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      # Actions pinned to commit SHAs (security/supply-chain).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Raise VERSION and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            version=$(node scripts/bump-version.mjs)
+            git commit -qam "chore: version $version"
+            if git push -q origin HEAD:main; then
+              echo "VERSION is now $version" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          done
+          echo "Could not push the VERSION bump after 3 attempts" >&2
+          exit 1

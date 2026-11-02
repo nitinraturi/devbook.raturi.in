@@ -1,50 +1,43 @@
 #!/usr/bin/env node
-// SessionStart hook: when a newer Devbook release exists, asks the agent to offer the upgrade.
-// Prints nothing when up to date, offline, or following main. Checks the network at most once a day.
-import { execFileSync } from 'node:child_process';
+// SessionStart hook: when main has a newer Devbook VERSION than .devbook/, asks the agent to offer the upgrade.
+// Prints nothing when up to date or offline. Checks the network at most once a day.
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { compareTags, TAG } from './lib.mjs';
+import { compareVersions, VERSION } from './lib.mjs';
 
-const DEFAULT_REPO = 'https://github.com/nitinraturi/devbook.raturi.in';
+const DEFAULT_SOURCE = 'https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION';
 const DAY_MS = 24 * 60 * 60 * 1000;
-const git = (args) =>
-	execFileSync('git', args, { encoding: 'utf8', timeout: 5000, stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 
-/** The tag this project pins, or undefined when it follows main or the version is unknown. */
+/** The version in .devbook/VERSION, or undefined when the file is missing or isn't a version number. */
 const currentVersion = (devbook) => {
-	if (existsSync(join(devbook, '.git'))) {
-		try {
-			return git(['-C', devbook, 'describe', '--tags', '--exact-match']);
-		} catch {
-			return undefined; // not on a tag: following main
-		}
-	}
 	const file = join(devbook, 'VERSION');
-	return existsSync(file) ? readFileSync(file, 'utf8').trim() : undefined;
+	const version = existsSync(file) ? readFileSync(file, 'utf8').trim() : '';
+	return VERSION.test(version) ? version : undefined;
 };
 
-const newestTag = (repo) =>
-	git(['ls-remote', '--tags', '--refs', repo, 'v*'])
-		.split('\n')
-		.map((line) => line.split('refs/tags/')[1])
-		.filter((tag) => tag && TAG.test(tag))
-		.sort(compareTags)
-		.at(-1);
+/** The version on main. DEVBOOK_VERSION_SOURCE may be a URL or, for tests, a local file. */
+const newestVersion = async (source) => {
+	const text = /^https?:/.test(source)
+		? await (await fetch(source, { signal: AbortSignal.timeout(5000) })).text()
+		: readFileSync(source, 'utf8');
+	const version = text.trim();
+	return VERSION.test(version) ? version : undefined;
+};
 
-const main = () => {
+const main = async () => {
 	const project = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 	const devbook = join(project, '.devbook');
+	// No installed files (no Devbook, or an uninitialised submodule): nothing to compare.
+	if (!existsSync(join(devbook, 'instructions'))) return;
 	const current = currentVersion(devbook);
-	if (!current || !TAG.test(current)) return;
 
-	const repo = process.env.DEVBOOK_REPO || DEFAULT_REPO;
+	const source = process.env.DEVBOOK_VERSION_SOURCE || DEFAULT_SOURCE;
 	const cacheDir = process.env.DEVBOOK_CACHE_DIR || join(tmpdir(), 'devbook');
 	const cacheFile = join(
 		cacheDir,
-		`${createHash('sha256').update(`${project}\n${repo}`).digest('hex').slice(0, 16)}.json`,
+		`${createHash('sha256').update(`${project}\n${source}`).digest('hex').slice(0, 16)}.json`,
 	);
 	let newest;
 	try {
@@ -54,15 +47,15 @@ const main = () => {
 		// no cache yet
 	}
 	if (!newest) {
-		newest = newestTag(repo);
+		newest = await newestVersion(source);
 		if (!newest) return;
 		mkdirSync(cacheDir, { recursive: true });
 		writeFileSync(cacheFile, JSON.stringify({ checkedAt: Date.now(), newest }));
 	}
-	if (compareTags(newest, current) <= 0) return;
+	if (current && compareVersions(newest, current) <= 0) return;
 
 	process.stdout.write(
-		`Devbook update available: this project uses ${current}, and ${newest} is the newest release. ` +
+		`Devbook update available: this project uses ${current ?? 'a version from before version numbers'}, and ${newest} is the newest. ` +
 			'Before starting on the first request, tell the user in one sentence and ask whether to upgrade now. ' +
 			'If they agree, follow the devbook-upgrade skill (.devbook/skills/devbook-upgrade/SKILL.md). ' +
 			"Don't upgrade without a yes, and don't ask again in this session.\n",
@@ -70,7 +63,7 @@ const main = () => {
 };
 
 try {
-	main();
+	await main();
 } catch {
-	// Offline or git missing: stay silent rather than interrupt the session.
+	// Offline or the file is unreachable: stay silent rather than interrupt the session.
 }

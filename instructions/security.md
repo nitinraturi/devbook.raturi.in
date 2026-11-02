@@ -1,6 +1,6 @@
 ---
 title: Security
-description: Mandatory security rules for every feature - access control, input validation, secrets, dependencies, injection, auth and sessions, headers, privacy and LLM features.
+description: Mandatory security rules for every feature - access control, input validation, secrets, dependencies, injection, auth, sessions, headers, privacy and LLMs.
 sidebar:
   order: 2
 sources:
