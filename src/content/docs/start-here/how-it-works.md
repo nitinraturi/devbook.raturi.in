@@ -40,7 +40,9 @@ your-project/
 
 - **Claude Code** reads `CLAUDE.md` at the start of every chat, follows `@AGENTS.md`, then follows each `@.devbook/...` line. The full text is in context before you type anything.
 - **GitHub Copilot** (VS Code agent mode, the coding agent and the CLI) reads `AGENTS.md` and `.github/copilot-instructions.md` on its own. It does not expand `@` lines, so the sentence in `copilot-instructions.md` tells it to open each listed file. It normally does, but that is an instruction, not a guarantee.
-- **Other assistants** that support `AGENTS.md`, such as Codex, Cursor and Gemini CLI, read the same file list.
+- **Codex** reads `AGENTS.md` files from the repository root down to the folder you work in and joins them, up to 32 KiB by default. Its docs describe no `@` imports, so the `@` lines arrive as plain text and the model has to open each file itself, as with Copilot.
+- **Cursor** reads `AGENTS.md` in the root and in subfolders. Its docs describe no imports for `AGENTS.md`; in Cursor's own rules, an `@` file mention points the agent to a file to read with its tools rather than adding the file's text. Expect the same as Copilot: the agent is asked to open the files.
+- **Gemini CLI** reads `GEMINI.md` by default, not `AGENTS.md`. To use `AGENTS.md`, set `"context": { "fileName": ["AGENTS.md", "GEMINI.md"] }` in `.gemini/settings.json`. Gemini expands `@` imports, but its documented forms start with `./`, `../` or `/`, so check that the `@.devbook/...` lines load by asking which files it is following.
 
 Rules load once per chat. After you change `AGENTS.md`, start a new chat.
 

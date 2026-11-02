@@ -70,7 +70,7 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
 ## How the instructions load
 
-Claude Code expands the `@` lines; Copilot and other assistants read `AGENTS.md` and open the listed files. Write `@` paths as plain text, because an `@` path inside backticks is not imported. [How Devbook works](/start-here/how-it-works/#how-each-assistant-loads-the-rules) explains each assistant and which rule wins.
+Claude Code expands the `@` lines; Copilot, Codex and Cursor read `AGENTS.md` and are asked to open the listed files. Gemini CLI needs a setting to read `AGENTS.md` at all. Write `@` paths as plain text, because an `@` path inside backticks is not imported. [How Devbook works](/start-here/how-it-works/#how-each-assistant-loads-the-rules) explains each assistant and which rule wins.
 
 <Aside type="caution" title="Cloud agents and submodules">
 Hosted agents only see a submodule's files if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`. You can also switch to the Copy method, whose files are in the repository itself.
