@@ -14,7 +14,8 @@
 //
 // This is a model of loading, not of behaviour: it says whether the assistant can see a rule and what that costs,
 // not whether it follows it. Measured runs (run.mjs --yes) answer that.
-import { existsSync, lstatSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { existsSync, lstatSync, realpathSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, matchesGlob, relative, resolve } from 'node:path';
@@ -106,8 +107,11 @@ const words = (text) =>
 	);
 export const TRIGGER_THRESHOLD = 0.34;
 
+// An HTTP method followed by a path (`DELETE /notes/<id>/`) is an endpoint, whatever words surround it.
+const normalise = (prompt) => prompt.replace(/\b(GET|POST|PUT|PATCH|DELETE)\s+`?\/\S*/g, '$& endpoint');
+
 export function triggerScores(prompt, skills) {
-	const p = words(prompt);
+	const p = words(normalise(prompt));
 	return skills
 		.map((s) => {
 			const d = words(`${s.name.replace(/^devbook-/, '')} ${s.description}`);
@@ -247,7 +251,8 @@ export async function modelRun({ task, dir, signals }) {
 
 // ---------- Main ----------
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Compare real paths: on macOS /var is a link to /private/var, so a plain URL comparison can miss.
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
 	const { values: opts } = parseArgs({
 		options: {
 			task: { type: 'string' },

@@ -1,6 +1,6 @@
 ---
 name: devbook-feature-doc
-description: Write or update a feature doc (FEATURE.md) with a feature's purpose, file map, EARS rules with IDs, flow and decisions. Use when asked to document a feature, or before building or changing a feature with business rules, states, permissions, money or integrations.
+description: "Writes or updates a feature doc (FEATURE.md) with EARS rules, flow and a file map, or says a feature needs none. Use when asked to document or start a feature with business rules: who may do what, states, sharing, expiry, scheduling, money or integrations."
 license: CC-BY-4.0
 ---
 

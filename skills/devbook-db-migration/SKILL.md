@@ -1,6 +1,6 @@
 ---
 name: devbook-db-migration
-description: Change a relational database schema safely - model, constraints and indexes, a reviewed migration, expand and contract, lock-safe operations and tests. Use when asked to add, change or remove tables, columns, indexes or constraints, or to write a data migration.
+description: "Plans a safe relational schema change and writes it after approval: constraints, indexes, a reviewed migration, expand and contract. Use when asked to add, change or remove a table, column, field, flag, index or unique rule on a model, or to split or migrate data."
 license: CC-BY-4.0
 ---
 

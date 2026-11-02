@@ -1,6 +1,6 @@
 ---
 name: devbook-seo-audit
-description: Audit a website's technical SEO against Google Search Central guidance - status codes, canonicals, robots and sitemap, titles and descriptions, links, images and structured data. Use when asked for an SEO audit or check, or before launching or migrating a public site.
+description: "Audits a built website's technical SEO against Google Search Central: status codes, canonicals, robots, sitemap, titles, descriptions, links, images, structured data. Use when asked for an SEO audit, or if a site is ready for Google or launch."
 license: CC-BY-4.0
 ---
 
@@ -19,4 +19,4 @@ Audit only; don't change code unless asked.
    - image `<img>` alt text (SEO-19)
    - JSON-LD that parses, matches the visible content and uses supported types (SEO-21 to SEO-23)
 5. Use the Rich Results Test and Search Console only if the user has access; otherwise list them as manual checks.
-6. Report findings by template with the rule ID, the URL, what is wrong and the fix, most impactful first. List what you checked and found clean.
+6. Report in the shape of [references/report-template.md](references/report-template.md): findings by template with the rule ID, the URL, what is wrong and the fix, most impactful first. List what you checked and found clean.

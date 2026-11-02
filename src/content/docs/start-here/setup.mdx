@@ -32,16 +32,16 @@ git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devb
 Downloads the latest `main` as plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md
+P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
 ```
 
 On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
 
 ```powershell
-$p = "devbook.raturi.in-main"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0" "$p/VERSION" "$p/CHANGELOG.md"; Remove-Item devbook.tar.gz
+$p = "devbook.raturi.in-main"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0" "$p/VERSION" "$p/CHANGELOG.md" "$p/devbook.manifest.json"; Remove-Item devbook.tar.gz
 ```
 
-Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0`, `VERSION` and `CHANGELOG.md` files into `.devbook/`.
+Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0`, `VERSION`, `CHANGELOG.md` and `devbook.manifest.json` files into `.devbook/`.
 
 </TabItem>
 </Tabs>
@@ -64,19 +64,17 @@ Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/
 
    <Code code={copilotTemplate} lang="md" title=".github/copilot-instructions.md" />
 
-4. Link each path-scoped file you chose (design, api-data, database, seo, content, mobile) into both rule folders. Claude Code then loads it only when a matching file is read or edited, and Copilot when one is edited:
+4. Link the path-scoped files you chose and the skills that fit. The script reads the files your `AGENTS.md` lists, links each path-scoped one into `.claude/rules/` and `.github/instructions/` (so Claude Code and Copilot load it only for matching files), and links the matching skills into `.claude/skills/`. Where symlinks don't work, it copies the files instead. Then check the result:
 
    ```sh
-   mkdir -p .claude/rules .github/instructions
-   ln -s ../../.devbook/instructions/design.md .claude/rules/devbook-design.md
-   ln -s ../../.devbook/instructions/design.md .github/instructions/devbook-design.instructions.md
+   node .devbook/skills/devbook-setup/scripts/link.mjs
+   node .devbook/skills/devbook-setup/scripts/verify.mjs
    ```
 
-5. Link the skills that fit, so the assistant can load them for matching tasks. `devbook-security-review`, `devbook-release-check` and `devbook-upgrade` suit every project; add `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration` or `devbook-seo-audit` with their instruction files:
+5. Add the secret-file patterns to `.gitignore` (SEC-29):
 
    ```sh
-   mkdir -p .claude/skills
-   ln -s ../../.devbook/skills/devbook-security-review .claude/skills/devbook-security-review
+   node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs
    ```
 
 6. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/` and `.github/instructions/`, then start a new chat.

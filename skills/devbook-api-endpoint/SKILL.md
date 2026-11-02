@@ -1,6 +1,6 @@
 ---
 name: devbook-api-endpoint
-description: Add or change a REST API endpoint the Devbook way - OpenAPI first, validation, access checks, problem-details errors, pagination, idempotency and tests. Use when asked to add, change or remove an API endpoint, route or webhook.
+description: "Adds or changes a REST API endpoint the Devbook way: OpenAPI first, validation, access checks, problem-details errors, status codes, pagination and tests. Use when asked to add, change, remove or fix an API endpoint, route, JSON error response or webhook."
 license: CC-BY-4.0
 ---
 

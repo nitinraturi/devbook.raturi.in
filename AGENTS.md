@@ -17,11 +17,11 @@ npm run lhci     # Lighthouse budgets
 
 - `instructions/*.md`: the product. Mandatory `core`, `security` and `testing`, plus conditional `security-web`, `performance`, `api-data`, `database`, `design`, `seo`, `content`, `mobile`, `licensing` and `feature-docs`. They are rendered on the site through the symlink `src/content/docs/instructions`.
 - `stacks/*.md`: short notes for one technology each, also rendered through a symlink.
-- `skills/<name>/SKILL.md`: Agent Skills that projects link into `.claude/skills/`. Each `name` starts with `devbook-` and matches its folder; the description says when to use it.
+- `skills/<name>/SKILL.md`: Agent Skills that projects link into `.claude/skills/`. Each `name` starts with `devbook-` and matches its folder; the description, in the third person, says what it does and then "Use when…". Mechanical steps live in `scripts/` (Node, no dependencies, MIT-0, tested by `npm run test:scripts`) and report shapes in `references/`; `npm run check:skills` runs the Agent Skills validator.
 - Loading tiers (in `devbook.manifest.json`): core, security and testing are `@` imports; security-web, design, api-data, database, seo, content and mobile carry identical `paths:` and `applyTo:` globs and are linked into projects' `.claude/rules/` and `.github/instructions/`; the rest are read-when lines or skills. Never add `paths:` to an always-loaded file.
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md`, `copilot-instructions.md` and `FEATURE.md`. Pages import them with `?raw`; never copy template text into a page.
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
-- `kit/`: the optional enforcement kit (Claude Code hooks, git hooks, starter CI) that projects opt into. It is code, so MIT-0; `npm run test:kit` tests the hooks.
+- `kit/`: the optional enforcement kit (Claude Code hooks, git hooks, starter CI) that projects opt into. It is code, so MIT-0; `npm run test:scripts` tests the hooks and the skills' scripts.
 - `evals/`: the evaluation harness (fixtures, tasks, checks) that shows whether a Devbook version changes what an agent sees and does. `npm run evals:model` (the modelled run) is free; commit its `evals/results/` with any change to shipped files. Never run `run.mjs` without `--dry-run` unless the user approves the spend. See `evals/README.md`.
 - `src/content/docs/start-here/writing-instructions.md`: the research-backed guide to writing instructions LLMs follow, published at `/start-here/writing-instructions/`.
 

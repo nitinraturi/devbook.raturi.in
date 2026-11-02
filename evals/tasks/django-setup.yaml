@@ -10,6 +10,7 @@ skill: devbook-setup
 checks:
   - check: skill-loaded
     skill: devbook-setup
+  - check: verify-setup
   - check: file-matches
     path: AGENTS.md
     pattern: '\.devbook/instructions/database\.md'

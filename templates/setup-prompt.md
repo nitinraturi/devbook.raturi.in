@@ -13,7 +13,7 @@ Method: submodule
 - Submodule: run:
   git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
 - Copy: from the repository root, run:
-  P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md
+  P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
   On Windows PowerShell, use the PowerShell command from
   https://devbook.raturi.in/start-here/setup/ instead.
   Don't edit the copied files. Put project rules in AGENTS.md instead.

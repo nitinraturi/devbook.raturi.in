@@ -1,5 +1,5 @@
 {
-  "$comment": "Every file projects can load from Devbook, with when to load it and its loading tier: always (@ import in AGENTS.md), path (linked into .claude/rules and .github/instructions; globs live in the file's paths/applyTo frontmatter) or task (read-when line in AGENTS.md, or a skill). scripts/check-budget.mjs keeps this list in sync with disk and enforces the size budgets (1 KB = 1000 bytes; tokens are estimated as bytes / 4). Rule IDs (CORE-01) are never reused: when a rule is removed, add its ID to retiredRuleIds.",
+  "$comment": "Every file projects can load from Devbook, with when to load it and its loading tier: always (@ import in AGENTS.md), path (linked into .claude/rules and .github/instructions; globs live in the file's paths/applyTo frontmatter) or task (read-when line in AGENTS.md, or a skill). scripts/check-budget.mjs keeps this list in sync with disk and enforces the size budgets (1 KB = 1000 bytes; tokens are estimated as bytes / 4). Rule IDs (CORE-01) are never reused: when a rule is removed, add its ID to retiredRuleIds. Skills link into a project when linkWith is \"always\" or names an instruction file the project chose; skills/devbook-setup/scripts/link.mjs reads this file from .devbook/.",
   "budgets": {
     "instructionBytes": 8000,
     "alwaysBytes": 9000,
@@ -175,43 +175,50 @@
       "path": "skills/devbook-security-review/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Security reviews of a change or the codebase; link in every project."
+      "loadWhen": "Security reviews of a change or the codebase; link in every project.",
+      "linkWith": "always"
     },
     {
       "path": "skills/devbook-release-check/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Checking a release or deploy is ready; link in every project."
+      "loadWhen": "Checking a release or deploy is ready; link in every project.",
+      "linkWith": "always"
     },
     {
       "path": "skills/devbook-upgrade/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Checking for and applying a newer Devbook release; link in every project."
+      "loadWhen": "Checking for and applying a newer Devbook release; link in every project.",
+      "linkWith": "always"
     },
     {
       "path": "skills/devbook-feature-doc/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Writing or updating a feature doc; link with feature-docs."
+      "loadWhen": "Writing or updating a feature doc; link with feature-docs.",
+      "linkWith": "instructions/feature-docs.md"
     },
     {
       "path": "skills/devbook-api-endpoint/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Adding or changing an API endpoint or webhook; link with api-data."
+      "loadWhen": "Adding or changing an API endpoint or webhook; link with api-data.",
+      "linkWith": "instructions/api-data.md"
     },
     {
       "path": "skills/devbook-db-migration/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Schema changes and data migrations; link with database."
+      "loadWhen": "Schema changes and data migrations; link with database.",
+      "linkWith": "instructions/database.md"
     },
     {
       "path": "skills/devbook-seo-audit/SKILL.md",
       "kind": "skill",
       "tier": "task",
-      "loadWhen": "Auditing a public site's technical SEO; link with seo."
+      "loadWhen": "Auditing a public site's technical SEO; link with seo.",
+      "linkWith": "instructions/seo.md"
     }
   ],
   "retiredRuleIds": []

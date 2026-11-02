@@ -1,6 +1,6 @@
 {
   "date": "2026-11-02",
-  "startedAt": "2026-11-02T16:33:59.760Z",
+  "startedAt": "2026-11-02T16:47:46.467Z",
   "method": "modelled",
   "model": "modelled",
   "variant": "main",
@@ -10,9 +10,9 @@
   "tokenizer": "bytes / 4",
   "overall": {
     "runs": 66,
-    "passes": 57,
-    "passRate": 0.8636363636363636,
-    "meanInputTokens": 5176.590909090909,
+    "passes": 59,
+    "passRate": 0.8939393939393939,
+    "meanInputTokens": 5185.227272727273,
     "minInputTokens": 1591,
     "maxInputTokens": 8267,
     "meanOutputTokens": 0,
@@ -569,16 +569,16 @@
     },
     "django-delete-note": {
       "runs": 1,
-      "passes": 0,
-      "passRate": 0,
-      "meanInputTokens": 5220,
-      "minInputTokens": 5220,
-      "maxInputTokens": 5220,
+      "passes": 1,
+      "passRate": 1,
+      "meanInputTokens": 5505,
+      "minInputTokens": 5505,
+      "maxInputTokens": 5505,
       "meanOutputTokens": 0,
       "meanCostUsd": 0,
       "coverageLoaded": 1,
       "coverageReachable": 1,
-      "failed": ["skill-trigger: expected devbook-api-endpoint, model loads none"]
+      "failed": []
     },
     "django-error-format": {
       "runs": 1,
@@ -660,16 +660,16 @@
     },
     "django-patch-title": {
       "runs": 1,
-      "passes": 0,
-      "passRate": 0,
-      "meanInputTokens": 5220,
-      "minInputTokens": 5220,
-      "maxInputTokens": 5220,
+      "passes": 1,
+      "passRate": 1,
+      "meanInputTokens": 5505,
+      "minInputTokens": 5505,
+      "maxInputTokens": 5505,
       "meanOutputTokens": 0,
       "meanCostUsd": 0,
       "coverageLoaded": 1,
       "coverageReachable": 1,
-      "failed": ["skill-trigger: expected devbook-api-endpoint, model loads none"]
+      "failed": []
     },
     "django-pinned-field": {
       "runs": 1,

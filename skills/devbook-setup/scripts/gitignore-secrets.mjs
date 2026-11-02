@@ -5,8 +5,9 @@
 //   node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs [--dry-run] [--check] [--root <dir>]
 //
 // --dry-run prints what it would add; --check exits 1 when a pattern is missing or a secret file is tracked.
+import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 
@@ -61,7 +62,8 @@ export function trackedSecrets(root) {
 	}
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Compare real paths: on macOS /var is a link to /private/var, so a plain URL comparison can miss.
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
 	const { values } = parseArgs({
 		options: {
 			'dry-run': { type: 'boolean', default: false },

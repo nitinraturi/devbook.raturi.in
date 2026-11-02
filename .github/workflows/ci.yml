@@ -72,8 +72,11 @@ jobs:
       - name: Eval tasks
         run: npm run evals:validate
 
-      - name: Enforcement kit hooks
-        run: npm run test:kit
+      - name: Skills (Agent Skills validator, links)
+        run: npm run check:skills
+
+      - name: Kit hooks and skill scripts
+        run: npm run test:scripts
 
       - name: Accent contrast
         run: npm run contrast

@@ -1,6 +1,6 @@
 ---
 name: devbook-security-review
-description: Review a change or the codebase for security problems against Devbook's security rules (access control, validation, secrets, injection, auth, headers, privacy, LLM features). Use when asked for a security review, before merging security-sensitive work, or before a release.
+description: "Reviews a change, branch or codebase against Devbook's security rules and reports findings with rule IDs, without editing code. Use when asked for a security review or check, before merging sensitive changes, or before a launch."
 license: CC-BY-4.0
 ---
 
@@ -19,4 +19,4 @@ Review only; don't change code unless asked.
    - New dependencies: real, maintained, licence allowed (SEC-04).
    - Personal data, logging and LLM features (SEC-21 to SEC-26).
 4. Run the tools the project has: dependency audit, secret scanner, linters with security rules. Show their real output.
-5. Report each finding as: severity (critical, high, medium, low), rule ID, `file:line`, what can go wrong, and the fix. Order by severity. Say which rules you checked and found nothing for, and what you could not check.
+5. Report in the shape of [references/report-template.md](references/report-template.md). Report each finding as: severity (critical, high, medium, low), rule ID, `file:line`, what can go wrong, and the fix. Order by severity. Say which rules you checked and found nothing for, and what you could not check.

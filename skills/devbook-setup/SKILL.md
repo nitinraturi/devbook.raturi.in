@@ -1,6 +1,6 @@
 ---
 name: devbook-setup
-description: Connect Devbook (in .devbook/) to this project - choose the instruction files, write AGENTS.md, CLAUDE.md and Copilot files, and link path rules and skills. Use when asked to set up, re-run or repair Devbook setup.
+description: "Connects Devbook (in .devbook/) to a project: chooses the instruction files, writes AGENTS.md, CLAUDE.md and the Copilot file, and links path rules and skills with a script. Use when asked to set up, re-run or repair Devbook setup."
 license: CC-BY-4.0
 ---
 
@@ -38,36 +38,21 @@ Instruction files load in three ways. Pick the ones that apply:
 - `.github/copilot-instructions.md`: copy `.devbook/templates/copilot-instructions.md`, or add its text to the existing file.
 - If existing project rules conflict with Devbook, list the conflicts and ask. Don't silently drop either side.
 
-## 4. Link the path-scoped files
+## 4. Link the path rules and skills
 
-For each chosen file whose frontmatter has `paths:` (security-web, design, api-data, database, seo, content, mobile), link it into both rule folders. Claude Code then loads it only when a matching file is read or edited, and Copilot when one is edited:
-
-```sh
-mkdir -p .claude/rules .github/instructions
-ln -s ../../.devbook/instructions/design.md .claude/rules/devbook-design.md
-ln -s ../../.devbook/instructions/design.md .github/instructions/devbook-design.instructions.md
-```
-
-- Compare the file's `paths:` globs with the project's layout. If the project's files for that topic wouldn't match (for example, UI in `.py` templates), tell the user; the "read when" line still covers it.
-- If symlinks don't work (Windows without Developer Mode, or `git config core.symlinks` is `false`), skip the links, say so, and rely on the "read when" lines.
-
-## 5. Link the skills
-
-Link the skills that fit the project into `.claude/skills/`. Claude Code and VS Code Copilot both read that folder. Each skill's description costs a little context in every chat, so link only useful ones:
-
-- Always: `devbook-security-review`, `devbook-release-check`, `devbook-upgrade`.
-- `devbook-feature-doc` with feature-docs; `devbook-api-endpoint` with api-data; `devbook-db-migration` with database; `devbook-seo-audit` with seo.
+Run the link script from the repository root. It reads the files `AGENTS.md` lists and links, from `.devbook/devbook.manifest.json`, each path-scoped instruction into `.claude/rules/` and `.github/instructions/`, and the matching skills into `.claude/skills/`. Every project gets `devbook-security-review`, `devbook-release-check` and `devbook-upgrade`; `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration` and `devbook-seo-audit` come with feature-docs, api-data, database and seo. It never links `devbook-setup`, and it copies files with a generated-file header where symlinks don't work.
 
 ```sh
-mkdir -p .claude/skills
-ln -s ../../.devbook/skills/devbook-security-review .claude/skills/devbook-security-review
+node .devbook/skills/devbook-setup/scripts/link.mjs --dry-run   # check the plan first
+node .devbook/skills/devbook-setup/scripts/link.mjs
+node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs   # SEC-29
 ```
 
-Never link `devbook-setup` itself.
+- Compare each linked file's `paths:` globs with the project's layout. If the project's files for that topic wouldn't match (for example, UI in `.py` templates), tell the user; the "read when" line still covers it.
+- If a line says `skipped`, a file the project made is in the way; ask before replacing it.
+- Claude Code asks before writing to `.claude/`. If that write is refused, finish the rest and give the user the commands above.
 
-Claude Code asks before writing to `.claude/`. If that write is refused, finish the rest and give the user the exact link commands to run.
-
-## 6. Offer the enforcement kit
+## 5. Offer the enforcement kit
 
 `.devbook/kit/` turns a few rules into checks (see `.devbook/kit/README.md`). Ask the user which parts they want, and install only those. If they don't answer, skip it and mention it in the report.
 
@@ -75,8 +60,8 @@ Claude Code asks before writing to `.claude/`. If that write is refused, finish 
 - A gitleaks secret scan and a Conventional Commits check on each commit: give the user the link commands from the kit README, because `.git/hooks/` is per clone.
 - Starter CI: copy `.devbook/kit/ci/node.yml` or `python.yml` to `.github/workflows/ci.yml` only if the project has no CI. Change the commands to the project's real ones, and copy `zizmor.yml` to `.github/zizmor.yml`.
 
-## 7. Verify and report
+## 6. Verify and report
 
-- Confirm every `@` path and "read when" path in `AGENTS.md` exists, and every link resolves (`ls -L .claude/rules .claude/skills .github/instructions`).
+- Run `node .devbook/skills/devbook-setup/scripts/verify.mjs` and fix every problem it lists until it exits 0.
 - Report the files you changed, the Devbook version (from `.devbook/VERSION`), the kit parts installed or declined, the instruction files and skills you chose and why, and any TODOs or questions.
 - Remind the user to commit `.devbook`, `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/`, `.github/instructions/` and any kit files, plus `.gitmodules` for a submodule; to clone with `--recurse-submodules`; and to start a new chat so the instructions load.

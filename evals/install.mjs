@@ -19,6 +19,7 @@ export const DEVBOOK_PATHS = [
 	'LICENSE-CC-BY-4.0',
 	'VERSION',
 	'CHANGELOG.md',
+	'devbook.manifest.json',
 ];
 // Skills the setup skill links, by the instruction file that brings them (null: every project).
 export const SKILLS = {
@@ -136,8 +137,17 @@ export async function agentsMd(fixture, variant) {
 	return `# AGENTS.md\n\n${fixture.project.trim()}\n\n${lines.join('\n').trim()}\n`;
 }
 
-/** Create the links the setup skill creates: path-scoped instructions into .claude/rules, skills into .claude/skills. */
+/**
+ * Create the links the setup skill creates: path-scoped instructions into .claude/rules, skills into .claude/skills.
+ * Versions that ship link.mjs use it, so the evals test the real script; older ones get the same links by hand.
+ */
 export async function linkVariant(fixture, dir) {
+	const script = join(dir, '.devbook/skills/devbook-setup/scripts/link.mjs');
+	if (existsSync(script) && existsSync(join(dir, '.devbook/devbook.manifest.json'))) {
+		const { code, stderr } = await sh(`node '${script}' --root '${dir}'`, { cwd: dir });
+		if (code !== 0) throw new Error(`link.mjs failed: ${stderr}`);
+		return;
+	}
 	for (const path of fixture.devbook) {
 		if (!existsSync(join(dir, '.devbook', path))) continue;
 		const text = await readFile(join(dir, '.devbook', path), 'utf8');
@@ -168,11 +178,12 @@ export async function installRun({ task, fixture, variant, prepared, dir }) {
 	if (variant) {
 		for (const p of DEVBOOK_PATHS.filter((p) => existsSync(join(variant.dir, p))))
 			await cp(join(variant.dir, p), join(dir, '.devbook', p), { recursive: true });
-		if (!bare) await linkVariant(fixture, dir);
 	}
 	await writeFile(join(dir, 'AGENTS.md'), await agentsMd(fixture, bare ? null : variant));
 	const claudeMd = variant && !bare ? await readFile(join(variant.dir, 'templates/CLAUDE.md'), 'utf8') : '@AGENTS.md\n';
 	await writeFile(join(dir, 'CLAUDE.md'), claudeMd);
+	// After AGENTS.md, because link.mjs reads the files it lists.
+	if (variant && !bare) await linkVariant(fixture, dir);
 	const git = 'git -c user.name=eval -c user.email=eval@example.invalid';
 	await sh(`git init -q -b main && git add -A && ${git} commit -qm "fixture" --no-verify`, { cwd: dir });
 	return (await sh('git rev-parse HEAD', { cwd: dir })).stdout.trim();

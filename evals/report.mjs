@@ -5,6 +5,8 @@
 //
 //   node evals/report.mjs --from evals/runs/<timestamp>/report.json    convert a measured run
 //   node evals/report.mjs --compare <a.json> <b.json>                   per-task delta between two result files
+import { fileURLToPath } from 'node:url';
+import { realpathSync } from 'node:fs';
 import { readFile, readdir, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -186,7 +188,8 @@ export function regressions(base, next, tolerance = 0) {
 		.map(([id, t]) => ({ task: id, before: t.passRate, after: next.tasks[id].passRate }));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Compare real paths: on macOS /var is a link to /private/var, so a plain URL comparison can miss.
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
 	const { values, positionals } = parseArgs({
 		options: { from: { type: 'string' }, compare: { type: 'boolean', default: false } },
 		allowPositionals: true,
