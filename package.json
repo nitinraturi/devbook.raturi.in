@@ -13,11 +13,12 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "check:descriptions": "node scripts/check-descriptions.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
     "contrast": "node scripts/check-contrast.mjs",
     "test:e2e": "playwright test",
     "lhci": "lhci autorun",
     "og:image": "node scripts/generate-og.mjs",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run contrast && npm run build && npm run test:e2e",
     "deploy": "wrangler deploy"
   },
   "dependencies": {

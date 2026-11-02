@@ -9,7 +9,7 @@ Devbook is a small set of instruction files that other projects load into Claude
 ```bash
 npm ci
 npm run dev      # local preview
-npm run check    # format, lint, typecheck, descriptions, contrast, build (link validation), Playwright + axe
+npm run check    # format, lint, typecheck, descriptions, size budgets, contrast, build (link validation), Playwright + axe
 npm run lhci     # Lighthouse budgets
 ```
 
@@ -41,7 +41,7 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 
 - [ ] `npm run check` passes.
 - [ ] Changed instruction text passes the review checklist in `src/content/docs/start-here/writing-instructions.md`.
-- [ ] If you renamed or added a file, update `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
+- [ ] If you renamed or added a file, update `devbook.manifest.json`, `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
 - [ ] Never rename or delete a file in `instructions/`, `stacks/` or `templates/`, because projects import them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
 - [ ] `instructions/`, `stacks/` and the `start-here/` guides are CC BY 4.0; `templates/` and code are MIT-0. Never move text between them without updating `/license/`.

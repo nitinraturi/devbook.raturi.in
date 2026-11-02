@@ -34,7 +34,7 @@ Devbook is not versioned. Projects track `main`, either through a git submodule 
 
 ```bash
 npm ci
-npm run check        # format, lint, typecheck, descriptions, contrast, build, Playwright + axe
+npm run check        # format, lint, typecheck, descriptions, size budgets, contrast, build, Playwright + axe
 npm run lhci         # Lighthouse budgets (needs Chrome; set CHROME_PATH if not found)
 npm run preview      # serve dist/ with the real _headers on http://127.0.0.1:4324
 ```

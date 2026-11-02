@@ -42,6 +42,9 @@ jobs:
       - name: Titles and descriptions
         run: npm run check:descriptions
 
+      - name: Manifest and size budgets
+        run: npm run check:budget
+
       - name: Accent contrast
         run: npm run contrast
 
