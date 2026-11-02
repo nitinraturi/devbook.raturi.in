@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// SessionStart hook: when main has a newer Devbook VERSION than .devbook/, asks the agent to offer the upgrade.
+// SessionStart hook: when Devbook's stable branch has a newer VERSION than .devbook/, asks the agent to offer the
+// upgrade. Until the first release creates stable, it reads main.
 // Prints nothing when up to date or offline. Checks the network at most once a day.
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -7,7 +8,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { compareVersions, VERSION } from './lib.mjs';
 
-const DEFAULT_SOURCE = 'https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION';
+const DEFAULT_SOURCE = 'https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/stable/VERSION';
+const FALLBACK_SOURCE = 'https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** The version in .devbook/VERSION, or undefined when the file is missing or isn't a version number. */
@@ -17,7 +19,7 @@ const currentVersion = (devbook) => {
 	return VERSION.test(version) ? version : undefined;
 };
 
-/** The version on main. DEVBOOK_VERSION_SOURCE may be a URL or, for tests, a local file. */
+/** The newest version. DEVBOOK_VERSION_SOURCE may be a URL or, for tests, a local file. */
 const newestVersion = async (source) => {
 	const text = /^https?:/.test(source)
 		? await (await fetch(source, { signal: AbortSignal.timeout(5000) })).text()
@@ -48,6 +50,7 @@ const main = async () => {
 	}
 	if (!newest) {
 		newest = await newestVersion(source);
+		if (!newest && source === DEFAULT_SOURCE) newest = await newestVersion(FALLBACK_SOURCE);
 		if (!newest) return;
 		mkdirSync(cacheDir, { recursive: true });
 		writeFileSync(cacheFile, JSON.stringify({ checkedAt: Date.now(), newest }));

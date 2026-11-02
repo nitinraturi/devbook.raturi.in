@@ -60,6 +60,7 @@ node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs   # SEC-29
 
 - Claude Code hooks that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook version is on `main`: merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`, keeping existing settings. They need Node.js on the `PATH`.
 - A gitleaks secret scan and a Conventional Commits check on each commit: give the user the link commands from the kit README, because `.git/hooks/` is per clone.
+- A weekly Devbook version check for every assistant: copy `.devbook/kit/ci/devbook-version.yml` to `.github/workflows/`. It only warns in the job summary.
 - Starter CI: copy `.devbook/kit/ci/node.yml` or `python.yml` to `.github/workflows/ci.yml` only if the project has no CI. Change the commands to the project's real ones, and copy `zizmor.yml` to `.github/zizmor.yml`.
 
 ## 6. Verify and report

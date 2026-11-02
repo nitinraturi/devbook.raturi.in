@@ -9,7 +9,7 @@ The kit turns a few Devbook rules into checks that tools run, because an assista
 
 | Part | Stops or reports | Needs |
 |---|---|---|
-| [Claude Code hooks](#claude-code-hooks) | `git push`, edits to `.env` files, recursive `rm` outside the project; a newer Devbook version on `main` | Claude Code, Node.js 18 or later |
+| [Claude Code hooks](#claude-code-hooks) | `git push`, edits to `.env` files, recursive `rm` outside the project; a newer Devbook release | Claude Code, Node.js 18 or later |
 | [Git hooks](#git-hooks) | Secrets in staged changes; commit messages that aren't Conventional Commits | [gitleaks](https://github.com/gitleaks/gitleaks#installing) |
 | [Starter CI](#starter-ci) | A pull request that fails format, lint, types, tests, build or the dependency audit, or uses an unpinned action | GitHub Actions |
 
@@ -22,7 +22,7 @@ Claude Code runs [hooks](https://code.claude.com/docs/en/hooks) before each tool
 - `block-git-push` blocks `git push` in any form, including `git -C app push`, after `&&` and inside `sh -c`. Pushing stays your decision.
 - `protect-env` blocks changes to `.env`, `.env.local` and similar files, through the edit tools or shell commands such as `>`, `sed -i`, `cp` and `mv`. `.env.example` stays editable, and reading isn't blocked.
 - `guard-rm` blocks `rm -r` when the target resolves outside the project, or uses a variable it can't check. The temp folder is allowed.
-- `check-version` runs when a session starts. If Devbook's `main` has a higher version number than `.devbook/VERSION`, the assistant tells you and asks whether to upgrade. It checks at most once a day and adds nothing to the chat when you are up to date.
+- `check-version` runs when a session starts. If Devbook's `stable` branch has a higher version number than `.devbook/VERSION`, the assistant tells you and asks whether to upgrade. It checks at most once a day and adds nothing to the chat when you are up to date.
 
 ### Install
 

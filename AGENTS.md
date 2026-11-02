@@ -51,4 +51,4 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
 - [ ] Never rename or delete a file in `instructions/`, `stacks/`, `skills/` or `templates/`, because projects import and link them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
 - [ ] `instructions/`, `stacks/`, `skills/` and the `start-here/` guides are CC BY 4.0; `templates/`, `kit/` and code are MIT-0. Never move text between them without updating `/license/`.
-- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`. Don't edit `VERSION` or create release tags: CI raises `VERSION` on every push to `main` (`DEPLOY.md`).
+- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`. Don't edit `VERSION`, create tags or push to `stable`: the Release workflow does that when shipped files change and the gates pass (`DEPLOY.md`).

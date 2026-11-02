@@ -153,20 +153,20 @@ export function worseTasks(results) {
 }
 
 /** Write the per-variant JSON files and the summary. Returns { summary, files }. */
-export async function writeResults(report, { save = true } = {}) {
+export async function writeResults(report, { save = true, dir = resultsDir } = {}) {
 	const results = aggregate(report);
 	const summary = summaryMarkdown(results);
 	const files = [];
 	if (save) {
-		await mkdir(resultsDir, { recursive: true });
+		await mkdir(dir, { recursive: true });
 		for (const r of results) {
-			const file = join(resultsDir, `${r.date}-${slug(r.variant)}-${r.model}.json`);
+			const file = join(dir, `${r.date}-${slug(r.variant)}-${r.model}.json`);
 			await writeFile(file, `${JSON.stringify(r, null, 2)}\n`);
 			files.push(file);
 		}
 		const kind = results[0].method === 'modelled' ? 'modelled' : results[0].model.replace(/,/g, '+');
 		const variants = [...new Set(results.map((r) => slug(r.variant)))].join('-vs-');
-		const file = join(resultsDir, `${results[0].date}-${kind}-${variants}.md`);
+		const file = join(dir, `${results[0].date}-${kind}-${variants}.md`);
 		await writeFile(file, summary);
 		files.push(file);
 	}

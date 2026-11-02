@@ -30,17 +30,29 @@ The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https:
 
 ## Releases
 
-Devbook ships from `main`; there are no release tags. The `VERSION` file at the root holds the version number: the UTC date, `YYYY.MM.DD`, with `.1`, `.2` and so on for later commits the same day. New projects get the latest `main`. Existing ones compare `.devbook/VERSION` with `VERSION` on `main` at the start of each session (the `AGENTS.md` template, the `devbook-upgrade` skill and the kit's version hook) and update when the user agrees. So merge only reviewed changes, and merge before deploying the site when the setup commands change.
+`main` is development; `stable` is what projects install and upgrade to. Only `.github/workflows/release.yml` moves `stable`.
 
-`VERSION` is raised automatically. On every push to `main`, `.github/workflows/version.yml` runs `scripts/bump-version.mjs` and pushes a `chore: version …` commit. The `main` ruleset blocks direct pushes, and personal repositories can't add GitHub Actions to its bypass list, so the workflow pushes with `VERSION_PUSH_TOKEN`: a fine-grained personal access token from the repository admin, who is a bypass actor. Create it at GitHub → Settings → Developer settings → Fine-grained tokens, for this repository only, with **Contents: Read and write** and an expiry, then save it with `gh secret set VERSION_PUSH_TOKEN`. Renew it before it expires; when it's missing or expired, the Version run fails and says so. The workflow skips its own `chore: version …` commits, so a bump doesn't trigger another. Don't edit `VERSION` by hand.
+**What releases.** A push to `main` that changes a shipped path (`instructions/`, `stacks/`, `skills/`, `templates/`, `kit/`, `LICENSE-CC-BY-4.0`, `CHANGELOG.md`, `devbook.manifest.json`), or a manual run of the Release workflow. Site, eval and CI changes don't release, so projects aren't told to upgrade when nothing they load changed.
 
-For a change to `instructions/`, `stacks/`, `skills/`, `templates/`, `kit/` or `LICENSE-CC-BY-4.0`:
+**The gates**, in order: `npm run check`; then `scripts/release-gate.mjs`, which needs shipped changes since `stable`, a `CHANGELOG.md` entry that `stable` doesn't have, and a modelled eval (`evals/model.mjs`, free and deterministic) with no task whose pass rate fell against `stable`. The tolerance is 0, because modelled runs don't vary; widen it in the script only with evidence once measured runs join the gate.
 
-1. In the same PR, add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something.
-2. Merge the PR. CI raises `VERSION`, and projects see the new version in their next session.
+**Then** the workflow raises `VERSION` (`scripts/bump-version.mjs`: the UTC date `YYYY.MM.DD`, then `.1`, `.2` the same day), commits `chore(release): <version>` to `main`, fast-forwards `stable` to that commit, tags it `v<version>` for people who pin, and publishes a GitHub Release whose notes are the new changelog entries. Don't edit `VERSION` by hand.
+
+**One-time setup** (the owner):
+
+1. Create a GitHub App (Settings → Developer settings → GitHub Apps) with no webhook and one repository permission, **Contents: Read and write**. Install it on this repository only.
+2. Save its client ID as the `RELEASE_APP_CLIENT_ID` Actions variable and a private key as the `RELEASE_APP_PRIVATE_KEY` secret (`gh variable set` / `gh secret set`, pasting into the prompt, never as a command argument).
+3. In Settings → Rules, add the App as the only bypass actor on the `main` ruleset, and add a `stable` ruleset (block force pushes and deletion, restrict updates) with the same single bypass actor. Confirm the App can be added; if the repository's plan doesn't allow it, stop and choose another route rather than reusing a personal token.
+4. Run the Release workflow once by hand (Actions → Release → Run workflow). It creates `stable` and the first GitHub Release. Do this before deploying the site, because the setup commands now point at `stable`.
+5. Delete the old `VERSION_PUSH_TOKEN` secret and revoke that token.
+
+For a change to shipped files:
+
+1. In the same PR, add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something, and commit the modelled results (`npm run evals:model -- --variant main,local`).
+2. Merge the PR. The Release workflow promotes it to `stable` if the gates pass, and projects see the new version when they next check.
 3. Deploy the site if it changed (`npm run deploy`).
 
-The old `v2026.11.02` tag stays so projects pinned to it keep working; don't add new tags.
+The old `v2026.11.02` tag stays so projects pinned to it keep working.
 
 ## Local checks
 

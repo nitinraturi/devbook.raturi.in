@@ -109,18 +109,18 @@ The answer should name core, security and testing, and mention running checks an
 
 ## Keep it up to date
 
-Devbook ships from its `main` branch. The `VERSION` file at its root holds a version number, such as `2026.11.02.1`, that goes up with every commit to `main`. Your copy is fixed at the commit you added, so nothing changes until you update, and `.devbook/VERSION` shows which version you have.
+Devbook is developed on `main` and released to `stable`: each release raises the `VERSION` number, such as `2026.11.02.1`, and gets a GitHub Release with its changelog. Projects install and upgrade from `stable`; `main` is the edge channel for people who want every change before release. Your copy is fixed at the commit you added, so nothing changes until you update, and `.devbook/VERSION` shows which version you have.
 
-**Automatic:** with the [enforcement kit](/start-here/enforcement-kit/), Claude Code checks once a day when a session starts and, when a newer version is out, tells you and asks whether to upgrade. Nothing in `AGENTS.md` makes a network call, so other assistants don't check on their own.
+**Automatic:** with the [enforcement kit](/start-here/enforcement-kit/), Claude Code checks once a day when a session starts and, when a newer version is out, tells you and asks whether to upgrade. Nothing in `AGENTS.md` makes a network call. For every assistant, copy `.devbook/kit/ci/devbook-version.yml` to `.github/workflows/`: it warns in the job summary each week when a release is out, and never fails the build.
 
-**On request:** ask "Is Devbook up to date?" or run `/devbook-upgrade`. The assistant compares your version with `main`, summarises the changelog entries in between, and updates only after you say yes.
+**On request:** ask "Is Devbook up to date?" or run `/devbook-upgrade`. The assistant runs `compare.mjs`, which compares your version with `stable`, summarises the changelog entries in between, and updates only after you say yes.
 
 **By hand:**
 
 1. Check your version: `cat .devbook/VERSION`. No file means you have a release from before version numbers, so update.
-2. Check the newest: `curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION`.
-3. Read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries since your version. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
-4. Update. **Submodule:** `git -C .devbook fetch origin main && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`. **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook).
+2. Check the newest: `curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/stable/VERSION`, or run `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`.
+3. Read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/stable/CHANGELOG.md) entries since your version. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
+4. Update. **Submodule:** `git -C .devbook fetch origin stable && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`, then `node .devbook/skills/devbook-setup/scripts/link.mjs`. **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook).
 5. Review the diff, make any **Upgrade** changes, commit and start a new chat.
 
 These files steer your assistant, so treat an update like a dependency upgrade. If a new version doesn't suit your project yet, don't commit the update; your project keeps the version it has.

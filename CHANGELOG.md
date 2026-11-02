@@ -1,6 +1,18 @@
 # Changelog
 
-Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with every commit to `main`. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
+Notable changes to Devbook, newest first. Devbook is developed on `main` and released to the `stable` branch; each release raises `VERSION` and has a GitHub Release. Each entry is in the first release on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
+
+## 2026-11-02: A stable release channel
+
+### Added
+- **`stable` branch.** Projects install and upgrade from `stable`; `main` is the edge channel. A release happens only when shipped files change and the gates pass (`npm run check`, a new changelog entry, and no eval regression against `stable`). Each release raises `VERSION`, is tagged `v<VERSION>` and has a GitHub Release with its changelog entries.
+- **`kit/ci/devbook-version.yml`**, a weekly job for any assistant that compares `.devbook/VERSION` with `stable` and warns in the job summary. It never fails the build.
+
+### Changed
+- `VERSION` no longer goes up on every commit, only on releases, so a site or eval change no longer tells projects to upgrade.
+- The setup prompt, the copy command, `devbook-upgrade`, `compare.mjs` and the kit's version hook read `stable`. Until the first release creates it, `compare.mjs` and the hook fall back to `main`.
+
+**Upgrade:** projects that track `main` keep working. To follow releases instead: **submodule:** `git config -f .gitmodules submodule..devbook.branch stable && git -C .devbook fetch -q origin stable && git -C .devbook checkout -q FETCH_HEAD && git add .gitmodules .devbook`; **copy:** rerun the copy command from the setup page, which now downloads `stable`. To stay on the edge, keep `branch = main` and pass `--channel main` to `compare.mjs`.
 
 ## 2026-11-02: Adapters for Cursor, Codex and Copilot code review
 

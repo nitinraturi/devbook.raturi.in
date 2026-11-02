@@ -259,6 +259,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.me
 			variant: { type: 'string', default: 'none,main' },
 			'count-tokens': { type: 'string' },
 			'no-save': { type: 'boolean', default: false },
+			out: { type: 'string' },
 			help: { type: 'boolean', short: 'h', default: false },
 		},
 	});
@@ -269,6 +270,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.me
   --variant <names>       none, main, stable, local or ref:<git-ref>, comma-separated (default: none,main)
   --count-tokens <model>  count tokens exactly with Anthropic's free token-counting endpoint (needs ANTHROPIC_API_KEY)
   --no-save               print the summary without writing evals/results/
+  --out <dir>             write the results to <dir> instead of evals/results/ (the release gate uses this)
 
 Free and deterministic: no model is called (except token counting with --count-tokens).`);
 		process.exit(0);
@@ -323,7 +325,10 @@ Free and deterministic: no model is called (except token counting with --count-t
 				]),
 			),
 		};
-		const { summary, files } = await writeResults({ meta, runs }, { save: !opts['no-save'] });
+		const { summary, files } = await writeResults(
+			{ meta, runs },
+			{ save: !opts['no-save'], ...(opts.out ? { dir: opts.out } : {}) },
+		);
 		console.log(summary);
 		for (const f of files) console.log(`Wrote ${f}`);
 	} finally {

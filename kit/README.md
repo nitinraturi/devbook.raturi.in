@@ -8,7 +8,7 @@ Instruction files are context: an assistant can still miss or skip a rule. The k
 |---|---|---|
 | `claude-code/` | `PreToolUse` hooks that block `git push`, changes to `.env` files, and recursive `rm` outside the project, each with a message telling the agent what to do instead, and a `SessionStart` hook that says when a newer Devbook version is on `main` | Merge `claude-code/settings.json` into `.claude/settings.json` |
 | `pre-commit/` | A gitleaks secret scan before each commit, and a Conventional Commits check on each message | Link the scripts into `.git/hooks/`, or use `.pre-commit-config.yaml` |
-| `ci/` | Starter GitHub Actions workflows for Node.js and Python: install from the lockfile, format, lint, typecheck, test, build, audit dependencies, and check that every action is pinned to a commit SHA | Copy one to `.github/workflows/ci.yml` and `zizmor.yml` to `.github/zizmor.yml` |
+| `ci/` | Starter GitHub Actions workflows for Node.js and Python: install from the lockfile, format, lint, typecheck, test, build, audit dependencies, and check that every action is pinned to a commit SHA; `devbook-version.yml`, a weekly job that warns in the job summary when a newer Devbook release is out, for any assistant | Copy one to `.github/workflows/ci.yml` and `zizmor.yml` to `.github/zizmor.yml`; copy `devbook-version.yml` to `.github/workflows/` |
 
 ## Claude Code hooks
 
@@ -16,7 +16,7 @@ The hooks need Node.js 18 or later on the `PATH`, and run from `.devbook/kit/`, 
 
 - `block-git-push.mjs` blocks `git push` in any form (`git -C dir push`, after `&&`, inside `sh -c`). The agent tells the user the branch is ready instead.
 - `protect-env.mjs` blocks edits to `.env`, `.env.local` and similar files through the edit tools and shell redirects, `sed -i`, `cp`, `mv` and `rm`. `.env.example`, `.env.sample` and `.env.template` stay editable. Reading is not blocked.
-- `check-version.mjs` runs when a session starts. It compares `.devbook/VERSION` with the `VERSION` file on Devbook's `main`, and when `main` is newer, asks the agent to tell you and offer the `devbook-upgrade` skill. It checks the network at most once a day, caches the answer in the temp folder, and prints nothing when up to date or offline.
+- `check-version.mjs` runs when a session starts. It compares `.devbook/VERSION` with the `VERSION` file on Devbook's `stable` branch (or `main`, before the first release), and when it is newer, asks the agent to tell you and offer the `devbook-upgrade` skill. It checks the network at most once a day, caches the answer in the temp folder, and prints nothing when up to date or offline.
 - `guard-rm.mjs` blocks `rm -r` whose target resolves outside the project, or that uses a variable it can't check. The temp folder is allowed.
 
 The hooks are guardrails against mistakes, not a sandbox: a determined agent can still write a script that does the same thing. For hard limits, also use [permission rules](https://code.claude.com/docs/en/permissions) and run untrusted work in a container. If `.devbook/` is missing, for example in a cloud checkout without submodules, the hooks report an error and let the call through.
