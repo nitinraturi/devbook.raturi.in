@@ -35,7 +35,7 @@ To get every change as soon as it lands instead, follow `main`: `git submodule a
 Downloads the newest release as plain files that you commit, and records its tag in `.devbook/VERSION`. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-REF=$(git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3) && P=devbook.raturi.in-${REF#v} && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$REF | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/LICENSE-CC-BY-4.0 && echo $REF > .devbook/VERSION
+REF=$(git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3) && P=devbook.raturi.in-${REF#v} && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$REF | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 && echo $REF > .devbook/VERSION
 ```
 
 To download a particular release, or `main` for the latest changes, start with `REF=v2026.11.02` or `REF=main` instead of the `git ls-remote` part.
@@ -43,10 +43,10 @@ To download a particular release, or `main` for the latest changes, start with `
 On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
 
 ```powershell
-$ref = (git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | Select-Object -First 1) -replace '.*/', ''; $p = "devbook.raturi.in-$($ref -replace '^v', '')"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$ref" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/LICENSE-CC-BY-4.0"; Set-Content .devbook/VERSION $ref; Remove-Item devbook.tar.gz
+$ref = (git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | Select-Object -First 1) -replace '.*/', ''; $p = "devbook.raturi.in-$($ref -replace '^v', '')"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$ref" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0"; Set-Content .devbook/VERSION $ref; Remove-Item devbook.tar.gz
 ```
 
-Without a terminal, open the [list of releases](https://github.com/nitinraturi/devbook.raturi.in/tags) and download the ZIP of the newest tag. Copy its `instructions/`, `stacks/`, `templates/` and `skills/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`, and write the tag name in `.devbook/VERSION`.
+Without a terminal, open the [list of releases](https://github.com/nitinraturi/devbook.raturi.in/tags) and download the ZIP of the newest tag. Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`, and write the tag name in `.devbook/VERSION`.
 
 </TabItem>
 </Tabs>
@@ -87,6 +87,22 @@ Without a terminal, open the [list of releases](https://github.com/nitinraturi/d
 6. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/` and `.github/instructions/`, then start a new chat.
 
 </Steps>
+
+## 3. Optional: add the enforcement kit
+
+Instructions are context, so an assistant can still miss a rule. The kit in `.devbook/kit/` turns a few of them into checks that tools run. The setup prompt asks before installing any part, and you can add it later. The [kit README](https://github.com/nitinraturi/devbook.raturi.in/blob/main/kit/README.md) lists which rule each check covers, and what it can't stop.
+
+- **Claude Code hooks** block `git push`, edits to `.env` files and recursive `rm` outside the project, and tell the agent what to do instead. Merge the `hooks` from `.devbook/kit/claude-code/settings.json` into `.claude/settings.json`. They need Node.js.
+- **Git hooks** scan staged changes for secrets with [gitleaks](https://github.com/gitleaks/gitleaks) and check that commit messages follow Conventional Commits:
+
+  ```sh
+  ln -s ../../.devbook/kit/pre-commit/pre-commit .git/hooks/pre-commit
+  ln -s ../../.devbook/kit/pre-commit/commit-msg .git/hooks/commit-msg
+  ```
+
+- **Starter CI** for GitHub Actions, for Node.js or Python: install from the lockfile, format, lint, typecheck, test, build, audit dependencies, and fail on actions not pinned to a commit SHA. Copy `.devbook/kit/ci/node.yml` or `python.yml` to `.github/workflows/ci.yml` and `zizmor.yml` to `.github/zizmor.yml`, then make the jobs required in branch protection.
+
+The kit is MIT-0, so you can copy and change it without credit.
 
 ## How the instructions load
 

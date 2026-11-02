@@ -2,6 +2,20 @@
 
 Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM.DD`); each entry is in the first release tagged after it. Read the entries after your current version before you upgrade.
 
+## 2026-11-02: Optional enforcement kit
+
+### Added
+- **`kit/`**, opt-in checks for rules that tools enforce better than text:
+  - Claude Code `PreToolUse` hooks that block `git push`, edits to `.env` files and recursive `rm` outside the project, each telling the agent what to do instead.
+  - Git hooks: a gitleaks secret scan before each commit, and a Conventional Commits check on each message.
+  - Starter GitHub Actions workflows for Node.js and Python, with every action pinned to a commit SHA and a zizmor job that fails on unpinned ones.
+- `kit/README.md` maps each rule marked "Enforce" in the pruning audit to the check that covers it, or to the tool to use where the kit has none.
+- The setup prompt asks whether you want the kit and installs only the parts you choose. The copy command now also downloads `kit/`.
+
+The kit is MIT-0, like the templates.
+
+**Upgrade:** nothing changes unless you opt in. To add the kit, update `.devbook/` (rerun the copy command, which now includes `kit/`), then follow [Add the enforcement kit](https://devbook.raturi.in/start-here/setup/#3-optional-add-the-enforcement-kit).
+
 ## 2026-11-02: Dated releases you can pin
 
 ### Added

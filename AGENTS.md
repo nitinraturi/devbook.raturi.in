@@ -21,6 +21,7 @@ npm run lhci     # Lighthouse budgets
 - Loading tiers (in `devbook.manifest.json`): core, security and testing are `@` imports; design, api-data, database, seo, content and mobile carry identical `paths:` and `applyTo:` globs and are linked into projects' `.claude/rules/` and `.github/instructions/`; the rest are read-when lines or skills. Never add `paths:` to an always-loaded file.
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md`, `copilot-instructions.md` and `FEATURE.md`. Pages import them with `?raw`; never copy template text into a page.
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
+- `kit/`: the optional enforcement kit (Claude Code hooks, git hooks, starter CI) that projects opt into. It is code, so MIT-0; `npm run test:kit` tests the hooks.
 - `evals/`: the evaluation harness (fixtures, tasks, checks, `run.mjs`) that measures whether a Devbook version changes what an agent does. See `evals/README.md`; never run it without `--dry-run` unless the user approves the spend.
 - `src/content/docs/start-here/writing-instructions.md`: the research-backed guide to writing instructions LLMs follow, published at `/start-here/writing-instructions/`.
 
@@ -47,5 +48,5 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 - [ ] If you renamed or added a file (including a skill), update `devbook.manifest.json`, `skills/devbook-setup/SKILL.md`, `templates/AGENTS.md`, `templates/setup-prompt.md`, the homepage cards and the table in `start-here/how-it-works.md`. If a file's size changed noticeably, update the cost table there too.
 - [ ] If you removed a URL, add a 301 to `public/_redirects`.
 - [ ] Never rename or delete a file in `instructions/`, `stacks/`, `skills/` or `templates/`, because projects import and link them by path and a missing `@` file fails silently. If one must go, keep it as a one-line pointer to its replacement and add an **Upgrade** note to the changelog.
-- [ ] `instructions/`, `stacks/`, `skills/` and the `start-here/` guides are CC BY 4.0; `templates/` and code are MIT-0. Never move text between them without updating `/license/`.
-- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/` or `templates/`.
+- [ ] `instructions/`, `stacks/`, `skills/` and the `start-here/` guides are CC BY 4.0; `templates/`, `kit/` and code are MIT-0. Never move text between them without updating `/license/`.
+- [ ] Add a dated entry to `CHANGELOG.md` for any change to `instructions/`, `stacks/`, `skills/`, `templates/` or `kit/`.

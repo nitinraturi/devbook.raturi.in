@@ -85,6 +85,7 @@ These files steer your assistant, so treat an update like a dependency upgrade. 
 | A path rule didn't load | It loads only after the assistant reads or edits a matching file; ask it to open one. Check that the link resolves (`ls -L .claude/rules`) and that your files match the globs in the instruction's `paths:` list. If they don't, rely on the "read" line, or ask the assistant to read the file. |
 | A skill didn't trigger | Check the link resolves (`ls -L .claude/skills`) and that the folder name matches the skill's `name`. Ask for the task in the words of its description, or name it: "use the devbook-security-review skill". Smaller, faster models use skills less often on their own. |
 | Links show up as small text files (Windows) | Git checked out symlinks as plain files. Turn on Developer Mode, set `git config core.symlinks true` and check out again, or delete the links and rely on the "read" list. |
+| A Devbook kit hook blocked a command | The [enforcement kit](/start-here/setup/#3-optional-add-the-enforcement-kit) stops `git push`, `.env` edits and recursive `rm` outside the project. Run the command yourself if it's what you want, or remove that hook from `.claude/settings.json`. |
 | Two rules conflict | Your Project section wins where it says so. Write the exception there with its reason. |
 | A rule is wrong for your project | Override it in your Project section. If it's wrong for everyone, [tell us](/start-here/contact/). |
 

@@ -49,6 +49,6 @@ To measure whether a change to the instructions helps, use the evals in [`evals/
 ## License
 
 - `instructions/`, `stacks/`, `skills/` and the site's guides in `src/content/docs/start-here/`: [CC BY 4.0](LICENSE-CC-BY-4.0). Reuse and change them with credit. Keeping `.devbook/` with its license file counts as credit.
-- `templates/`, the site code and the evals in `evals/`: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
+- `templates/`, the enforcement kit in `kit/`, the site code and the evals in `evals/`: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
 
 See the [license page](https://devbook.raturi.in/license/) for how to give credit.
