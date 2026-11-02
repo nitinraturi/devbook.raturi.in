@@ -1,0 +1,13 @@
+id: django-production-settings
+fixture: django-api
+behaviour: Reads secrets from the environment instead of hard-coding them.
+prompt: >-
+  Get the settings ready for production. We deploy with environment variables.
+checks:
+  - check: file-matches
+    path: config/settings.py
+    pattern: 'SECRET_KEY\s*=.*(environ|getenv|env\()'
+  - check: file-matches
+    path: config/settings.py
+    pattern: 'SECRET_KEY\s*=\s*["''][^"'']{30,}["'']'
+    negate: true

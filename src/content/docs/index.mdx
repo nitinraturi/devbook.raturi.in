@@ -13,7 +13,9 @@ hero:
       variant: minimal
 ---
 
-import { CardGrid, Code, LinkCard } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import InstructionIndex from '../../components/InstructionIndex.astro';
+import History from '../../components/History.astro';
 import setupPrompt from '../../../templates/setup-prompt.md?raw';
 import agentsTemplate from '../../../templates/AGENTS.md?raw';
 
@@ -28,12 +30,12 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
 
   <p class="dvb-quick-start-intro">Open your project in Claude Code or VS Code Copilot agent mode, with file editing and terminal access turned on. Paste this prompt. The assistant adds Devbook at <code>.devbook/</code>, either as a git submodule (the default) or as copied files (change <code>Method</code> to <code>copy</code>). It then picks the files your project needs and connects them. It does not commit anything.</p>
   <Code code={setupPrompt} lang="text" title="Paste into Claude or Copilot" />
-  <div class="dvb-quick-start-notes">
-    <p><strong>1. Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</p>
-    <p><strong>2. Commit.</strong> Commit those files along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</p>
-    <p><strong>3. Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</p>
-    <p><strong>4. Stay current.</strong> Devbook follows <code>main</code>, with no version pins. To update a submodule, run <code>git submodule update --remote .devbook</code>. For a copy, run the download command again.</p>
-  </div>
+  <ol class="dvb-quick-start-notes">
+    <li><strong>Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</li>
+    <li><strong>Commit.</strong> Commit those files and the <code>devbook-*</code> links in <code>.claude/</code> and <code>.github/instructions/</code>, along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</li>
+    <li><strong>Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</li>
+    <li><strong>Stay current.</strong> Setup pins the newest dated release, such as <code>v2026.11.02</code>, so Devbook changes only when you upgrade. With the <a href="/start-here/enforcement-kit/">enforcement kit</a>, Claude Code tells you when a newer one is out. Read the changelog, then move to the new tag as described in <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it up to date</a>.</li>
+  </ol>
 </section>
 
 <section class="dvb-home-layers" aria-labelledby="result-title">
@@ -47,11 +49,11 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
   <div class="dvb-home-layer-grid">
     <article>
       <h3>Claude Code</h3>
-      <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads the <code>@</code> imports into every session.</p>
+      <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads core, security and testing in every session, path-scoped rules when it opens a matching file, and skills when a task needs them.</p>
     </article>
     <article>
       <h3>GitHub Copilot</h3>
-      <p>Copilot reads <code>AGENTS.md</code> on its own. <code>copilot-instructions.md</code> tells it to read each Devbook file listed there.</p>
+      <p>Copilot reads <code>AGENTS.md</code> on its own. <code>copilot-instructions.md</code> tells it to read the Devbook files listed there, and VS Code attaches the path-scoped ones to matching files.</p>
     </article>
     <article>
       <h3>Your rules</h3>
@@ -63,23 +65,20 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
 <section class="dvb-home-modules" aria-labelledby="modules-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">Short enough to load every time</p>
+      <p class="dvb-home-eyebrow">Loaded only when they apply</p>
       <h2 id="modules-title">The instructions</h2>
     </div>
   </div>
-  <CardGrid>
-    <LinkCard title="Core (mandatory)" description="Work like a senior engineer: understand first, stay current, structure, naming, code, docs, git and done." href="/instructions/core/" />
-    <LinkCard title="Security (mandatory)" description="Secure defaults, auth, headers, secrets, dependencies, privacy and LLM features." href="/instructions/security/" />
-    <LinkCard title="Testing (mandatory)" description="What to test, test levels, deterministic tests, test data and CI gates." href="/instructions/testing/" />
-    <LinkCard title="Performance and reliability" description="Budgets, Core Web Vitals, efficient back ends, caching, timeouts and monitoring." href="/instructions/performance/" />
-    <LinkCard title="REST APIs" description="HTTP standards and top-company guidelines: resources, methods, errors, pagination, versioning, security and webhooks." href="/instructions/api-data/" />
-    <LinkCard title="Databases" description="Tables and models that stay correct: keys, types, constraints, relationships, indexes, migrations and backups." href="/instructions/database/" />
-    <LinkCard title="Design" description="Distinctive UI: design direction, craft, hierarchy, layout, type, colour, components, forms, motion and WCAG 2.2 AA." href="/instructions/design/" />
-    <LinkCard title="SEO" description="Google Search Central guidance: crawling, indexing, titles, links, structured data and spam policies." href="/instructions/seo/" />
-    <LinkCard title="Content" description="People-first writing, verified facts, E-E-A-T trust signals and an AI editorial policy." href="/instructions/content/" />
-    <LinkCard title="Mobile (optional)" description="Extra rules for iOS, Android, React Native and Flutter apps." href="/instructions/mobile/" />
-    <LinkCard title="Licensing" description="Choosing a licence, SPDX identifiers, dependency and asset licences, notices and attribution." href="/instructions/licensing/" />
-    <LinkCard title="Feature docs" description="One short file per complex feature with its rules, flow and file map, so agents read less code." href="/instructions/feature-docs/" />
-    <LinkCard title="Stack notes" description="Short notes for Astro, Starlight, Cloudflare, TypeScript, Django, GA4 and three.js." href="/stacks/astro/" />
-  </CardGrid>
+  <InstructionIndex />
+</section>
+
+<section class="dvb-home-history" aria-labelledby="history-title">
+  <div class="dvb-home-section-heading">
+    <div>
+      <p class="dvb-home-eyebrow">Built in the open since October 2026</p>
+      <h2 id="history-title">How Devbook was made</h2>
+    </div>
+    <a class="dvb-home-text-link" href="/about/">The full story, and how AI was used <span aria-hidden="true">→</span></a>
+  </div>
+  <History perDay={3} />
 </section>

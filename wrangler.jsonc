@@ -16,6 +16,8 @@
 		"not_found_handling": "404-page",
 	},
 	"routes": [{ "pattern": "devbook.raturi.in", "custom_domain": true }],
-	"workers_dev": true,
+	// Serve only the custom domain, so there is no duplicate copy of the site on workers.dev.
+	"workers_dev": false,
+	"previews": {},
 	"observability": { "enabled": false },
 }

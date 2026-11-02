@@ -1,0 +1,31 @@
+{
+  "description": "A small static Astro marketing site with a blog, a contact page and plain-JavaScript helpers tested with node --test.",
+  "setup": ["npm install --no-audit --no-fund --ignore-scripts"],
+  "test": "npm test",
+  "testPattern": "\\bnpm (run )?test\\b|node --test",
+  "devbook": [
+    "instructions/core.md",
+    "instructions/security.md",
+    "instructions/testing.md",
+    "instructions/performance.md",
+    "instructions/design.md",
+    "instructions/seo.md",
+    "instructions/content.md"
+  ],
+  "stacks": ["stacks/astro.md", "stacks/cloudflare.md"],
+  "allowedTools": [
+    "Read",
+    "Edit",
+    "Write",
+    "Glob",
+    "Grep",
+    "Bash(npm test)",
+    "Bash(npm test *)",
+    "Bash(npm run *)",
+    "Bash(node *)",
+    "Bash(npx astro *)",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)"
+  ]
+}

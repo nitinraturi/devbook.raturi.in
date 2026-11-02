@@ -1,0 +1,42 @@
+---
+title: How Devbook was made
+description: How Devbook was built and changed since October 2026, the decisions behind each stage, and how Claude and GitHub Copilot were used to write it.
+sidebar:
+  order: 7
+---
+
+import History from '../../components/History.astro';
+
+Devbook is maintained by [Nitin Raturi](/start-here/contact/). It started on 22 October 2026 as a set of guides with a Starlight site. Since then it has become a small set of numbered rules that projects pin by release. Much of the work was done with AI coding assistants, directed by the maintainer, and the repository's history records which commits they helped write.
+
+## Stages
+
+**22 October 2026: first version.** The first commit added the guides, the templates and an Astro and Starlight site, built from a written build brief. The same day added CI with tests, accessibility and Lighthouse checks, the first decision records ([ADRs](https://github.com/nitinraturi/devbook.raturi.in/tree/main/docs/adr)) and hosting on Cloudflare Workers.
+
+**23 October 2026: simpler and unversioned.** A versioned design with a release `v1.0.0` was replaced within a day by a minimal set of instruction files that projects load through a git submodule. The copy method, the MIT-0 licence for templates and the mandatory core, testing, performance and API files followed.
+
+**24 to 25 October 2026: ready for public use.** Instructions for databases, licensing, feature docs and REST APIs arrived, along with the start-here guides, the CC BY 4.0 licence for the text, and a rewrite of every instruction for how models follow rules. The public release was merged on 25 October.
+
+**2 November 2026: lighter and enforceable.** A six-phase [efficiency plan](https://github.com/nitinraturi/devbook.raturi.in/blob/main/docs/plans/llm-efficiency.md) aimed to cut what every chat pays for:
+- An evaluation harness that measures whether a Devbook version changes what an agent does.
+- A rule-by-rule [audit](https://github.com/nitinraturi/devbook.raturi.in/blob/main/docs/plans/prune-audit.md) that cut about 410 rules to 250, each with a stable ID.
+- Three loading tiers, so a chat starts with about 12 KB instead of every chosen file.
+- Dated releases that projects pin, and a check that says when a newer one is out.
+- The optional [enforcement kit](/start-here/enforcement-kit/), for rules that tools enforce better than text.
+
+## Every change, by date
+
+Built from the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md), which has the details and upgrade notes for each entry.
+
+<History />
+
+## How AI was used
+
+Claude and GitHub Copilot wrote much of the code and text under the maintainer's direction. The maintainer chose what to build, answered the design questions, and decides what is merged and released. Of the first 147 commits, up to the one that added this page on 2 November 2026, 55 credit Claude Opus 5.5 as a co-author and 11 credit GitHub Copilot. The other commits don't record whether an assistant helped.
+
+Devbook follows its own [content rules](/instructions/content/):
+- Rules are based on primary sources, listed in each file's `sources:`.
+- Facts are checked against those sources before they are published.
+- AI suggestions are treated as drafts, not as sources.
+
+If you find a rule that is wrong or a claim that isn't supported, please [say so](/start-here/contact/).

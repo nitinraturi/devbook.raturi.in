@@ -4,10 +4,15 @@ import { Aside } from '@astrojs/starlight/components';
 import { STALE_AFTER_DAYS } from '../lib/site';
 
 const route = Astro.locals.starlightRoute;
-const { lastVerified } = route.entry.data as { lastVerified?: Date };
+const { lastVerified, sources } = route.entry.data as { lastVerified?: Date; sources?: string[] };
 const isStale = lastVerified ? Date.now() - lastVerified.getTime() > STALE_AFTER_DAYS * 864e5 : false;
 const verifiedIso = lastVerified?.toISOString().slice(0, 10);
-const verifiedLabel = lastVerified?.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const verifiedLabel = lastVerified?.toLocaleDateString('en-GB', {
+	day: 'numeric',
+	month: 'long',
+	year: 'numeric',
+	timeZone: 'UTC',
+});
 // Raw Markdown for the page is served at <page>/index.md (src/pages/[...slug]/index.md.ts).
 const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
 ---
@@ -18,7 +23,13 @@ const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
 		Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
 	</p>
 )}
-{isStale && <Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>}
+{/* `hidden` is the build-time answer (the no-JS fallback); src/scripts/site.ts recomputes it when the page is viewed. */}
+{lastVerified && (
+	<div data-stale-notice data-verified={verifiedIso} data-stale-days={STALE_AFTER_DAYS} hidden={!isStale}>
+		<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
+	</div>
+)}
+{sources && sources.length > 0 && <p class="dvb-verified">Sources: {sources.join('; ')}.</p>}
 <div class="dvb-actions">
 	<button type="button" data-copy-md={mdHref}>
 		Copy page as Markdown

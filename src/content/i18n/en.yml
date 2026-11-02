@@ -1,0 +1,4 @@
+# Starlight UI-string overrides for English (https://starlight.astro.build/guides/i18n/).
+# None are needed yet. The file exists because Starlight always reads the i18n collection,
+# and Astro warns at build time when that collection is empty.
+{}

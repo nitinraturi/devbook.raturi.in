@@ -1,1 +1,1 @@
-Follow `AGENTS.md` at the repository root. Before your first change in a session, read every Devbook file it lists under `.devbook/`, then follow those rules for all work.
+Follow `AGENTS.md` at the repository root. Before your first change in a session, read the three Devbook files it imports with `@` (core, security, testing). Before each kind of change, read the Devbook file listed for it under "read the file and follow it".

@@ -8,6 +8,8 @@ const PAGES = [
 	'/start-here/how-it-works/',
 	'/start-here/setup/',
 	'/start-here/using-devbook/',
+	'/start-here/enforcement-kit/',
+	'/about/',
 	'/start-here/writing-instructions/',
 	'/instructions/core/',
 	'/instructions/security/',
@@ -45,7 +47,10 @@ test('homepage shows the complete setup prompt and AGENTS.md template', async ({
 	const agents = (await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8')).trim();
 	await page.goto('/');
 	await expect(
-		page.locator('.expressive-code').filter({ hasText: 'Paste into Claude or Copilot' }).getByRole('button', { name: 'Copy to clipboard' }),
+		page
+			.locator('.expressive-code')
+			.filter({ hasText: 'Paste into Claude or Copilot' })
+			.getByRole('button', { name: 'Copy to clipboard' }),
 	).toBeAttached();
 	expect(await codeText(page, 'Paste into Claude or Copilot')).toBe(prompt);
 	expect(await codeText(page, 'AGENTS.md (template)')).toBe(agents);
@@ -53,10 +58,12 @@ test('homepage shows the complete setup prompt and AGENTS.md template', async ({
 	expect(await (await request.get('/index.md')).text()).toContain(prompt);
 });
 
-test('every @ path in the AGENTS.md template exists in the repo', async () => {
+test('every Devbook path in the AGENTS.md template exists in the repo', async () => {
 	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
-	const paths = [...agents.matchAll(/^@\.devbook\/(\S+)$/gm)].map((m) => m[1]!).filter((p) => !p.includes('<'));
-	expect(paths.length).toBeGreaterThanOrEqual(9);
+	const paths = [...agents.matchAll(/^(?:@|- `)\.devbook\/([^\s`]+)/gm)]
+		.map((m) => m[1]!)
+		.filter((p) => !p.includes('<'));
+	expect(paths.length).toBeGreaterThanOrEqual(12);
 	for (const p of paths) await expect(readFile(new URL(`../../${p}`, import.meta.url), 'utf8')).resolves.toBeTruthy();
 });
 
@@ -73,8 +80,14 @@ function watchErrors(page: Page) {
 async function axe(page: Page) {
 	// Starlight's search button is named "Search" while also showing a ⌘K hint; that one
 	// element is excluded from label-content-name-mismatch only (upstream, see docs/TODO.md).
-	const a = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).disableRules(['label-content-name-mismatch']).analyze();
-	const b = await new AxeBuilder({ page }).withRules(['label-content-name-mismatch']).exclude('site-search > button[data-open-modal]').analyze();
+	const a = await new AxeBuilder({ page })
+		.withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+		.disableRules(['label-content-name-mismatch'])
+		.analyze();
+	const b = await new AxeBuilder({ page })
+		.withRules(['label-content-name-mismatch'])
+		.exclude('site-search > button[data-open-modal]')
+		.analyze();
 	const violations = [...a.violations, ...b.violations];
 	return violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.help}`);
 }
@@ -88,7 +101,11 @@ for (const path of PAGES) {
 		expect(await page.locator('link[rel="canonical"]').getAttribute('href')).toBe(`https://devbook.raturi.in${path}`);
 		const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? '{}');
 		const types = ld['@graph'].map((n: { '@type': string }) => n['@type']);
-		expect(types).toEqual(path === '/' ? ['WebSite', 'Person'] : ['WebSite', 'Person', 'TechArticle', 'BreadcrumbList'].slice(0, path === '/privacy/' ? 3 : 4));
+		expect(types).toEqual(
+			path === '/'
+				? ['WebSite', 'Person']
+				: ['WebSite', 'Person', 'TechArticle', 'BreadcrumbList'].slice(0, path === '/privacy/' ? 3 : 4),
+		);
 		expect(await axe(page)).toEqual([]);
 		expect(errors).toEqual([]);
 	});
@@ -140,15 +157,23 @@ test('every instruction file is listed in the AGENTS.md template and on the home
 	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
 	await page.goto('/');
 	for (const f of files) {
-		expect(agents).toContain(`@.devbook/instructions/${f}`);
+		expect(agents).toContain(`.devbook/instructions/${f}`);
 		await expect(page.locator(`a[href="/instructions/${f.replace(/\.md$/, '')}/"]`).first()).toBeAttached();
 	}
 });
 
-test('the setup prompt names every instruction file', async () => {
-	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
+test('the setup skill names every instruction file and links every path-scoped one', async () => {
+	const skill = await readFile(new URL('../../skills/devbook-setup/SKILL.md', import.meta.url), 'utf8');
 	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
-	for (const f of files) expect(prompt).toMatch(new RegExp(`\\b${f.replace(/\.md$/, '')}\\b`));
+	for (const f of files) {
+		const name = f.replace(/\.md$/, '');
+		expect(skill).toMatch(new RegExp(`\\b${name}\\b`));
+		const text = await readFile(new URL(`../../instructions/${f}`, import.meta.url), 'utf8');
+		if (/^paths:/m.test(text))
+			expect(skill, `${name} has paths, so setup must link it`).toMatch(new RegExp(`\\b${name}\\b[^\\n]*By file path`));
+	}
+	for (const s of await readdir(new URL('../../skills/', import.meta.url)))
+		if (s !== 'devbook-setup') expect(skill).toContain(s);
 });
 
 test('license page shows the full LICENSE text', async ({ page }) => {
@@ -177,14 +202,21 @@ test('page Markdown is served and setup includes the templates', async ({ reques
 	expect(md).toMatch(/^# Setup\n/);
 	expect(md).toContain('@.devbook/instructions/core.md');
 	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
-	const copyCommand = prompt.match(/^\s*(rm -rf \.devbook .+)$/m)?.[1];
+	const copyCommand = prompt.match(/(rm -rf \.devbook .+)$/m)?.[1];
 	expect(copyCommand).toBeTruthy();
 	expect(md).toContain(copyCommand!);
 	expect(md).not.toContain('import ');
 });
 
 test('crawl files exist', async ({ request }) => {
-	for (const path of ['/robots.txt', '/sitemap.xml', '/sitemap-index.xml', '/llms.txt', '/llms-full.txt', '/llms-small.txt']) {
+	for (const path of [
+		'/robots.txt',
+		'/sitemap.xml',
+		'/sitemap-index.xml',
+		'/llms.txt',
+		'/llms-full.txt',
+		'/llms-small.txt',
+	]) {
 		expect((await request.get(path)).status(), path).toBe(200);
 	}
 });
@@ -196,4 +228,35 @@ test('security headers are applied', async ({ request }) => {
 	expect(h['content-security-policy']).not.toContain('googletagmanager');
 	expect(h['x-content-type-options']).toBe('nosniff');
 	expect(h['strict-transport-security']).toContain('max-age=');
+});
+
+test('staleness notice is decided when the page is viewed, not when it was built', async ({ page }) => {
+	await page.goto('/stacks/astro/');
+	const notice = page.locator('[data-stale-notice]');
+	const verified = Date.parse((await notice.getAttribute('data-verified'))!);
+	const days = Number(await notice.getAttribute('data-stale-days'));
+
+	await page.clock.setFixedTime(verified + 864e5);
+	await page.reload();
+	await expect(notice).toBeHidden();
+
+	await page.clock.setFixedTime(verified + (days + 1) * 864e5);
+	await page.reload();
+	await expect(notice).toBeVisible();
+	await expect(notice).toContainText('may be out of date');
+});
+
+test('local server answers a malformed URL with 400 and keeps serving', async ({ request }) => {
+	expect((await request.get('/%E0%A4%A')).status()).toBe(400);
+	expect((await request.get('/')).status()).toBe(200);
+});
+
+test('the history timeline is built from the changelog', async ({ page }) => {
+	const changelog = await readFile(new URL('../../CHANGELOG.md', import.meta.url), 'utf8');
+	const newest = changelog.match(/^## \d{4}-\d{2}-\d{2}: (.+)$/m)?.[1];
+	expect(newest).toBeTruthy();
+	await page.goto('/about/');
+	await expect(page.locator('.dvb-timeline').getByText(newest!, { exact: true })).toBeVisible();
+	await page.goto('/');
+	await expect(page.locator('.dvb-home-history .dvb-timeline > li').first()).toBeVisible();
 });

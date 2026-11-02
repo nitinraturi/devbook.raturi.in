@@ -1,0 +1,11 @@
+# Markdown is the product: formatting it would change instruction text. Edit it by hand.
+*.md
+*.mdx
+package-lock.json
+dist/
+.astro/
+.wrangler/
+.lighthouseci/
+playwright-report/
+test-results/
+public/

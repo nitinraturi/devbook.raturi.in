@@ -1,0 +1,26 @@
+---
+// Custom 404, replacing Starlight's injected route (`disable404Route` in astro.config.mjs).
+// Keeping it out of the docs collection stops `[...slug]` from rendering a second /404.
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+---
+
+<StarlightPage
+	frontmatter={{
+		title: 'Page not found',
+		description:
+			'The page you asked for does not exist or has moved. Search the devbook or start from the setup guide or the instructions.',
+		template: 'splash',
+		editUrl: false,
+		lastUpdated: false,
+		pagefind: false,
+		hero: {
+			title: 'Page not found',
+			tagline:
+				'This page does not exist or has moved. Use the search at the top of the page, or start from one of these.',
+			actions: [
+				{ text: 'Set up Devbook', link: '/start-here/setup/', icon: 'right-arrow' },
+				{ text: 'Read the instructions', link: '/instructions/core/', variant: 'minimal' },
+			],
+		},
+	}}
+/>

@@ -1,0 +1,11 @@
+id: django-search
+fixture: django-api
+behaviour: Adds tests for new behaviour and runs the test command before reporting done.
+prompt: >-
+  Let clients search notes by title with a `q` query parameter on the list endpoint.
+checks:
+  - check: file-matches
+    path: notes/tests.py
+    pattern: '[?&]q=|["'']q["'']'
+  - check: ran-tests-after-last-edit
+  - check: tests-pass

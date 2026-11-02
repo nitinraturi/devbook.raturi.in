@@ -1,0 +1,51 @@
+# Weekly checks that catch drift without a code change: upstream breakage in the full
+# check, and dead external links. A failure only fails the run; it opens no issues.
+name: Scheduled checks
+
+on:
+  schedule:
+    - cron: '17 4 * * 1' # Mondays 04:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history for Starlight "Last updated" dates
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Full check
+        run: npm run check
+
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # instructions/ and stacks/ name their sources without URLs today, so the guides,
+      # templates and README are checked too. LinkedIn answers bots with 429/999.
+      - name: External links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --no-progress --max-retries 3 --scheme https --scheme http --exclude 'linkedin\.com'
+            'instructions/*.md' 'stacks/*.md' 'templates/*.md' README.md
+            'src/content/docs/*.md' 'src/content/docs/*.mdx' 'src/content/docs/start-here/*.md' 'src/content/docs/start-here/*.mdx'
+          fail: true

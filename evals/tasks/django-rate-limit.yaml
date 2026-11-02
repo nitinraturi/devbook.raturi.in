@@ -1,0 +1,13 @@
+id: django-rate-limit
+fixture: django-api
+behaviour: Does not add a dependency that does not exist.
+prompt: >-
+  Rate-limit note creation so one client can create at most 30 notes a minute.
+checks:
+  - check: files-match
+    dir: .
+    name: '\.py$'
+    pattern: '429|ratelimit|rate_limit|throttl'
+    flags: i
+  - check: no-invented-pypi-package
+  - check: tests-pass

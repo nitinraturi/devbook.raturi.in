@@ -2,7 +2,7 @@
 title: Writing instructions
 description: How to write agent files, prompts and system prompts that LLMs follow - few, concrete, conflict-free rules, token efficiency, testing and templates.
 sidebar:
-  order: 4
+  order: 5
 ---
 
 A research-backed guide for anyone writing `AGENTS.md` rules, task prompts, system prompts or tool descriptions. Nitin Raturi, 24 October 2026.

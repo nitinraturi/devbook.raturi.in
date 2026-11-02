@@ -1,0 +1,28 @@
+---
+// The instruction files as a ruled index: rule-ID prefix, title, summary and when each loads.
+import { instructionRows, stackTitles } from '../lib/instruction-index';
+
+const rows = await instructionRows();
+const stacks = await stackTitles();
+---
+
+<ol class="dvb-index">
+	{rows.map((row) => (
+		<li>
+			<span class="dvb-index-prefix">{row.prefix}</span>
+			<div>
+				<a href={row.href}>{row.title}</a>
+				<p>{row.description}</p>
+			</div>
+			<span class="dvb-index-loads">{row.loads}</span>
+		</li>
+	))}
+	<li>
+		<span class="dvb-index-prefix">STACK</span>
+		<div>
+			<a href="/stacks/astro/">Stack notes</a>
+			<p>Short notes for one technology each: {stacks.join(', ')}.</p>
+		</div>
+		<span class="dvb-index-loads">By task</span>
+	</li>
+</ol>

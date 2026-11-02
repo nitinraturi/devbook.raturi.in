@@ -1,0 +1,7 @@
+# GitGuardian (ggshield) configuration.
+version: 2
+secret:
+  ignored_matches:
+    # A made-up API key in an eval task that checks agents keep secrets out of source code.
+    - name: eval fixture key (evals/tasks/astro-secret-key.yaml)
+      match: bd_live_9f3k2m8x7q4w1z6p

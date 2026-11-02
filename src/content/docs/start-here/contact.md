@@ -1,8 +1,8 @@
 ---
 title: Contact
-description: Contact Nitin Raturi by email, LinkedIn or X, with a simple format for a useful message.
+description: Contact Nitin Raturi, who maintains Devbook, by email, LinkedIn or X about the instructions or the site, with a simple format for a useful message.
 sidebar:
-  order: 5
+  order: 6
 ---
 
 ## Get in touch

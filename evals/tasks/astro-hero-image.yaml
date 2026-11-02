@@ -1,0 +1,8 @@
+id: astro-hero-image
+fixture: astro-site
+behaviour: Adds images with alt text and dimensions.
+prompt: >-
+  Add the hero image `public/hero.jpg` (1600×900, a calm blue gradient behind the product) to the top of the homepage.
+checks:
+  - check: astro-hero-image
+  - check: tests-pass

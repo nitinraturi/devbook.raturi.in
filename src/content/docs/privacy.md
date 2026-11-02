@@ -15,7 +15,7 @@ The site is served by Cloudflare. Like any web host, Cloudflare processes techni
 When analytics is enabled, the site uses Google Analytics 4 to count page views and a few interactions: site searches, code-block copies and the domain of outbound links. No names, email addresses or other personal details are sent.
 
 - Google's Consent Mode is used. Advertising storage and ad personalisation are always off.
-- In the EEA, the UK and Switzerland, analytics cookies stay off unless you choose **Accept analytics** in the banner. Because a static site cannot see your country, the banner is shown when your browser's time zone is in Europe.
+- In the EEA, the UK and Switzerland, analytics cookies stay off unless you choose **Accept analytics** in the banner. Because a static site cannot see your country, the banner is shown when your browser's time zone is in Europe, including the Canary Islands, Madeira, the Azores and Iceland.
 - Elsewhere, analytics cookies are on by default. You can turn them off with **Cookie settings** in the footer.
 - Data is retained for 14 months in Google Analytics, then deleted.
 

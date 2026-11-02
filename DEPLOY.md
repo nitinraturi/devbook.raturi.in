@@ -14,11 +14,7 @@ npm run deploy        # = wrangler deploy; wrangler runs `npm run build:prod` fi
 
 ## Custom domain
 
-The Worker is live at `https://devbook-raturi-in.raturi002.workers.dev`. To serve `devbook.raturi.in`:
-
-1. If `devbook.raturi.in` is attached to a Pages project, remove it there first.
-2. The custom domain is configured in `wrangler.jsonc`; set `"workers_dev": false` if the workers.dev URL should stop serving.
-3. Run `npm run deploy`. The raturi.in zone is on Cloudflare, so the DNS record is created automatically.
+The Worker serves only `https://devbook.raturi.in`, configured in `wrangler.jsonc` under `routes`. The raturi.in zone is on Cloudflare, so `npm run deploy` creates the DNS record. `"workers_dev": false` turns off the `*.workers.dev` URL, so search engines never see a second copy of the site.
 
 ## After deploying
 
@@ -28,17 +24,28 @@ The Worker is live at `https://devbook-raturi-in.raturi002.workers.dev`. To serv
 
 ## Optional: deploy on push (Workers Builds)
 
-In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, with production branch `main` and deploy command `npx wrangler deploy`. Non-production branches upload preview versions; they build as previews (`noindex`, no analytics) because `WORKERS_CI_BRANCH` is not `main`.
+In the Worker's settings → Builds, connect `nitinraturi/devbook.raturi.in`, with production branch `main` and deploy command `npx wrangler deploy`. Use `npx wrangler preview` for non-production branches; they build as previews (`noindex`, no analytics) because `WORKERS_CI_BRANCH` is not `main`.
 
-## Updates
+The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https://developers.cloudflare.com/workers/previews/configuration/#wrangler-configuration-file). Static assets and compatibility settings stay at the top level; production routes do not target Previews. Preview URLs are public unless access controls are configured.
 
-Devbook is not versioned. Projects track `main`, either through a git submodule (`git submodule update --remote .devbook`) or by rerunning the copy command. A push to `main` reaches every project on its next update, so merge only reviewed changes, and merge before deploying the site when the setup commands change. Every change to `instructions/` or `stacks/` gets a dated entry in `CHANGELOG.md`, so projects can see what changed.
+## Releases
+
+Projects pin a dated tag, `vYYYY.MM.DD` (UTC date), with `.1`, `.2` and so on for later releases the same day. The setup prompt and setup page find the newest tag with `git ls-remote --sort=-version:refname`, so a pushed tag reaches new projects at once and existing ones when they upgrade. Some projects follow `main` instead, so merge only reviewed changes, and merge before deploying the site when the setup commands change.
+
+To release:
+
+1. On an up-to-date `main`, run `npm run check`.
+2. List what changed since the last release: `git log --oneline $(git describe --tags --abbrev=0)..main -- instructions stacks skills templates`. Make sure `CHANGELOG.md` has a dated entry for each change, with an **Upgrade** note where projects must change something, and commit any fix to `main`.
+3. Tag and push: `git tag -a v2026.11.02 -m "Devbook v2026.11.02" && git push origin v2026.11.02`. Never move or delete a pushed tag; release a `.1` instead.
+4. Deploy the site if it changed (`npm run deploy`).
+
+The setup commands need at least one tag. Until the first one is pushed, `git ls-remote` prints nothing and the setup prompt falls back to `main`.
 
 ## Local checks
 
 ```bash
 npm ci
-npm run check        # typecheck, descriptions, contrast, build, Playwright + axe
+npm run check        # format, lint, typecheck, descriptions, size budgets, contrast, build, Playwright + axe
 npm run lhci         # Lighthouse budgets (needs Chrome; set CHROME_PATH if not found)
 npm run preview      # serve dist/ with the real _headers on http://127.0.0.1:4324
 ```

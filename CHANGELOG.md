@@ -1,6 +1,93 @@
 # Changelog
 
-Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
+Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM.DD`); each entry is in the first release tagged after it. Read the entries after your current version before you upgrade.
+
+## 2026-11-02: Find out when a newer Devbook is out
+
+### Added
+- **`devbook-upgrade` skill.** It compares your pinned tag with the newest release, summarises the changelog entries and **Upgrade** notes in between, and upgrades `.devbook/` only after you agree.
+- **Version check hook** in the kit: `kit/claude-code/hooks/check-version.mjs` runs when a Claude Code session starts. When a newer release exists, the assistant tells you and asks whether to upgrade. It checks at most once a day and adds nothing to the chat when you are up to date.
+- The `AGENTS.md` template lists the skill, so Copilot, Codex and Cursor can follow it when you ask whether Devbook is up to date.
+
+**Upgrade:**
+1. Update `.devbook/`.
+2. Link the skill: `ln -s ../../.devbook/skills/devbook-upgrade .claude/skills/devbook-upgrade`.
+3. Add the `devbook-upgrade` line from `.devbook/templates/AGENTS.md` to your `AGENTS.md`.
+4. If you use the kit's hooks, add the `SessionStart` entry from `.devbook/kit/claude-code/settings.json` to `.claude/settings.json`.
+
+## 2026-11-02: Optional enforcement kit
+
+### Added
+- **`kit/`**, opt-in checks for rules that tools enforce better than text:
+  - Claude Code `PreToolUse` hooks that block `git push`, edits to `.env` files and recursive `rm` outside the project, each telling the agent what to do instead.
+  - Git hooks: a gitleaks secret scan before each commit, and a Conventional Commits check on each message.
+  - Starter GitHub Actions workflows for Node.js and Python, with every action pinned to a commit SHA and a zizmor job that fails on unpinned ones.
+- `kit/README.md` maps each rule marked "Enforce" in the pruning audit to the check that covers it, or to the tool to use where the kit has none.
+- The setup prompt asks whether you want the kit and installs only the parts you choose. The copy command now also downloads `kit/`.
+
+The kit is MIT-0, like the templates.
+
+**Upgrade:** nothing changes unless you opt in. To add the kit, update `.devbook/` (rerun the copy command, which now includes `kit/`), then follow [Use the enforcement kit](https://devbook.raturi.in/start-here/enforcement-kit/).
+
+## 2026-11-02: Dated releases you can pin
+
+### Added
+- **Releases.** Each release is a git tag named by its date, such as `v2026.11.02`, with `.1` for a second release that day. Tags never move.
+- The setup prompt has a `Version:` line. `latest`, the default, pins the newest tag; a tag name pins that one; `main` follows every change, as before.
+- The copy method downloads the tag's tarball and records the tag in `.devbook/VERSION`.
+
+### Changed
+- New submodules are added without `-b main` and checked out at the tag, so `git submodule update --remote` no longer applies to them. Upgrade by checking out a newer tag.
+- The setup page and [Use Devbook day to day](https://devbook.raturi.in/start-here/using-devbook/#keep-it-up-to-date) describe checking your version, reading the changelog and upgrading.
+
+**Upgrade:** nothing breaks if you keep following `main`. To pin a release instead:
+- **Submodule:** run `git config -f .gitmodules --unset submodule..devbook.branch`, then `git -C .devbook fetch --tags && git -C .devbook checkout -q <tag> && git add .gitmodules .devbook`, and commit.
+- **Copy:** rerun the download command from the [setup page](https://devbook.raturi.in/start-here/setup/#1-choose-how-to-add-devbook). It fetches the newest tag and writes `.devbook/VERSION`.
+
+## 2026-11-02: Load rules only when they apply
+
+A chat now starts with core, security and testing (10 KB), the "read" list and the skill descriptions: about 12 KB in all, instead of every chosen file. The rest load when the work needs them.
+
+### Added
+- **Path-scoped instructions.** Design, REST APIs, databases, SEO, content and mobile carry their own globs in frontmatter (`paths:` for Claude Code, `applyTo:` for Copilot). Setup links them into `.claude/rules/devbook-<name>.md` and `.github/instructions/devbook-<name>.instructions.md`, so each loads only when the assistant reads or edits a matching file, such as a `.css` file for design. Tested in Claude Code with the `InstructionsLoaded` hook: nothing loads at session start, and opening an `.astro` page loads design and SEO. We couldn't test Copilot's handling of linked files.
+- **Skills** in `skills/`: `devbook-security-review`, `devbook-release-check`, `devbook-feature-doc`, `devbook-api-endpoint`, `devbook-db-migration`, `devbook-seo-audit`, and `devbook-setup` for the setup itself. Projects link the ones they need into `.claude/skills/`, which Claude Code and VS Code both read. Only each skill's name and description load until a task needs it.
+
+### Changed
+- The `AGENTS.md` template keeps `@` lines for core, security and testing, then lists the other files with when to read each, instead of "read every file below". Assistants without path rules or skills (Codex, Cursor, Gemini CLI) open them from that list.
+- The setup prompt is now short: it adds `.devbook/` and hands over to `skills/devbook-setup/SKILL.md`. The copy command also downloads `skills/`.
+- `.github/copilot-instructions.md` tells Copilot to read the three core files up front and the others before matching work.
+
+**Upgrade:** existing projects keep working unchanged, because every file keeps its path and `@` lines still load. To switch to on-demand loading:
+1. Update `.devbook/`. For the copy method, rerun the download command; it now includes `skills/`.
+2. In `AGENTS.md`, keep the three `@` lines for core, security and testing, and turn the other `@` lines into "read" lines, as in `.devbook/templates/AGENTS.md`.
+3. Link the path-scoped files and the skills you want, as on the [setup page](https://devbook.raturi.in/start-here/setup/#2-connect-your-assistants), or ask your assistant to "follow .devbook/skills/devbook-setup/SKILL.md".
+4. Copy the new `.devbook/templates/copilot-instructions.md`, commit, and start a new chat.
+
+## 2026-11-02: Fewer, numbered rules
+
+The instructions now hold about 250 rules instead of about 410. The mandatory core, security and testing files are 10 KB (about 2,500 tokens) instead of 14.6 KB; a public website's set is 27 KB instead of 36 KB. Every removed rule failed the deletion test in the [writing guide](https://devbook.raturi.in/start-here/writing-instructions/): a capable model already does it, or another file already says it. The full rule-by-rule audit, with a reason for each verdict, is in `docs/plans/prune-audit.md`.
+
+### Changed
+- Every rule starts with a stable ID (`CORE-02`, `SEC-05`, `API-03`). Assistants cite IDs in their reports, and project overrides can name the rule they replace. IDs are never reused.
+- Each file starts with its most important rules.
+- Sources moved from each file's first paragraph to a `sources:` list in its frontmatter. The site shows them under the title.
+- Validating input at the boundary now lives only in security (`SEC-02`), along with access per property, rate limits and URL allowlists that the REST API file repeated.
+- The browser check for UI work (360 px and 1440 px, light and dark, keyboard) moved from core to design (`DES-04`). The axe check moved from testing to design (`DES-05`).
+
+### Removed
+- Core: reading code first, naming conventions (language defaults, verbs for functions, domain words), folder-layout defaults, small functions, comment style, error-handling and logging advice that security already covers, README contents and re-reading the diff.
+- Testing: the edge-case list, test levels models choose by default, arrange-act-assert, snapshot and coverage advice.
+- Design: general heuristics (hierarchy, consistency, feedback timing, recognition over recall), grid rhythm, density, optical alignment, squint tests, logical properties, button-label, toast and skeleton advice, and focus trapping, which native `<dialog>` handles.
+- Database, REST APIs, SEO, content, mobile, licensing and performance: rules models follow by default (normal forms, column naming, HTTP method semantics, readable URLs, platform conventions) and rules repeated in another file.
+
+**Upgrade:** nothing breaks; every file keeps its path. If your project relied on a removed rule, such as a naming convention or the edge-case list, add it to the Project section of your `AGENTS.md`. Overrides that named a section ("this overrides api-data") can now name the rule ID instead.
+
+## 2026-11-02: PBKDF2 for FIPS-140, and accurate loading notes
+
+### Changed
+- Security: where FIPS-140 validation is required, hash passwords with PBKDF2-HMAC-SHA-256 at 600,000 iterations or more, as the OWASP Password Storage Cheat Sheet says. Argon2id stays the default.
+- How Devbook works: says exactly how Codex, Cursor and Gemini CLI load `AGENTS.md`, instead of saying they read the same file list. Gemini CLI reads `GEMINI.md` unless you set `context.fileName`. The cost table reflects current sizes.
+- The "View Markdown" version of the home, setup and license pages is now plain Markdown, with no MDX components, and includes the licence text.
 
 ## 2026-10-24: Ready for public use
 

@@ -1,0 +1,13 @@
+{
+  "name": "lumen-site",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "astro": "7.4.2"
+  }
+}

@@ -1,10 +1,17 @@
 // Small site behaviours, bundled into one hashed file under /_astro/:
-// copy-as-Markdown, consent banner, and GA4 events (search, copy_code, outbound_click).
+// staleness notice, copy-as-Markdown, consent banner, and GA4 events (search, copy_code, outbound_click).
 // All analytics calls are no-ops when GA is not loaded.
 
 type Gtag = (...args: unknown[]) => void;
 const gtag = (...args: unknown[]) => (window as unknown as { gtag?: Gtag }).gtag?.(...args);
 const KEY = 'dvb-consent';
+
+// Staleness notice: decided at view time, because the site is only rebuilt on deploy.
+document.querySelectorAll<HTMLElement>('[data-stale-notice]').forEach((el) => {
+	const verified = Date.parse(el.dataset.verified ?? '');
+	const days = Number(el.dataset.staleDays);
+	if (!Number.isNaN(verified) && days > 0) el.hidden = Date.now() - verified <= days * 864e5;
+});
 
 // Copy page as Markdown.
 document.querySelectorAll<HTMLButtonElement>('[data-copy-md]').forEach((btn) => {
@@ -23,7 +30,9 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy-md]').forEach((btn) => 
 });
 
 // Consent banner: shown where consent is required. A static site cannot read the
-// visitor's country, so a Europe/* timezone is used as the approximation.
+// visitor's country, so the timezone is used as the approximation: Europe/*, plus the
+// IANA Atlantic/* zones in EEA countries (Canary Islands, Madeira, Azores, Iceland).
+const EEA_ATLANTIC = new Set(['Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Azores', 'Atlantic/Reykjavik']);
 const banner = document.querySelector<HTMLElement>('[data-consent]');
 if (banner) {
 	let stored: string | null = null;
@@ -31,7 +40,7 @@ if (banner) {
 		stored = localStorage.getItem(KEY);
 	} catch {}
 	const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
-	if (!stored && tz.startsWith('Europe/')) banner.hidden = false;
+	if (!stored && (tz.startsWith('Europe/') || EEA_ATLANTIC.has(tz))) banner.hidden = false;
 	banner.querySelectorAll<HTMLButtonElement>('[data-consent-choice]').forEach((b) =>
 		b.addEventListener('click', () => {
 			const choice = b.dataset.consentChoice!;

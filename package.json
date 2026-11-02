@@ -1,38 +1,55 @@
 {
-	"name": "devbook.raturi.in",
-	"type": "module",
-	"private": true,
-	"license": "(MIT-0 AND CC-BY-4.0)",
-	"scripts": {
-		"dev": "astro dev",
-		"build": "astro build && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs",
-		"build:prod": "DEVBOOK_ENV=production npm run build",
-		"preview": "node scripts/serve-dist.mjs",
-		"typecheck": "astro check",
-		"check:descriptions": "node scripts/check-descriptions.mjs",
-		"contrast": "node scripts/check-contrast.mjs",
-		"test:e2e": "playwright test",
-		"lhci": "lhci autorun",
-		"og:image": "node scripts/generate-og.mjs",
-		"check": "npm run typecheck && npm run check:descriptions && npm run contrast && npm run build && npm run test:e2e",
-		"deploy": "wrangler deploy"
-	},
-	"dependencies": {
-		"@astrojs/starlight": "0.42.6",
-		"astro": "7.4.2",
-		"starlight-llms-txt": "0.12.0"
-	},
-	"devDependencies": {
-		"@astrojs/check": "0.9.12",
-		"@axe-core/playwright": "4.14.0",
-		"@lhci/cli": "0.15.1",
-		"@playwright/test": "1.64.1",
-		"sharp": "0.35.5",
-		"starlight-links-validator": "0.27.0",
-		"typescript": "6.0.3",
-		"wrangler": "4.152.0"
-	},
-	"engines": {
-		"node": ">=22"
-	}
+  "name": "devbook.raturi.in",
+  "type": "module",
+  "private": true,
+  "license": "(MIT-0 AND CC-BY-4.0)",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/astro-build.mjs && node scripts/postbuild-html.mjs && node scripts/postbuild-csp.mjs && node scripts/check-markdown.mjs",
+    "build:prod": "DEVBOOK_ENV=production npm run build",
+    "preview": "node scripts/serve-dist.mjs",
+    "typecheck": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "check:descriptions": "node scripts/check-descriptions.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
+    "check:rule-ids": "node scripts/check-rule-ids.mjs",
+    "evals:validate": "node evals/run.mjs --validate",
+    "contrast": "node scripts/check-contrast.mjs",
+    "test:e2e": "playwright test",
+    "test:kit": "node --test 'kit/**/*.test.mjs'",
+    "lhci": "lhci autorun",
+    "og:image": "node scripts/generate-og.mjs",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run check:descriptions && npm run check:budget && npm run check:rule-ids && npm run evals:validate && npm run test:kit && npm run contrast && npm run build && npm run test:e2e",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.6",
+    "astro": "7.4.2",
+    "starlight-llms-txt": "0.12.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.14.0",
+    "@eslint/js": "10.0.1",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "1.64.1",
+    "eslint": "10.14.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-astro": "3.2.1",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.2",
+    "sharp": "0.35.5",
+    "starlight-links-validator": "0.27.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "wrangler": "4.152.0",
+    "yaml": "2.9.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
 }

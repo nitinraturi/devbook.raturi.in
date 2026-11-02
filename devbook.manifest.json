@@ -1,0 +1,211 @@
+{
+  "$comment": "Every file projects can load from Devbook, with when to load it and its loading tier: always (@ import in AGENTS.md), path (linked into .claude/rules and .github/instructions; globs live in the file's paths/applyTo frontmatter) or task (read-when line in AGENTS.md, or a skill). scripts/check-budget.mjs keeps this list in sync with disk and enforces the size budgets (1 KB = 1000 bytes; tokens are estimated as bytes / 4). Rule IDs (CORE-01) are never reused: when a rule is removed, add its ID to retiredRuleIds.",
+  "budgets": {
+    "instructionBytes": 8000,
+    "alwaysBytes": 10000,
+    "websiteBytes": 35000,
+    "websiteSet": [
+      "instructions/performance.md",
+      "instructions/design.md",
+      "instructions/seo.md",
+      "instructions/content.md"
+    ],
+    "skillDescriptionChars": 2000
+  },
+  "files": [
+    {
+      "path": "instructions/core.md",
+      "kind": "instruction",
+      "tier": "always",
+      "loadWhen": "Always (mandatory)."
+    },
+    {
+      "path": "instructions/security.md",
+      "kind": "instruction",
+      "tier": "always",
+      "loadWhen": "Always (mandatory)."
+    },
+    {
+      "path": "instructions/testing.md",
+      "kind": "instruction",
+      "tier": "always",
+      "loadWhen": "Always (mandatory)."
+    },
+    {
+      "path": "instructions/performance.md",
+      "kind": "instruction",
+      "tier": "task",
+      "loadWhen": "Any app, site or service."
+    },
+    {
+      "path": "instructions/api-data.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project has a backend or an API."
+    },
+    {
+      "path": "instructions/database.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project uses a relational database."
+    },
+    {
+      "path": "instructions/design.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project has a UI."
+    },
+    {
+      "path": "instructions/seo.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project is a public website."
+    },
+    {
+      "path": "instructions/content.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project is a public website or blog."
+    },
+    {
+      "path": "instructions/mobile.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project is a mobile app."
+    },
+    {
+      "path": "instructions/licensing.md",
+      "kind": "instruction",
+      "tier": "task",
+      "loadWhen": "The project is published or distributed, or uses third-party code or assets."
+    },
+    {
+      "path": "instructions/feature-docs.md",
+      "kind": "instruction",
+      "tier": "task",
+      "loadWhen": "An app or service with business rules."
+    },
+    {
+      "path": "stacks/astro.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project uses Astro."
+    },
+    {
+      "path": "stacks/cloudflare.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project is hosted on Cloudflare Workers or Pages."
+    },
+    {
+      "path": "stacks/django.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project uses Django."
+    },
+    {
+      "path": "stacks/ga4-consent.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project uses Google Analytics 4."
+    },
+    {
+      "path": "stacks/starlight.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project uses Starlight."
+    },
+    {
+      "path": "stacks/three-js.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project uses three.js."
+    },
+    {
+      "path": "stacks/typescript.md",
+      "kind": "stack",
+      "tier": "task",
+      "loadWhen": "The project uses TypeScript."
+    },
+    {
+      "path": "templates/setup-prompt.md",
+      "kind": "template",
+      "tier": "task",
+      "loadWhen": "Setting up Devbook in a project (pasted once)."
+    },
+    {
+      "path": "templates/AGENTS.md",
+      "kind": "template",
+      "tier": "task",
+      "loadWhen": "Setting up Devbook: becomes the project's root AGENTS.md."
+    },
+    {
+      "path": "templates/CLAUDE.md",
+      "kind": "template",
+      "tier": "task",
+      "loadWhen": "Setting up Devbook: becomes the project's CLAUDE.md."
+    },
+    {
+      "path": "templates/copilot-instructions.md",
+      "kind": "template",
+      "tier": "task",
+      "loadWhen": "Setting up Devbook: becomes .github/copilot-instructions.md."
+    },
+    {
+      "path": "templates/FEATURE.md",
+      "kind": "template",
+      "tier": "task",
+      "loadWhen": "Writing a feature doc."
+    },
+    {
+      "path": "skills/devbook-setup/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Setting up or repairing Devbook in a project (read by the setup prompt; never linked).",
+      "linked": false
+    },
+    {
+      "path": "skills/devbook-security-review/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Security reviews of a change or the codebase; link in every project."
+    },
+    {
+      "path": "skills/devbook-release-check/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Checking a release or deploy is ready; link in every project."
+    },
+    {
+      "path": "skills/devbook-upgrade/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Checking for and applying a newer Devbook release; link in every project."
+    },
+    {
+      "path": "skills/devbook-feature-doc/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Writing or updating a feature doc; link with feature-docs."
+    },
+    {
+      "path": "skills/devbook-api-endpoint/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Adding or changing an API endpoint or webhook; link with api-data."
+    },
+    {
+      "path": "skills/devbook-db-migration/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Schema changes and data migrations; link with database."
+    },
+    {
+      "path": "skills/devbook-seo-audit/SKILL.md",
+      "kind": "skill",
+      "tier": "task",
+      "loadWhen": "Auditing a public site's technical SEO; link with seo."
+    }
+  ],
+  "retiredRuleIds": []
+}
