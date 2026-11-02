@@ -42,6 +42,7 @@ function toMarkdown(body: string, filePath: string | undefined) {
 	let heading = 1; // level of the last heading, so tab labels nest under it
 	let aside: string[] | undefined;
 	let squeeze = false; // drop the blank line after a removed wrapper tag if one already precedes it
+	let listIndent: number | undefined; // content column of the open list item, if any
 	for (const line of body.replace(/^import\s.+$\n?/gm, '').split('\n')) {
 		const marker = line.match(/^\s*(`{3,}|~{3,})/)?.[1];
 		if (inFence) {
@@ -60,6 +61,9 @@ function toMarkdown(body: string, filePath: string | undefined) {
 		const tag = line.trim();
 		const h = line.match(/^(#{1,6})\s/);
 		if (h) heading = h[1]!.length;
+		const item = line.match(/^\s*(?:\d+\.|[-*+])\s+/);
+		if (item) listIndent = item[0].length;
+		else if (tag && indent.length < (listIndent ?? 0)) listIndent = undefined;
 
 		if (/^<\/?(Tabs|Steps|CardGrid)\b[^>]*>$/.test(tag) || tag === '</TabItem>') {
 			squeeze = true;
@@ -88,7 +92,9 @@ function toMarkdown(body: string, filePath: string | undefined) {
 		const code = tag.match(/^<Code\s+code=\{(\w+)\}\s+lang="(\w+)"(?:\s+title="([^"]*)")?\s*\/>$/);
 		const src = code ? imports.get(code[1]!) : undefined;
 		if (code && src !== undefined) {
-			(aside ?? out).push(fence(src, code[2]!, code[3], indent));
+			// Indent only inside a list item; other indentation comes from HTML nesting.
+			const inList = listIndent !== undefined && indent.length >= listIndent;
+			(aside ?? out).push(fence(src, code[2]!, code[3], inList ? ' '.repeat(listIndent!) : ''));
 			continue;
 		}
 		(aside ?? out).push(line);
