@@ -14,11 +14,7 @@ npm run deploy        # = wrangler deploy; wrangler runs `npm run build:prod` fi
 
 ## Custom domain
 
-The Worker is live at `https://devbook-raturi-in.raturi002.workers.dev`. To serve `devbook.raturi.in`:
-
-1. If `devbook.raturi.in` is attached to a Pages project, remove it there first.
-2. The custom domain is configured in `wrangler.jsonc`; set `"workers_dev": false` if the workers.dev URL should stop serving.
-3. Run `npm run deploy`. The raturi.in zone is on Cloudflare, so the DNS record is created automatically.
+The Worker serves only `https://devbook.raturi.in`, configured in `wrangler.jsonc` under `routes`. The raturi.in zone is on Cloudflare, so `npm run deploy` creates the DNS record. `"workers_dev": false` turns off the `*.workers.dev` URL, so search engines never see a second copy of the site.
 
 ## After deploying
 
