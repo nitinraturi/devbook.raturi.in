@@ -2,6 +2,18 @@
 
 Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with every commit to `main`. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-02: Keep tokens out of reach
+
+### Added
+- **SEC-27:** never put a secret in a command argument, URL, chat or CI output; have the user paste it into a hidden prompt or stdin. Tokens get the least scope, one repository or service, and an expiry.
+- **SEC-28:** scan for secrets before each commit and in CI, treat a hit as a leak until a human clears it, and generate test keys at run time instead of committing them.
+- **SEC-29:** gitignore every file that can hold secrets before it exists (`.env*`, `.dev.vars`, keys and certificates, credential files such as `.npmrc` with tokens, and editor or assistant local settings), and check `git status` for them before each commit.
+
+### Changed
+- **SEC-03** now says to revoke an exposed secret first, because deleting the commit leaves the copies.
+
+**Upgrade:** add the SEC-29 patterns your project can have to its `.gitignore`, then run `git ls-files` to check none of those files are already tracked; if one is, remove it from the index (`git rm --cached <file>`) and revoke what it held.
+
 ## 2026-11-02: Versions instead of release tags
 
 ### Changed

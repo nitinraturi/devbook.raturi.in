@@ -5,7 +5,8 @@ sidebar:
   order: 2
 sources:
   - OWASP Top 10
-  - OWASP Cheat Sheet Series, including the Password Storage Cheat Sheet
+  - OWASP Cheat Sheet Series, including the Password Storage and Secrets Management Cheat Sheets
+  - GitHub Docs on secret scanning and fine-grained tokens
   - NIST SP 800-63B
 ---
 
@@ -14,7 +15,10 @@ Mandatory for every project. For anything not listed, follow the OWASP Cheat She
 ## First
 - SEC-01: Deny by default. Every route declares who may access it, and the server checks permissions per object and property, not only per route.
 - SEC-02: Validate all outside input (requests, forms, env vars, files, API and model responses) with a schema at the boundary, and re-check on the server everything the client sends, because any client can be modified.
-- SEC-03: Keep secrets in the platform's secret store or env vars, never in the repo, client bundles, logs, prompts or error messages. Commit `.env.example` with names only, and rotate anything exposed.
+- SEC-03: Keep secrets in the platform's secret store or env vars, never in the repo, client bundles, logs, prompts or error messages. Commit `.env.example` with names only. Revoke an exposed secret first, because deleting the commit leaves the copies.
+- SEC-27: Never put a secret in a command argument, URL, chat or CI output, which are stored and shown; have the user paste it into a hidden prompt or stdin. Tokens get the least scope, one repository or service, and an expiry.
+- SEC-28: Scan for secrets before each commit and in CI, and treat a hit as a leak until a human clears it. Generate test keys at run time instead of committing them.
+- SEC-29: Gitignore every file that can hold secrets before it exists: `.env*` except `.env.example`, `.dev.vars`, keys and certificates (`*.pem`, `*.key`, `*.p12`), `.npmrc`, `.pypirc` or `.netrc` with tokens, and editor or assistant local settings (`.idea/workspace.xml`, `.claude/settings.local.json`, `*.local.*`). Check `git status` for them before each commit, because scanners miss unusual formats.
 - SEC-04: Before adding a dependency, confirm the exact name exists, is maintained, matches its repository and has an allowed licence, because invented and typosquatted names are a real attack.
 - SEC-05: The Content Security Policy allows scripts by hash or nonce, without `'unsafe-inline'` or `'unsafe-eval'`.
 

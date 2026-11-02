@@ -14,7 +14,7 @@ Review only; don't change code unless asked.
    - Access: who may call it, and is ownership checked per object and property (SEC-01)?
    - Input: is every outside value validated at the boundary (SEC-02), and passed to SQL, shell and paths only as parameters (SEC-06)?
    - Output: auto-escaping kept, raw HTML reviewed (SEC-07).
-   - Secrets: no keys, tokens or passwords in code, logs, fixtures or prompts (SEC-03).
+   - Secrets: no keys, tokens or passwords in code, logs, fixtures, prompts, command arguments or CI output; tokens least-scoped with an expiry; a secret scan in place; secret-holding files gitignored (SEC-03, SEC-27 to SEC-29).
    - Auth, sessions, CSRF and cookies (SEC-09, SEC-13 to SEC-17), CSP and headers (SEC-05, SEC-18).
    - New dependencies: real, maintained, licence allowed (SEC-04).
    - Personal data, logging and LLM features (SEC-21 to SEC-26).

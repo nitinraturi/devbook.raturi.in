@@ -92,12 +92,12 @@ Every rule loaded takes up part of the context window, so Devbook keeps its file
 
 | Project type | At the start of every chat | Most a chat can add | Files that can be added |
 |---|---|---|---|
-| Any project | about 12 KB, 3,000 tokens | — | — |
-| Public website | about 12 KB, 3,000 tokens | 18 KB, 4,500 tokens | performance, design, SEO, content |
-| API service | about 12 KB, 3,000 tokens | 15 KB, 3,800 tokens | performance, REST APIs, databases |
-| Web app | about 12 KB, 3,000 tokens | 25 KB, 6,200 tokens | performance, REST APIs, databases, design, feature docs |
+| Any project | about 13 KB, 3,300 tokens | — | — |
+| Public website | about 13 KB, 3,300 tokens | 18 KB, 4,500 tokens | performance, design, SEO, content |
+| API service | about 13 KB, 3,300 tokens | 15 KB, 3,800 tokens | performance, REST APIs, databases |
+| Web app | about 13 KB, 3,300 tokens | 25 KB, 6,200 tokens | performance, REST APIs, databases, design, feature docs |
 
-The start of every chat holds core, security and testing (10 KB), the "read" list in `AGENTS.md` and the descriptions of the linked skills. A chat that only touches backend code never loads design or SEO rules. The always-loaded part is the same in every chat, so providers can cache it.
+The start of every chat holds core, security and testing (about 10.5 KB), the "read" list in `AGENTS.md` and the descriptions of the linked skills. A chat that only touches backend code never loads design or SEO rules. The always-loaded part is the same in every chat, so providers can cache it.
 
 ## What it can't do
 
