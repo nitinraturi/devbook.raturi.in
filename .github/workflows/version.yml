@@ -1,7 +1,9 @@
 name: Version
 
-# Every push to main raises VERSION, so projects can see they're behind. The bump commit is pushed
-# with GITHUB_TOKEN, which doesn't trigger workflows, so it doesn't bump itself again.
+# Every push to main raises VERSION, so projects can see they're behind. The main ruleset blocks
+# direct pushes, so the bump is pushed with VERSION_PUSH_TOKEN, a fine-grained token of the repo
+# admin (a bypass actor) with Contents: write on this repo only. That push starts workflows again,
+# so bump commits are skipped by their message.
 on:
   push:
     branches: [main]
@@ -15,16 +17,26 @@ concurrency:
 
 jobs:
   bump:
-    if: github.actor != 'github-actions[bot]'
+    if: "!startsWith(github.event.head_commit.message, 'chore: version ')"
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: write
+      contents: read
     steps:
+      - name: Check the push token is set
+        env:
+          HAS_TOKEN: ${{ secrets.VERSION_PUSH_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::error::Add the VERSION_PUSH_TOKEN secret (see DEPLOY.md, Releases)"
+            exit 1
+          fi
+
       # Actions pinned to commit SHAs (security/supply-chain).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
+          token: ${{ secrets.VERSION_PUSH_TOKEN }}
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
