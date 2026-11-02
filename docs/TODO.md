@@ -1,9 +1,7 @@
 # Owner TODOs and known gaps
 
 ## Owner
-- [ ] **Custom domain:** attach `devbook.raturi.in` to the `devbook-raturi-in` Worker (`DEPLOY.md` → Custom domain).
 - [ ] **GA4:** the site uses the raturi.in property (`G-4343Y0SFZ5`). Confirm its data retention is **14 months**, the period `/privacy/` states (Admin → Data collection and modification → Data retention). Optionally add a hostname filter or comparison for `devbook.raturi.in` in reports.
-- [ ] **Person `sameAs`:** add profile URLs (GitHub, LinkedIn, …) in `src/lib/site.ts` → `PERSON.sameAs`.
 - [ ] **OG image:** review `public/og-default.png` (regenerate with `npm run og:image` after editing `scripts/generate-og.mjs`).
 - [ ] **Privacy notice:** review `/privacy/` (`src/content/docs/privacy.md`) against your own legal advice, including India's DPDP.
 - [ ] **HSTS preload:** add `preload` to `Strict-Transport-Security` in `public/_headers` only once every raturi.in subdomain serves HTTPS.
