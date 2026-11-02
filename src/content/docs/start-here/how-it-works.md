@@ -53,7 +53,7 @@ Rules load once per chat. After you change `AGENTS.md`, start a new chat.
 3. Stack notes, for details about one technology.
 4. Devbook instructions.
 
-So you never edit Devbook's files to change a rule. Write the exception in your Project section instead, for example: `- Rules: we use offset pagination on /reports because the dataset is fixed; this overrides api-data.`
+Every rule has a stable ID (`CORE-02`, `SEC-05`), so an override can name exactly the rule it replaces, and the assistant cites IDs in its reports. So you never edit Devbook's files to change a rule. Write the exception in your Project section instead, for example: `- Rules: we use offset pagination on /reports because the dataset is fixed; this overrides API-03.`
 
 ## Mandatory and optional files
 
@@ -78,10 +78,10 @@ Every rule takes up part of the context window in every chat, so Devbook keeps i
 
 | Project type | Files | Size | About |
 |---|---|---|---|
-| Any project | Core, security, testing | 15 KB | 3,700 tokens |
-| Public website | + performance, design, SEO, content | 36 KB | 9,100 tokens |
-| API service | + performance, REST APIs, databases | 32 KB | 7,900 tokens |
-| Web app | + performance, REST APIs, databases, design, feature docs | 44 KB | 10,900 tokens |
+| Any project | Core, security, testing | 10 KB | 2,500 tokens |
+| Public website | + performance, design, SEO, content | 27 KB | 6,700 tokens |
+| API service | + performance, REST APIs, databases | 24 KB | 6,000 tokens |
+| Web app | + performance, REST APIs, databases, design, feature docs | 33 KB | 8,300 tokens |
 
 That is a small share of a modern context window, and it is the same in every chat, so providers can cache it.
 

@@ -2,6 +2,25 @@
 
 Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
 
+## 2026-11-02: Fewer, numbered rules
+
+The instructions now hold about 250 rules instead of about 410. The mandatory core, security and testing files are 10 KB (about 2,500 tokens) instead of 14.6 KB; a public website's set is 27 KB instead of 36 KB. Every removed rule failed the deletion test in the [writing guide](https://devbook.raturi.in/start-here/writing-instructions/): a capable model already does it, or another file already says it. The full rule-by-rule audit, with a reason for each verdict, is in `docs/plans/prune-audit.md`.
+
+### Changed
+- Every rule starts with a stable ID (`CORE-02`, `SEC-05`, `API-03`). Assistants cite IDs in their reports, and project overrides can name the rule they replace. IDs are never reused.
+- Each file starts with its most important rules.
+- Sources moved from each file's first paragraph to a `sources:` list in its frontmatter. The site shows them under the title.
+- Validating input at the boundary now lives only in security (`SEC-02`), along with access per property, rate limits and URL allowlists that the REST API file repeated.
+- The browser check for UI work (360 px and 1440 px, light and dark, keyboard) moved from core to design (`DES-04`). The axe check moved from testing to design (`DES-05`).
+
+### Removed
+- Core: reading code first, naming conventions (language defaults, verbs for functions, domain words), folder-layout defaults, small functions, comment style, error-handling and logging advice that security already covers, README contents and re-reading the diff.
+- Testing: the edge-case list, test levels models choose by default, arrange-act-assert, snapshot and coverage advice.
+- Design: general heuristics (hierarchy, consistency, feedback timing, recognition over recall), grid rhythm, density, optical alignment, squint tests, logical properties, button-label, toast and skeleton advice, and focus trapping, which native `<dialog>` handles.
+- Database, REST APIs, SEO, content, mobile, licensing and performance: rules models follow by default (normal forms, column naming, HTTP method semantics, readable URLs, platform conventions) and rules repeated in another file.
+
+**Upgrade:** nothing breaks; every file keeps its path. If your project relied on a removed rule, such as a naming convention or the edge-case list, add it to the Project section of your `AGENTS.md`. Overrides that named a section ("this overrides api-data") can now name the rule ID instead.
+
 ## 2026-11-02: PBKDF2 for FIPS-140, and accurate loading notes
 
 ### Changed

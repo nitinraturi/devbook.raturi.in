@@ -1,6 +1,6 @@
 # Prune audit (Phase 3)
 
-One row per bullet in `instructions/*.md`, at commit `b2b6391`. **Line** is the line number in that file. Rule text is shortened; the line number points to the full text. Status: **awaiting approval**. No instruction file has been edited.
+One row per bullet in `instructions/*.md`, at commit `b2b6391`. **Line** is the line number in that file. Rule text is shortened; the line number points to the full text. Status: **approved and applied** on 2026-11-02, with the verdicts as written. The always tier's remaining gap was closed by rewording; moving the LLM and privacy sections to conditional loading is left for Phase 4.
 
 Verdicts, from `docs/plans/llm-efficiency.md` Phase 3:
 

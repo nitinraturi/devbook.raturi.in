@@ -26,7 +26,7 @@ npm run lhci     # Lighthouse budgets
 
 Before writing or changing a file in `instructions/`, `stacks/` or `templates/`, read `src/content/docs/start-here/writing-instructions.md`; the rules below apply it to Devbook and win where they differ. Don't add `.claude/rules/` or other auto-loaded agent files here: projects that use the submodule would load them too.
 
-1. One imperative rule per bullet, concrete enough that a reviewer can check it. Add a one-clause reason when the rule is not obvious, because models generalise from the why.
+1. One imperative rule per bullet, starting with its stable ID (`CORE-01`; never reuse a retired ID), concrete enough that a reviewer can check it. Add a one-clause reason when the rule is not obvious, because models generalise from the why.
 2. Say what to do. Pair every "never" with the alternative, and every "always" with what to do when it can't be done.
 3. Pass the deletion test: keep a rule only if a capable model would otherwise get it wrong. No preamble, filler or rules models follow by default.
 4. Normal tone. No capitals, "CRITICAL" or "MUST" for emphasis, because current models over-apply it.
@@ -34,8 +34,8 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 6. Examples only where a format or shape matters, such as templates, and then a few consistent ones.
 7. Keep each instruction file under about 8 KB. The mandatory set stays under about 15 KB and a typical website under about 35 KB.
 8. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
-9. Base rules on primary sources (official docs, standards, recognised guidelines) and name them in the file's intro. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
-10. Frontmatter: a `title`, a 120–160 character `description` and `sidebar.order`. No H1 in the body; the title is the heading.
+9. Base rules on primary sources (official docs, standards, recognised guidelines) and list them in the file's `sources:` frontmatter. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
+10. Frontmatter: a `title`, a 120–160 character `description`, `sidebar.order` and, for instructions, `sources:`. No H1 in the body; the title is the heading.
 11. Stack-agnostic instructions name no framework. Framework details go in `stacks/`.
 
 ## Before you finish

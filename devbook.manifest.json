@@ -1,8 +1,8 @@
 {
-  "$comment": "Every file projects can load from Devbook, with when to load it and its loading tier (always, path, task). scripts/check-budget.mjs keeps this list in sync with disk and enforces the size budgets (1 KB = 1000 bytes; tokens are estimated as bytes / 4).",
+  "$comment": "Every file projects can load from Devbook, with when to load it and its loading tier (always, path, task). scripts/check-budget.mjs keeps this list in sync with disk and enforces the size budgets (1 KB = 1000 bytes; tokens are estimated as bytes / 4). Rule IDs (CORE-01) are never reused: when a rule is removed, add its ID to retiredRuleIds.",
   "budgets": {
     "instructionBytes": 8000,
-    "alwaysBytes": 15000,
+    "alwaysBytes": 10000,
     "websiteBytes": 35000,
     "websiteSet": [
       "instructions/performance.md",
@@ -10,10 +10,6 @@
       "instructions/seo.md",
       "instructions/content.md"
     ]
-  },
-  "pendingOverBudget": {
-    "instructions/design.md": "Over the per-file budget; slimmed in Phase 3 of docs/plans/llm-efficiency.md.",
-    "website": "Over the public-website budget; slimmed in Phase 3 of docs/plans/llm-efficiency.md."
   },
   "files": [
     {
@@ -160,5 +156,6 @@
       "tier": "task",
       "loadWhen": "Writing a feature doc."
     }
-  ]
+  ],
+  "retiredRuleIds": []
 }

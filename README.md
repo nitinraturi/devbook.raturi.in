@@ -4,13 +4,13 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 
 | File | Covers | Load when |
 |---|---|---|
-| `instructions/core.md` | understand first, stay current, design principles, project structure, naming, code, docs and decisions, git, done | always (mandatory) |
+| `instructions/core.md` | verify before reporting, never weaken checks, approvals, stay current, simple design, structure, docs and decisions, git | always (mandatory) |
 | `instructions/security.md` | secure defaults, auth, headers, secrets, dependencies, privacy, LLM features | always (mandatory) |
-| `instructions/testing.md` | what to test, test levels, deterministic tests, CI gates | always (mandatory) |
+| `instructions/testing.md` | tests per criterion, failing test first, deterministic tests, real boundaries, flaky tests, CI gates | always (mandatory) |
 | `instructions/performance.md` | budgets, Core Web Vitals, back-end efficiency, caching, reliability | any app, site or service |
 | `instructions/api-data.md` | REST API design: contract first, resources and URLs, methods and status codes, payloads, problem-details errors, pagination, idempotency, ETags and caching, versioning and deprecation, OWASP API Top 10, webhooks | backend or API |
 | `instructions/database.md` | modelling, naming, keys, types, constraints, relationships, indexes, concurrency, migrations, backups | relational database |
-| `instructions/design.md` | design direction, craft, hierarchy, layout, type, colour, tokens, components, forms, motion, WCAG 2.2 AA | the project has a UI |
+| `instructions/design.md` | design direction, avoiding the template look, layout, type, colour, tokens, states, forms, motion, WCAG 2.2 AA | the project has a UI |
 | `instructions/seo.md` | Google Search Central: crawling, indexing, titles, links, structured data, spam policies | public website |
 | `instructions/content.md` | voice, structure, facts, trust, AI editorial policy | public website or blog |
 | `instructions/mobile.md` | mobile-app rules | mobile app |
