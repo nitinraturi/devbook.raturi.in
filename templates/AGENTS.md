@@ -19,6 +19,7 @@ Follow these in every task:
 
 Before working on the matching kind of change, read the file and follow it. Paths are relative to the repository root.
 <!-- Keep only the lines that apply, and delete the rest. -->
+- `.devbook/instructions/security-web.md`: pages, headers, cookies, sessions, CORS, sign-in or passwords
 - `.devbook/instructions/performance.md`: pages, endpoints, queries, caching or deploys
 - `.devbook/instructions/api-data.md`: API endpoints, webhooks or the OpenAPI document
 - `.devbook/instructions/database.md`: tables, models, migrations or queries
@@ -30,5 +31,3 @@ Before working on the matching kind of change, read the file and follow it. Path
 - `.devbook/instructions/feature-docs.md`: building or changing a feature with business rules
 - `.devbook/stacks/<stack>.md`: work that touches <stack>
 - `.devbook/skills/devbook-upgrade/SKILL.md`: when asked whether Devbook is up to date, or to upgrade it
-
-At the start of each session, before the first task, do step 1 of `.devbook/skills/devbook-upgrade/SKILL.md`. If `main` has a newer version, tell the user in one sentence and ask whether to upgrade; upgrade only after a yes. If the check fails, carry on without mentioning it.

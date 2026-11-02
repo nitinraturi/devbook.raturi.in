@@ -4,8 +4,13 @@
 // `pendingOverBudget` only warn, and fail once they fit, so the list can't go stale.
 // Also checks loading metadata: path-tier instructions carry identical `paths` and `applyTo`
 // globs, and skills follow the Agent Skills format.
+// Budgets only go down (the ratchet): a budget may rise only when the same change commits eval results in
+// evals/results/ that show no pass-rate loss against the base's main or stable result. The base is BUDGET_BASE,
+// else the merge base with origin/main, else the previous commit.
+import { execFileSync } from 'node:child_process';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { parse as parseYaml } from 'yaml';
+import { regressions } from '../evals/report.mjs';
 
 const root = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('devbook.manifest.json', root), 'utf8'));
@@ -87,6 +92,62 @@ for (const { name, bytes, limit } of results) {
 }
 for (const name of Object.keys(pendingOverBudget)) {
 	if (!results.some((r) => r.name === name)) error(`pendingOverBudget lists unknown budget "${name}"`);
+}
+
+// ---------- Ratchet ----------
+
+const git = (...args) => {
+	try {
+		return execFileSync('git', args, {
+			cwd: new URL('.', root).pathname,
+			encoding: 'utf8',
+			stdio: ['ignore', 'pipe', 'ignore'],
+		}).trim();
+	} catch {
+		return null;
+	}
+};
+const head = git('rev-parse', 'HEAD');
+const mergeBase = git('merge-base', 'HEAD', 'origin/main');
+const base = process.env.BUDGET_BASE || (mergeBase && mergeBase !== head ? mergeBase : git('rev-parse', 'HEAD~1'));
+const baseManifest = base && git('show', `${base}:devbook.manifest.json`);
+if (!baseManifest) console.log('Ratchet: no base commit to compare with; skipped');
+else {
+	const before = JSON.parse(baseManifest).budgets ?? {};
+	const rises = Object.keys(budgets).filter(
+		(k) => typeof budgets[k] === 'number' && budgets[k] > (before[k] ?? Infinity),
+	);
+	if (!rises.length) console.log(`Ratchet: no budget rose since ${base.slice(0, 7)}`);
+	else {
+		const changed = [
+			...(git('diff', '--name-only', base, '--', 'evals/results/') ?? '').split('\n'),
+			...(git('ls-files', '--others', '--exclude-standard', 'evals/results/') ?? '').split('\n'),
+		].filter((f) => f.endsWith('.json'));
+		const baseFiles = (git('ls-tree', '--name-only', base, 'evals/results/') ?? '')
+			.split('\n')
+			.filter((f) => f.endsWith('.json'));
+		const reference = (r) =>
+			baseFiles
+				.map((f) => JSON.parse(git('show', `${base}:${f}`)))
+				.filter((b) => ['main', 'stable'].includes(b.variant) && b.method === r.method && b.model === r.model)
+				.sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0];
+		const evidence = [];
+		for (const f of changed) {
+			const r = JSON.parse(await readFile(new URL(f, root), 'utf8'));
+			if (r.variant === 'none') continue;
+			const ref = reference(r);
+			if (!ref) continue;
+			const worse = regressions(ref, r);
+			if (worse.length)
+				error(`${f}: pass rate fell on ${worse.map((w) => w.task).join(', ')}, so the budget can't rise`);
+			else evidence.push(f);
+		}
+		if (!evidence.length)
+			error(
+				`budget raised (${rises.join(', ')}) without eval results showing no pass-rate loss; commit evals/results/ from \`npm run evals:model\` (see AGENTS.md)`,
+			);
+		else console.log(`Ratchet: ${rises.join(', ')} rose, backed by ${evidence.join(', ')}`);
+	}
 }
 
 console.log(`Budget: ${errors} error(s)`);

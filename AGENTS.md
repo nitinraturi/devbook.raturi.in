@@ -15,10 +15,10 @@ npm run lhci     # Lighthouse budgets
 
 ## Layout
 
-- `instructions/*.md`: the product. Mandatory `core`, `security` and `testing`, plus conditional `performance`, `api-data`, `database`, `design`, `seo`, `content`, `mobile`, `licensing` and `feature-docs`. They are rendered on the site through the symlink `src/content/docs/instructions`.
+- `instructions/*.md`: the product. Mandatory `core`, `security` and `testing`, plus conditional `security-web`, `performance`, `api-data`, `database`, `design`, `seo`, `content`, `mobile`, `licensing` and `feature-docs`. They are rendered on the site through the symlink `src/content/docs/instructions`.
 - `stacks/*.md`: short notes for one technology each, also rendered through a symlink.
 - `skills/<name>/SKILL.md`: Agent Skills that projects link into `.claude/skills/`. Each `name` starts with `devbook-` and matches its folder; the description says when to use it.
-- Loading tiers (in `devbook.manifest.json`): core, security and testing are `@` imports; design, api-data, database, seo, content and mobile carry identical `paths:` and `applyTo:` globs and are linked into projects' `.claude/rules/` and `.github/instructions/`; the rest are read-when lines or skills. Never add `paths:` to an always-loaded file.
+- Loading tiers (in `devbook.manifest.json`): core, security and testing are `@` imports; security-web, design, api-data, database, seo, content and mobile carry identical `paths:` and `applyTo:` globs and are linked into projects' `.claude/rules/` and `.github/instructions/`; the rest are read-when lines or skills. Never add `paths:` to an always-loaded file.
 - `templates/`: `setup-prompt.md` (shown on the homepage), `AGENTS.md`, `CLAUDE.md`, `copilot-instructions.md` and `FEATURE.md`. Pages import them with `?raw`; never copy template text into a page.
 - `src/content/docs/`: the homepage, the `start-here/` guides (how it works, setup, day-to-day use, writing instructions, contact), license and privacy pages. Instruction and stack pages come through the symlinks.
 - `kit/`: the optional enforcement kit (Claude Code hooks, git hooks, starter CI) that projects opt into. It is code, so MIT-0; `npm run test:kit` tests the hooks.
@@ -35,7 +35,7 @@ Before writing or changing a file in `instructions/`, `stacks/` or `templates/`,
 4. Normal tone. No capitals, "CRITICAL" or "MUST" for emphasis, because current models over-apply it.
 5. Each rule lives in one file. Link to it instead of restating it, so copies can't drift into contradictions.
 6. Examples only where a format or shape matters, such as templates, and then a few consistent ones.
-7. Keep each instruction file under about 8 KB. The mandatory set stays under about 15 KB and a typical website under about 35 KB.
+7. Keep each instruction file under about 8 KB, and the sets within the budgets in `devbook.manifest.json` (the always tier 9 KB, a typical website 35 KB). Budgets only go down: `check-budget.mjs` fails a raised budget unless the same change commits `evals/results/` showing no pass-rate loss against the last `main` or `stable` result.
 8. No version numbers for tools. Tell the reader to check the current official docs. Stack notes carry `lastVerified`.
 9. Base rules on primary sources (official docs, standards, recognised guidelines) and list them in the file's `sources:` frontmatter. Never invent facts, standards or statistics. Paraphrase sources; don't copy them.
 10. Frontmatter: a `title`, a 120–160 character `description`, `sidebar.order` and, for instructions, `sources:`. No H1 in the body; the title is the heading.

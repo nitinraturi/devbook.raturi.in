@@ -47,7 +47,7 @@ your-project/
 Devbook loads in three tiers, so a chat pays only for what its task needs:
 
 1. **Every chat:** core, security and testing, through the `@` lines in `AGENTS.md`.
-2. **By file path:** design, REST APIs, databases, SEO, content and mobile carry their own globs (`paths:` for Claude Code, `applyTo:` for Copilot). Through the links in `.claude/rules/` and `.github/instructions/`, each loads only when the assistant reads or edits a matching file, such as a `.css` file for design.
+2. **By file path:** web security, design, REST APIs, databases, SEO, content and mobile carry their own globs (`paths:` for Claude Code, `applyTo:` for Copilot). Through the links in `.claude/rules/` and `.github/instructions/`, each loads only when the assistant reads or edits a matching file, such as a `.css` file for design.
 3. **By task:** performance, licensing, feature docs and stack notes are in the "read" list, so the assistant opens them when a task calls for them. Skills load only their name and description until a task needs one, then the full procedure.
 
 - **Claude Code** reads `CLAUDE.md` at the start of every chat, follows `@AGENTS.md`, and loads the three `@` files. It loads a linked rule the first time it reads or edits a matching file, and a skill when the task matches its description.
@@ -74,6 +74,7 @@ Core, security and testing load in every project. The rest are set up only when 
 | File | Set it up when | Loads |
 |---|---|---|
 | [Core](/instructions/core/), [Security](/instructions/security/), [Testing](/instructions/testing/) | Always | Every chat |
+| [Web security](/instructions/security-web/) | It serves pages or an API to browsers, or has its own sign-in | Pages, headers, settings, auth and session code |
 | [Performance](/instructions/performance/) | Any app, site or service | When a task needs it |
 | [REST APIs](/instructions/api-data/) | The project has a backend or API | API files |
 | [Databases](/instructions/database/) | It stores data in a relational database | Models, migrations, SQL |
@@ -92,12 +93,12 @@ Every rule loaded takes up part of the context window, so Devbook keeps its file
 
 | Project type | At the start of every chat | Most a chat can add | Files that can be added |
 |---|---|---|---|
-| Any project | about 13 KB, 3,300 tokens | — | — |
-| Public website | about 13 KB, 3,300 tokens | 18 KB, 4,500 tokens | performance, design, SEO, content |
-| API service | about 13 KB, 3,300 tokens | 15 KB, 3,800 tokens | performance, REST APIs, databases |
-| Web app | about 13 KB, 3,300 tokens | 25 KB, 6,200 tokens | performance, REST APIs, databases, design, feature docs |
+| Any project | about 12 KB, 3,100 tokens | — | — |
+| Public website | about 12 KB, 3,100 tokens | 20 KB, 5,100 tokens | web security, performance, design, SEO, content |
+| API service | about 12 KB, 3,100 tokens | 18 KB, 4,400 tokens | web security, performance, REST APIs, databases |
+| Web app | about 12 KB, 3,100 tokens | 27 KB, 6,800 tokens | web security, performance, REST APIs, databases, design, feature docs |
 
-The start of every chat holds core, security and testing (about 10.5 KB), the "read" list in `AGENTS.md` and the descriptions of the linked skills. A chat that only touches backend code never loads design or SEO rules. The always-loaded part is the same in every chat, so providers can cache it.
+The start of every chat holds core, security and testing (about 9 KB), the "read" list in `AGENTS.md` and the descriptions of the linked skills. A chat that only touches backend code never loads design or SEO rules. The always-loaded part is the same in every chat, so providers can cache it.
 
 ## What it can't do
 

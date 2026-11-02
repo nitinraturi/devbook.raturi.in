@@ -103,7 +103,7 @@ Every skill below is used the same way:
 ### devbook-upgrade
 
 - **Use it when:** you want to know whether a newer Devbook exists, or to move to it.
-- **Linked in:** every project. `AGENTS.md` also has the assistant run its version check at the start of each session, so you're told when a newer version is out.
+- **Linked in:** every project. With the enforcement kit, Claude Code also checks once a day when a session starts, so you're told when a newer version is out.
 - **Type:**
   ```text
   /devbook-upgrade
@@ -137,6 +137,7 @@ These load when the assistant reads or edits a file that matches the paths liste
 
 | File | Loads for files like | What you'll notice |
 |---|---|---|
+| [Web security](/instructions/security-web/) | `*.html`, `*.astro`, `templates/`, `layouts/`, `_headers`, `settings.py`, middleware, session, cookie and auth files | It keeps the CSP strict, CSRF on, CORS to named origins, cookies `Secure` and `HttpOnly`, and sets the security headers. |
 | [Design](/instructions/design/) | `*.css`, `*.html`, `*.tsx`, `*.vue`, `*.svelte`, `*.astro` | It asks for a design direction before the first screen, builds mobile first at 360 px, uses design tokens and checks WCAG 2.2 AA. |
 | [REST APIs](/instructions/api-data/) | `api/`, `routes/`, `controllers/`, `handlers/`, `views.py`, `urls.py`, `openapi*.yaml` | It updates the OpenAPI document first, uses problem-details errors, paginates lists and asks before breaking changes. |
 | [Databases](/instructions/database/) | `migrations/`, `models/`, `models.py`, `*.sql`, `schema.prisma`, `db/` | It declares constraints in the database, names them, stores money and time safely and plans live changes in stages. |

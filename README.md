@@ -5,7 +5,8 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 | File | Covers | Load when |
 |---|---|---|
 | `instructions/core.md` | verify before reporting, never weaken checks, approvals, stay current, simple design, structure, docs and decisions, git | always (mandatory) |
-| `instructions/security.md` | secure defaults, auth, headers, secrets, dependencies, privacy, LLM features | always (mandatory) |
+| `instructions/security.md` | access control, validation, secrets, dependencies, injection, auth, privacy, LLM features | always (mandatory) |
+| `instructions/security-web.md` | CSP, CSRF, CORS, session cookies, passwords and account flows, HTTPS headers | pages or APIs for browsers, or its own sign-in |
 | `instructions/testing.md` | tests per criterion, failing test first, deterministic tests, real boundaries, flaky tests, CI gates | always (mandatory) |
 | `instructions/performance.md` | budgets, Core Web Vitals, back-end efficiency, caching, reliability | any app, site or service |
 | `instructions/api-data.md` | REST API design: contract first, resources and URLs, methods and status codes, payloads, problem-details errors, pagination, idempotency, ETags and caching, versioning and deprecation, OWASP API Top 10, webhooks | backend or API |
@@ -19,7 +20,7 @@ A few short instruction files that make AI coding assistants (Claude, Copilot an
 | `stacks/*.md` | Astro, Starlight, Cloudflare, TypeScript, Django, GA4, three.js | you use that technology |
 | `skills/*/SKILL.md` | security review, release check, Devbook upgrade, feature doc, API endpoint, database migration, SEO audit, setup | the task needs it (loaded on demand) |
 
-Core, security and testing load in every chat. Design, REST APIs, databases, SEO, content and mobile load only when the assistant opens a matching file, through links in `.claude/rules/` and `.github/instructions/`. The rest are listed in `AGENTS.md` to read when a task needs them.
+Core, security and testing load in every chat. Web security, design, REST APIs, databases, SEO, content and mobile load only when the assistant opens a matching file, through links in `.claude/rules/` and `.github/instructions/`. The rest are listed in `AGENTS.md` to read when a task needs them.
 
 ## Use it in a project
 

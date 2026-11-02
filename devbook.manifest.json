@@ -2,9 +2,10 @@
   "$comment": "Every file projects can load from Devbook, with when to load it and its loading tier: always (@ import in AGENTS.md), path (linked into .claude/rules and .github/instructions; globs live in the file's paths/applyTo frontmatter) or task (read-when line in AGENTS.md, or a skill). scripts/check-budget.mjs keeps this list in sync with disk and enforces the size budgets (1 KB = 1000 bytes; tokens are estimated as bytes / 4). Rule IDs (CORE-01) are never reused: when a rule is removed, add its ID to retiredRuleIds.",
   "budgets": {
     "instructionBytes": 8000,
-    "alwaysBytes": 11000,
+    "alwaysBytes": 9000,
     "websiteBytes": 35000,
     "websiteSet": [
+      "instructions/security-web.md",
       "instructions/performance.md",
       "instructions/design.md",
       "instructions/seo.md",
@@ -30,6 +31,12 @@
       "kind": "instruction",
       "tier": "always",
       "loadWhen": "Always (mandatory)."
+    },
+    {
+      "path": "instructions/security-web.md",
+      "kind": "instruction",
+      "tier": "path",
+      "loadWhen": "The project serves pages or an API to browsers, or has its own sign-in."
     },
     {
       "path": "instructions/performance.md",

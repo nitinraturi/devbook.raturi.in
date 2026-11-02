@@ -20,6 +20,7 @@ Instruction files load in three ways. Pick the ones that apply:
 | File | Choose it when | How it loads |
 |---|---|---|
 | core, security, testing | Always | Every chat (`@` import) |
+| security-web | It serves pages or an API to browsers, or has its own sign-in (choose it with design or any web backend) | By file path |
 | design | The project has any user interface | By file path |
 | api-data | It has a backend or API | By file path |
 | database | It stores data in a relational database | By file path |
@@ -39,7 +40,7 @@ Instruction files load in three ways. Pick the ones that apply:
 
 ## 4. Link the path-scoped files
 
-For each chosen file whose frontmatter has `paths:` (design, api-data, database, seo, content, mobile), link it into both rule folders. Claude Code then loads it only when a matching file is read or edited, and Copilot when one is edited:
+For each chosen file whose frontmatter has `paths:` (security-web, design, api-data, database, seo, content, mobile), link it into both rule folders. Claude Code then loads it only when a matching file is read or edited, and Copilot when one is edited:
 
 ```sh
 mkdir -p .claude/rules .github/instructions

@@ -8,7 +8,7 @@ license: CC-BY-4.0
 
 Review only; don't change code unless asked.
 
-1. Read `.devbook/instructions/security.md`. If the project has an API, also read the security rules in `.devbook/instructions/api-data.md`.
+1. Read `.devbook/instructions/security.md`, and `.devbook/instructions/security-web.md` for anything a browser talks to or users sign in to. If the project has an API, also read the security rules in `.devbook/instructions/api-data.md`.
 2. Find the scope: the diff against the main branch (`git diff main...HEAD`), staged changes, or the paths the user named. Read every changed file in full, not just the hunks.
 3. For each change, check the rules that apply, in this order:
    - Access: who may call it, and is ownership checked per object and property (SEC-01)?

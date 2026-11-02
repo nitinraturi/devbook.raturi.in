@@ -111,7 +111,7 @@ The answer should name core, security and testing, and mention running checks an
 
 Devbook ships from its `main` branch. The `VERSION` file at its root holds a version number, such as `2026.11.02.1`, that goes up with every commit to `main`. Your copy is fixed at the commit you added, so nothing changes until you update, and `.devbook/VERSION` shows which version you have.
 
-**Automatic:** at the start of each session, the assistant compares your version with `main` and, when `main` is newer, tells you and asks whether to upgrade.
+**Automatic:** with the [enforcement kit](/start-here/enforcement-kit/), Claude Code checks once a day when a session starts and, when a newer version is out, tells you and asks whether to upgrade. Nothing in `AGENTS.md` makes a network call, so other assistants don't check on their own.
 
 **On request:** ask "Is Devbook up to date?" or run `/devbook-upgrade`. The assistant compares your version with `main`, summarises the changelog entries in between, and updates only after you say yes.
 

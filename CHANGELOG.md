@@ -2,6 +2,23 @@
 
 Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with every commit to `main`. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-02: A smaller always-loaded tier
+
+### Added
+- **`instructions/security-web.md`**, path-scoped like design: the browser and sign-in rules SEC-05 (CSP), SEC-09 (CSRF), SEC-10 (CORS), SEC-14 and SEC-15 (passwords), SEC-16 (session cookies), SEC-17 (account responses) and SEC-18 (headers) moved here with their IDs and wording unchanged. CLIs, libraries and other projects without a browser or sign-in no longer load them in every chat.
+- **`skills/devbook-setup/scripts/gitignore-secrets.mjs`** adds the secret-file patterns to `.gitignore` and lists any such file already tracked. SEC-29 now points to it instead of listing the patterns.
+
+### Changed
+- The always-loaded tier (core, security, testing) is 9.0 KB, down from 10.8 KB. Rules were reworded for density; their meaning and IDs are unchanged.
+- **`AGENTS.md` template:** no session-start version check. It made a network call in every chat, failed in sandboxes and repeated what the kit's `SessionStart` hook does once a day. The `devbook-upgrade` line stays for "Is Devbook up to date?".
+- The `devbook-security-review` skill also reads `security-web.md`.
+
+**Upgrade:**
+1. Update `.devbook/`.
+2. In `AGENTS.md`, delete the paragraph that starts "At the start of each session, before the first task". If you want automatic checks in Claude Code, install the kit's `SessionStart` hook.
+3. If the project serves pages or an API to browsers, or has its own sign-in, add the `security-web.md` line from `.devbook/templates/AGENTS.md` and link it: `ln -s ../../.devbook/instructions/security-web.md .claude/rules/devbook-security-web.md` and `ln -s ../../.devbook/instructions/security-web.md .github/instructions/devbook-security-web.instructions.md`.
+4. Optionally run `node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs`, then commit and start a new chat.
+
 ## 2026-11-02: Keep tokens out of reach
 
 ### Added
