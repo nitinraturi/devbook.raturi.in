@@ -30,7 +30,9 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy-md]').forEach((btn) => 
 });
 
 // Consent banner: shown where consent is required. A static site cannot read the
-// visitor's country, so a Europe/* timezone is used as the approximation.
+// visitor's country, so the timezone is used as the approximation: Europe/*, plus the
+// IANA Atlantic/* zones in EEA countries (Canary Islands, Madeira, Azores, Iceland).
+const EEA_ATLANTIC = new Set(['Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Azores', 'Atlantic/Reykjavik']);
 const banner = document.querySelector<HTMLElement>('[data-consent]');
 if (banner) {
 	let stored: string | null = null;
@@ -38,7 +40,7 @@ if (banner) {
 		stored = localStorage.getItem(KEY);
 	} catch {}
 	const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
-	if (!stored && tz.startsWith('Europe/')) banner.hidden = false;
+	if (!stored && (tz.startsWith('Europe/') || EEA_ATLANTIC.has(tz))) banner.hidden = false;
 	banner.querySelectorAll<HTMLButtonElement>('[data-consent-choice]').forEach((b) =>
 		b.addEventListener('click', () => {
 			const choice = b.dataset.consentChoice!;
