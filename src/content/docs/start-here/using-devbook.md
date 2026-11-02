@@ -61,12 +61,16 @@ The answer should name core, security and testing, and mention running checks an
 
 ## Keep it up to date
 
-- **Submodule:** run `git submodule update --remote .devbook`, review the diff and commit it.
-- **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook), review `git diff .devbook` and commit.
+Devbook releases are dated git tags, such as `v2026.11.02`. Setup pins the newest one, so nothing changes until you move to a newer tag.
 
-Then read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md). Some entries have an **Upgrade** section, for example when a file is added or split and you need a new line or link.
+1. Check your version: `git -C .devbook describe --tags` for a submodule, or `.devbook/VERSION` for a copy.
+2. Read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries since then. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
+3. Move to the new tag. **Submodule:** `git -C .devbook fetch --tags`, then `git -C .devbook checkout -q <tag> && git add .devbook`. **Copy:** rerun the download command from the [setup page](/start-here/setup/#1-choose-how-to-add-devbook), which fetches the newest tag.
+4. Review the diff, make any **Upgrade** changes, commit and start a new chat.
 
-Review each update's diff before you commit it. These files steer your assistant, so treat an update like a dependency upgrade: read what changed, and pin the submodule to the old commit if something doesn't suit your project yet.
+To get every change as soon as it lands, follow `main` instead: add the submodule with `-b main` and update with `git submodule update --remote .devbook`, or download with `REF=main`. You then review each change yourself, without release points to roll back to.
+
+These files steer your assistant, so treat an update like a dependency upgrade. If a release doesn't suit your project yet, stay on the previous tag or check it out again.
 
 ## Troubleshooting
 

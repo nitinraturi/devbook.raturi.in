@@ -25,7 +25,7 @@ For each task, variant and repeat, `run.mjs`:
 1. Copies the fixture into a temporary directory. Setup (`npm install`, or a Python venv and `pip install`) runs once per fixture and runs reuse it.
 2. Writes the task's `files`, then installs the variant:
    - `none`: `AGENTS.md` with only the project section, and `CLAUDE.md` with `@AGENTS.md`.
-   - `main`, `ref:<git-ref>` or `local` (the working tree): `.devbook/` from that version, plus `AGENTS.md` built from that version's own `templates/AGENTS.md`, keeping the `@` lines this fixture uses.
+   - `main`, `ref:<git-ref>` (a commit or a release tag such as `ref:v2026.11.02`) or `local` (the working tree): `.devbook/` from that version, plus `AGENTS.md` built from that version's own `templates/AGENTS.md`, keeping the `@` lines this fixture uses.
 3. Commits that state, so checks can diff against it.
 4. Runs `claude -p` headless with `--output-format stream-json --verbose`, `--permission-mode acceptEdits`, the fixture's `allowedTools`, `--setting-sources project,local` and `--max-budget-usd`. Each run gets an empty `CLAUDE_CONFIG_DIR`, so your own `~/.claude` memory, settings, plugins and hooks stay out of the result. Auto memory and non-essential traffic are off.
 5. Runs the task's checks and saves `transcript.jsonl`, `diff.patch` and `result.json` for the run.

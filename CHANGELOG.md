@@ -1,6 +1,21 @@
 # Changelog
 
-Notable changes to Devbook, newest first. Devbook is not versioned: projects track `main` through the `.devbook` submodule, so check this file after `git submodule update --remote .devbook`.
+Notable changes to Devbook, newest first. Releases are dated git tags (`vYYYY.MM.DD`); each entry is in the first release tagged after it. Read the entries after your current version before you upgrade.
+
+## 2026-11-02: Dated releases you can pin
+
+### Added
+- **Releases.** Each release is a git tag named by its date, such as `v2026.11.02`, with `.1` for a second release that day. Tags never move.
+- The setup prompt has a `Version:` line. `latest`, the default, pins the newest tag; a tag name pins that one; `main` follows every change, as before.
+- The copy method downloads the tag's tarball and records the tag in `.devbook/VERSION`.
+
+### Changed
+- New submodules are added without `-b main` and checked out at the tag, so `git submodule update --remote` no longer applies to them. Upgrade by checking out a newer tag.
+- The setup page and [Use Devbook day to day](https://devbook.raturi.in/start-here/using-devbook/#keep-it-up-to-date) describe checking your version, reading the changelog and upgrading.
+
+**Upgrade:** nothing breaks if you keep following `main`. To pin a release instead:
+- **Submodule:** run `git config -f .gitmodules --unset submodule..devbook.branch`, then `git -C .devbook fetch --tags && git -C .devbook checkout -q <tag> && git add .gitmodules .devbook`, and commit.
+- **Copy:** rerun the download command from the [setup page](https://devbook.raturi.in/start-here/setup/#1-choose-how-to-add-devbook). It fetches the newest tag and writes `.devbook/VERSION`.
 
 ## 2026-11-02: Load rules only when they apply
 

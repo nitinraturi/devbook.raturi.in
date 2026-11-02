@@ -1,6 +1,6 @@
 ---
 title: Setup
-description: Add Devbook to a project by hand, see how Claude and Copilot load the instructions and their limits, and learn how to update or remove it.
+description: Add Devbook to a project by hand, pin a release, see how Claude and Copilot load the instructions, and learn how to upgrade or remove it.
 sidebar:
   order: 2
 ---
@@ -15,33 +15,38 @@ The [setup prompt](/#setup) does all of this for you. The steps below show the s
 
 ## 1. Choose how to add Devbook
 
-Both methods put the files in `.devbook/`, so the rest of the setup is the same. Pick a tab.
+Both methods put the files in `.devbook/`, so the rest of the setup is the same. Each release is a dated git tag, such as `v2026.11.02` (`v2026.11.02.1` for a second release that day). Pinning a tag means Devbook changes only when you move to a newer one. Pick a tab.
 
 <Tabs syncKey="method">
 <TabItem label="Submodule (tracks updates)">
 
-Follows `main`. You update with one git command, and every update shows up as a reviewable change.
+Pins the newest release. You update with a few git commands, and every update shows up as a reviewable change.
 
 ```sh
-git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
+TAG=$(git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3)
+git submodule add https://github.com/nitinraturi/devbook.raturi.in .devbook && git -C .devbook checkout -q $TAG && git add .devbook
 ```
+
+To get every change as soon as it lands instead, follow `main`: `git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook`.
 
 </TabItem>
 <TabItem label="Copy (plain files)">
 
-Downloads plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
+Downloads the newest release as plain files that you commit, and records its tag in `.devbook/VERSION`. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
 
 ```sh
-rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/skills devbook.raturi.in-main/LICENSE-CC-BY-4.0
+REF=$(git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | head -n1 | cut -d/ -f3) && P=devbook.raturi.in-${REF#v} && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$REF | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/LICENSE-CC-BY-4.0 && echo $REF > .devbook/VERSION
 ```
+
+To download a particular release, or `main` for the latest changes, start with `REF=v2026.11.02` or `REF=main` instead of the `git ls-remote` part.
 
 On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
 
 ```powershell
-Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook devbook.raturi.in-main/instructions devbook.raturi.in-main/stacks devbook.raturi.in-main/templates devbook.raturi.in-main/skills devbook.raturi.in-main/LICENSE-CC-BY-4.0; Remove-Item devbook.tar.gz
+$ref = (git ls-remote --tags --refs --sort=-version:refname https://github.com/nitinraturi/devbook.raturi.in 'v*' | Select-Object -First 1) -replace '.*/', ''; $p = "devbook.raturi.in-$($ref -replace '^v', '')"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$ref" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/LICENSE-CC-BY-4.0"; Set-Content .devbook/VERSION $ref; Remove-Item devbook.tar.gz
 ```
 
-Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/` and `skills/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`.
+Without a terminal, open the [list of releases](https://github.com/nitinraturi/devbook.raturi.in/tags) and download the ZIP of the newest tag. Copy its `instructions/`, `stacks/`, `templates/` and `skills/` folders and its `LICENSE-CC-BY-4.0` file into `.devbook/`, and write the tag name in `.devbook/VERSION`.
 
 </TabItem>
 </Tabs>
@@ -99,27 +104,35 @@ Start a new chat and ask which Devbook files the assistant is following. [Use De
 
 ## Update, clone or remove
 
+Before you update, read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries added since your version. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
+
 <Tabs syncKey="method">
 <TabItem label="Submodule (tracks updates)">
 
 ```sh
-git submodule update --remote .devbook       # pull the latest Devbook, then commit the change
-git clone --recurse-submodules <your-repo>   # clone a project that uses Devbook
-git submodule update --init                  # fetch .devbook in an existing clone
-git rm .devbook                              # remove; then delete the Devbook section and links
+git -C .devbook describe --tags                                # the version you use
+git -C .devbook fetch --tags                                   # fetch new releases
+git -C .devbook tag -l 'v*' --sort=-version:refname | head -n5 # list the newest
+git -C .devbook diff HEAD v2026.12.01 -- CHANGELOG.md          # what changed up to that release
+git -C .devbook checkout -q v2026.12.01 && git add .devbook    # move to it, then commit
+git clone --recurse-submodules <your-repo>                     # clone a project that uses Devbook
+git submodule update --init                                    # fetch .devbook in an existing clone
+git rm .devbook                                                # remove; then delete the Devbook section and links
 ```
+
+If you follow `main`, update with `git submodule update --remote .devbook` instead. To pin a submodule that follows `main`, run `git config -f .gitmodules --unset submodule..devbook.branch`, then check out a tag as above.
 
 </TabItem>
 <TabItem label="Copy (plain files)">
 
-Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/`, the Devbook section of `AGENTS.md` and the `devbook-*` links in `.claude/` and `.github/instructions/`.
+`.devbook/VERSION` shows the version you use. Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/`, the Devbook section of `AGENTS.md` and the `devbook-*` links in `.claude/` and `.github/instructions/`.
 
 To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then run the submodule command.
 
 </TabItem>
 </Tabs>
 
-Devbook has no version pins. Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade.
+Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade. If a release doesn't suit your project yet, stay on the previous tag.
 
 ## License
 
