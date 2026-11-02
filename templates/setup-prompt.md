@@ -18,7 +18,7 @@ v2026.11.02 pins that one, and "main" follows every change.)
   For main, run instead:
   git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook
 - Copy: from the repository root, run, with <tag> replaced by the tag or main:
-  REF=<tag> && P=devbook.raturi.in-${REF#v} && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$REF | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/LICENSE-CC-BY-4.0 && echo $REF > .devbook/VERSION
+  REF=<tag> && P=devbook.raturi.in-${REF#v} && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/$REF | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 && echo $REF > .devbook/VERSION
   On Windows PowerShell, use the PowerShell command from
   https://devbook.raturi.in/start-here/setup/ instead.
   Don't edit the copied files. Put project rules in AGENTS.md instead.
@@ -27,4 +27,6 @@ v2026.11.02 pins that one, and "main" follows every change.)
 2. Connect it
 - Read .devbook/skills/devbook-setup/SKILL.md and follow it. It chooses
   the instruction files, writes AGENTS.md, CLAUDE.md and the Copilot file,
-  and links path rules and skills. Do not commit, push or deploy.
+  links path rules and skills, and asks me about the optional enforcement
+  kit. Do not install the kit unless I say yes. Do not commit, push or
+  deploy.
