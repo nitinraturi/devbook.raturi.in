@@ -32,24 +32,24 @@ The empty `previews` block in `wrangler.jsonc` enables [Workers Previews](https:
 
 Devbook ships from `main`; there are no tags and no other branches to install from. The `VERSION` file holds the version number, and it goes up only with a release, so projects are told to upgrade only when something they load changed.
 
-**What releases.** A push to `main` that changes a shipped path (`instructions/`, `stacks/`, `skills/`, `templates/`, `kit/`, `LICENSE-CC-BY-4.0`, `CHANGELOG.md`, `devbook.manifest.json`), or a manual run of the Release workflow. Site, eval and CI changes don't release.
+**What releases.** A push to `main` that changes a shipped path (`core/`, `catalog/`, `prompt/`, `optional/`, `.claude-plugin/`, `LICENSE-CC-BY-4.0`, `CHANGELOG.md`), or a manual run of the Release workflow. Site, eval and CI changes don't release.
 
-**The gates**, in order: `npm run check`; then `scripts/release-gate.mjs`, which compares with the last release (the newest commit that changed `VERSION`) and needs shipped changes since then, a `CHANGELOG.md` entry that release didn't have, and a modelled eval (`evals/model.mjs`, free and deterministic) with no task whose pass rate fell. The tolerance is 0, because modelled runs don't vary; widen it in the script only with evidence once measured runs join the gate.
+**The gates**, in order: `npm run check`; then `scripts/release-gate.mjs`, which compares with the last release (the newest commit that changed `VERSION`) and needs shipped changes since then, a `CHANGELOG.md` entry that release didn't have, and, once a measured eval is committed in `evals/results/`, no core case in the newest one where Devbook scored below no Devbook (Δ < 0).
 
-**Then** the workflow raises `VERSION` (`scripts/bump-version.mjs`: the UTC date `YYYY.MM.DD`, then `.1`, `.2` the same day) and commits `chore(release): <version>` to `main`. Don't edit `VERSION` by hand.
+**Then** the workflow raises `VERSION` (`scripts/bump-version.mjs`: the UTC date `YYYY.MM.DD`, then `.1`, `.2` the same day) and regenerates the prompt (`scripts/build-prompt.mjs`), whose core-block markers carry the version, and commits `chore(release): <version>` to `main`. Don't edit `VERSION` by hand.
 
 **One-time setup** (the owner):
 
-1. Create a GitHub App (Settings → Developer settings → GitHub Apps) with no webhook and one repository permission, **Contents: Read and write**. Install it on this repository only.
+1. Create a GitHub App (Settings → Developer settings → GitHub Apps) with no webhook and two repository permissions, **Contents: Read and write** and **Pull requests: Read and write** (the drift and eval workflows open pull requests). Install it on this repository only.
 2. Save its client ID as the `RELEASE_APP_CLIENT_ID` Actions variable and a private key as the `RELEASE_APP_PRIVATE_KEY` secret (`gh variable set` / `gh secret set`, pasting into the prompt, never as a command argument).
 3. In Settings → Rules, add the App as a bypass actor on the `main` ruleset, so it can push the `VERSION` commit.
 4. Delete the old `VERSION_PUSH_TOKEN` secret and revoke that token.
 
-Until step 2 is done, the Release and Sources workflows are skipped, not failed; release by hand meanwhile with `node scripts/release-gate.mjs` and `node scripts/bump-version.mjs`, committing `chore(release): <version>`. The scheduled Claude reviews and triage also stay off until you save `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) as a secret and set the `CLAUDE_REVIEWS` variable to `true`. The monthly modelled eval and the digest need neither.
+Until step 2 is done, the Release workflow is skipped, not failed, and the Drift workflow only writes its report to the run summary; release by hand meanwhile with `node scripts/release-gate.mjs`, `node scripts/bump-version.mjs` and `node scripts/build-prompt.mjs`, committing `chore(release): <version>`. The scheduled Claude reviews and triage stay off until you save `CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) as a secret and set the `CLAUDE_REVIEWS` variable to `true`. The monthly measured evals also need the `MEASURED_EVALS` variable set to `true`, because they spend subscription usage. The digest needs none of these.
 
 For a change to shipped files:
 
-1. In the same PR, add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something, and commit the modelled results (`npm run evals:model -- --variant main,local`).
+1. In the same PR, run `npm run prompt`, and add a dated `CHANGELOG.md` entry, with an **Upgrade** note where projects must change something.
 2. Merge the PR. The Release workflow raises `VERSION` if the gates pass, and projects see the new version when they next check.
 3. Deploy the site if it changed (`npm run deploy`).
 
@@ -57,7 +57,7 @@ For a change to shipped files:
 
 ```bash
 npm ci
-npm run check        # format, lint, typecheck, descriptions, size budgets, contrast, build, Playwright + axe
+npm run check        # format, lint, typecheck, descriptions, prompt and catalog, eval cases, skills, contrast, build, Playwright + axe
 npm run lhci         # Lighthouse budgets (needs Chrome; set CHROME_PATH if not found)
 npm run preview      # serve dist/ with the real _headers on http://127.0.0.1:4324
 ```

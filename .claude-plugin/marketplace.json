@@ -1,0 +1,32 @@
+{
+  "name": "devbook",
+  "description": "Devbook's opt-in domain skills: the ones with no maintained vendor equivalent. Install only the ones a project needs.",
+  "owner": { "name": "Nitin Raturi", "url": "https://devbook.raturi.in" },
+  "plugins": [
+    {
+      "name": "api-design",
+      "source": "./optional/plugins/api-design",
+      "description": "Adds or changes REST endpoints: contract first, problem-details errors, pagination, idempotency, ETags and webhooks."
+    },
+    {
+      "name": "db-migration",
+      "source": "./optional/plugins/db-migration",
+      "description": "Plans and writes safe relational schema changes: constraints, indexes and expand-migrate-contract across deploys."
+    },
+    {
+      "name": "feature-doc",
+      "source": "./optional/plugins/feature-doc",
+      "description": "Writes and maintains FEATURE.md docs with EARS rules, flow and a file map, and only when a feature needs one."
+    },
+    {
+      "name": "licensing",
+      "source": "./optional/plugins/licensing",
+      "description": "Checks licences of dependencies, assets and copied code with SPDX identifiers; a human chooses the project licence."
+    },
+    {
+      "name": "llm-security",
+      "source": "./optional/plugins/llm-security",
+      "description": "Secures features that call a language model: untrusted input and output, enforced permissions, minimal data and caps."
+    }
+  ]
+}

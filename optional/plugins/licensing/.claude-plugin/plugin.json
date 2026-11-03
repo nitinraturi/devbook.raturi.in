@@ -1,0 +1,8 @@
+{
+  "name": "licensing",
+  "description": "Checks licences of dependencies, assets and copied code with SPDX identifiers; a human chooses the project licence.",
+  "author": { "name": "Nitin Raturi", "url": "https://devbook.raturi.in" },
+  "homepage": "https://devbook.raturi.in/optional-skills/",
+  "repository": "https://github.com/nitinraturi/devbook.raturi.in",
+  "license": "CC-BY-4.0"
+}

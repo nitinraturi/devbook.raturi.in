@@ -138,36 +138,6 @@ nav.sidebar .large {
 	box-shadow: inset 2px 0 0 var(--dvb-accent);
 }
 
-/* Signature element: rule IDs as margin clause numbers (added by scripts/postbuild-html.mjs). */
-.sl-markdown-content ul:has(> li.dvb-rule) {
-	padding-inline-start: 0;
-	border-top: 1px solid var(--dvb-rule);
-}
-.sl-markdown-content li.dvb-rule {
-	position: relative;
-	margin: 0;
-	padding-block: 0.7rem;
-	list-style: none;
-	border-bottom: 1px solid var(--dvb-rule);
-}
-.dvb-rule-id {
-	display: block;
-	font-family: var(--__sl-font-mono);
-	font-size: var(--dvb-label);
-	letter-spacing: 0.02em;
-	color: var(--dvb-accent-text);
-}
-@media (min-width: 50rem) {
-	.sl-markdown-content li.dvb-rule {
-		padding-inline-start: 6rem;
-	}
-	.dvb-rule-id {
-		position: absolute;
-		inset-inline-start: 0;
-		top: 0.95rem;
-	}
-}
-
 /* Page title extras: verified date, sources and the Markdown actions. */
 .dvb-verified {
 	margin-top: var(--dvb-space-1);
@@ -294,42 +264,11 @@ nav.sidebar .large {
 	border-radius: var(--dvb-radius);
 	background: var(--dvb-surface-sunken);
 }
-.dvb-quick-start-intro {
-	max-width: 70ch;
-	color: var(--dvb-ink);
-}
 .dvb-quick-start pre {
 	max-height: 30rem;
 }
-.sl-markdown-content .dvb-quick-start-notes {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
-	gap: var(--dvb-space-2) var(--dvb-space-3);
-	margin: var(--dvb-space-3) 0 0;
-	padding: 0;
-	list-style: none;
-	counter-reset: step;
-}
-.sl-markdown-content .dvb-quick-start-notes li {
-	margin: 0;
-	padding-top: var(--dvb-space-1);
-	border-top: 1px solid var(--dvb-rule);
-	color: var(--dvb-ink-muted);
-	font-size: var(--sl-text-sm);
-	counter-increment: step;
-}
-.dvb-quick-start-notes li::before {
-	content: counter(step, decimal-leading-zero);
-	display: block;
-	font-family: var(--__sl-font-mono);
-	font-size: var(--dvb-label);
-	color: var(--dvb-accent-text);
-}
-.dvb-quick-start-notes strong {
-	color: var(--dvb-ink-strong);
-}
 
-/* "What the prompt creates": three short notes under the template, separated by rules. */
+/* "The core block": three short notes under the block, separated by rules. */
 .sl-markdown-content .dvb-home-layer-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
@@ -395,10 +334,6 @@ nav.sidebar .large {
 	color: var(--dvb-ink-muted);
 	font-size: var(--sl-text-sm);
 }
-.sl-markdown-content .dvb-flow-subhead {
-	margin: var(--dvb-space-6) 0 0;
-	font-size: var(--sl-text-h4);
-}
 .sl-markdown-content .dvb-flow-tiers {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
@@ -421,89 +356,10 @@ nav.sidebar .large {
 	text-transform: uppercase;
 }
 
-.sl-markdown-content .dvb-skill-list {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-	gap: 0 var(--dvb-space-3);
-	margin: var(--dvb-space-2) 0 0;
-	padding: 0;
-	list-style: none;
-	border-top: 1px solid var(--dvb-ink-strong);
-}
-.sl-markdown-content .dvb-skill-list li {
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
-	margin: 0;
-	padding: var(--dvb-space-1) 0;
-	border-bottom: 1px solid var(--dvb-rule);
-}
-.sl-markdown-content .dvb-skill-list li > span {
-	color: var(--dvb-ink-muted);
-	font-size: var(--sl-text-sm);
-}
 .sl-markdown-content .dvb-skill-note {
 	margin-top: var(--dvb-space-2);
 	color: var(--dvb-ink-muted);
 	font-size: var(--sl-text-sm);
-}
-
-/* Instruction index: a ruled table of contents. */
-.sl-markdown-content .dvb-index {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	border-top: 1px solid var(--dvb-ink-strong);
-}
-.sl-markdown-content .dvb-index > li {
-	display: grid;
-	grid-template-columns: 4.5rem minmax(0, 1fr);
-	gap: 0.15rem var(--dvb-space-2);
-	margin: 0;
-	padding-block: 0.85rem;
-	border-bottom: 1px solid var(--dvb-rule);
-}
-.sl-markdown-content .dvb-index > li > * {
-	margin: 0;
-}
-.dvb-index-prefix,
-.dvb-index-loads {
-	font-family: var(--__sl-font-mono);
-	font-size: var(--dvb-label);
-	letter-spacing: 0.04em;
-}
-.dvb-index-prefix {
-	padding-top: 0.3rem;
-	color: var(--dvb-accent-text);
-}
-.dvb-index-loads {
-	grid-column: 2;
-	color: var(--dvb-ink-muted);
-}
-.sl-markdown-content .dvb-index a {
-	color: var(--dvb-ink-strong);
-	font-size: var(--sl-text-lg);
-	font-weight: 600;
-	text-decoration: none;
-}
-.sl-markdown-content .dvb-index a:hover {
-	color: var(--dvb-accent-text);
-	text-decoration: underline;
-}
-.sl-markdown-content .dvb-index p {
-	margin: 0.15rem 0 0;
-	color: var(--dvb-ink-muted);
-	font-size: var(--sl-text-sm);
-}
-@media (min-width: 50rem) {
-	.sl-markdown-content .dvb-index > li {
-		grid-template-columns: 4.5rem minmax(0, 1fr) 8rem;
-	}
-	.dvb-index-loads {
-		grid-column: auto;
-		padding-top: 0.3rem;
-		text-align: end;
-	}
 }
 
 /* History timeline (homepage and /about/). */
@@ -640,20 +496,4 @@ nav.sidebar .large {
 	.dvb-actions button {
 		transition: none;
 	}
-}
-
-/* Homepage: the eval result under the hero, and the three terms before "What loads". */
-.sl-markdown-content .dvb-home-claim {
-	max-width: 65ch;
-	margin: 0 0 var(--dvb-space-4);
-	padding-left: var(--dvb-space-2);
-	border-left: 3px solid var(--dvb-accent);
-	color: var(--dvb-ink);
-	text-wrap: pretty;
-}
-.sl-markdown-content .dvb-home-terms {
-	max-width: 65ch;
-	margin-top: var(--dvb-space-2);
-	padding-left: var(--dvb-space-3);
-	color: var(--dvb-ink-muted);
 }

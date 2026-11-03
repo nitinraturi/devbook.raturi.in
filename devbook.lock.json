@@ -1,0 +1,70 @@
+{
+  "devbook": "2026.11.02.5",
+  "host": ["claude-code"],
+  "stack": ["node", "npm", "typescript", "astro", "starlight", "cloudflare-workers"],
+  "core_block_sha256": "6c92b347338b465c1a1aaac10bb820279c93cb259db206e351d4c7196f44ebec",
+  "commands": {
+    "format": "npm run format",
+    "lint": "npm run lint",
+    "typecheck": "npm run typecheck",
+    "test": "npm run test:scripts && npm run test:e2e",
+    "build": "npm run build",
+    "all": "npm run check"
+  },
+  "sources": [
+    {
+      "id": "security-guidance",
+      "type": "plugin",
+      "repo": "anthropics/claude-plugins-official",
+      "ref": "vendor-channel",
+      "installed_to": ".claude/settings.json (enabledPlugins, project scope)",
+      "why": "Security warnings on edits, as hooks; does not count toward the cap",
+      "scan": "not-run"
+    },
+    {
+      "id": "cloudflare",
+      "type": "plugin",
+      "repo": "cloudflare/skills",
+      "ref": "vendor-channel",
+      "installed_to": ".claude/settings.json (enabledPlugins, project scope)",
+      "why": "The site runs on Cloudflare Workers (wrangler.jsonc)",
+      "scan": "not-run"
+    },
+    {
+      "id": "format-on-edit",
+      "type": "hook",
+      "repo": "nitinraturi/devbook.raturi.in",
+      "ref": "local",
+      "installed_to": ".claude/hooks/format.mjs",
+      "why": "Runs the repository Prettier on each edited file",
+      "scan": "pass"
+    },
+    {
+      "id": "permissions",
+      "type": "hook",
+      "repo": "nitinraturi/devbook.raturi.in",
+      "ref": "local",
+      "installed_to": ".claude/settings.json (permissions)",
+      "why": "Deny git push and .env reads; ask before CI, deploy and header edits or deploy commands",
+      "scan": "pass"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "typescript-lsp",
+      "why": "typescript-language-server is not on PATH"
+    },
+    {
+      "id": "web-design-guidelines",
+      "why": "Fetches its rules at run time from an unpinned URL; retired in the catalog"
+    },
+    {
+      "id": "stop-hook",
+      "why": "Declined: lint already runs in npm run check and CI"
+    },
+    {
+      "id": "docs-mcp",
+      "why": "Astro docs MCP is suggest-only in the catalog"
+    }
+  ]
+}

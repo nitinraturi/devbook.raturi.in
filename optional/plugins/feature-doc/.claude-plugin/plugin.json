@@ -1,0 +1,8 @@
+{
+  "name": "feature-doc",
+  "description": "Writes and maintains FEATURE.md docs with EARS rules, flow and a file map, and only when a feature needs one.",
+  "author": { "name": "Nitin Raturi", "url": "https://devbook.raturi.in" },
+  "homepage": "https://devbook.raturi.in/optional-skills/",
+  "repository": "https://github.com/nitinraturi/devbook.raturi.in",
+  "license": "CC-BY-4.0"
+}

@@ -1,30 +1,18 @@
 import AxeBuilder from '@axe-core/playwright';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 
-// Home, the start-here guides, every instruction file, one stack note, plus privacy.
+// Home, every guide, the catalog and evals, plus privacy.
 const PAGES = [
 	'/',
 	'/start-here/how-it-works/',
 	'/start-here/setup/',
 	'/start-here/using-devbook/',
-	'/start-here/skills-and-instructions/',
-	'/start-here/enforcement-kit/',
+	'/catalog/',
+	'/optional-skills/',
+	'/evals/',
 	'/about/',
 	'/start-here/writing-instructions/',
-	'/instructions/core/',
-	'/instructions/security/',
-	'/instructions/testing/',
-	'/instructions/performance/',
-	'/instructions/api-data/',
-	'/instructions/database/',
-	'/instructions/design/',
-	'/instructions/seo/',
-	'/instructions/content/',
-	'/instructions/mobile/',
-	'/instructions/licensing/',
-	'/instructions/feature-docs/',
-	'/stacks/astro/',
 	'/license/',
 	'/privacy/',
 ];
@@ -43,29 +31,36 @@ const codeText = async (page: Page, title: string) => {
 		.trim();
 };
 
-test('homepage shows the complete setup prompt and AGENTS.md template', async ({ page, request }) => {
-	const prompt = (await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8')).trim();
-	const agents = (await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8')).trim();
+test('homepage shows the complete bootstrap prompt and core block', async ({ page, request }) => {
+	const prompt = (await readFile(new URL('../../prompt/bootstrap.md', import.meta.url), 'utf8')).trim();
+	const core = (await readFile(new URL('../../core/AGENTS.core.md', import.meta.url), 'utf8')).trim();
 	await page.goto('/');
 	await expect(
 		page
 			.locator('.expressive-code')
-			.filter({ hasText: 'Paste into Claude or Copilot' })
+			.filter({ hasText: 'Paste into your coding agent' })
 			.getByRole('button', { name: 'Copy to clipboard' }),
 	).toBeAttached();
-	expect(await codeText(page, 'Paste into Claude or Copilot')).toBe(prompt);
-	expect(await codeText(page, 'AGENTS.md (template)')).toBe(agents);
+	expect(await codeText(page, 'Paste into your coding agent')).toBe(prompt);
+	expect(await codeText(page, 'AGENTS.md (Devbook block)')).toBe(core);
 	expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
 	expect(await (await request.get('/index.md')).text()).toContain(prompt);
 });
 
-test('every Devbook path in the AGENTS.md template exists in the repo', async () => {
-	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
-	const paths = [...agents.matchAll(/^(?:@|- `)\.devbook\/([^\s`]+)/gm)]
-		.map((m) => m[1]!)
-		.filter((p) => !p.includes('<'));
-	expect(paths.length).toBeGreaterThanOrEqual(12);
-	for (const p of paths) await expect(readFile(new URL(`../../${p}`, import.meta.url), 'utf8')).resolves.toBeTruthy();
+test('the catalog page links every adopted, suggested and retired source', async ({ page, request }) => {
+	const catalog = JSON.parse(await readFile(new URL('../../catalog/sources.json', import.meta.url), 'utf8'));
+	await page.goto('/catalog/');
+	const md = await (await request.get('/catalog/index.md')).text();
+	for (const u of catalog.upstreams) {
+		await expect(page.locator(`a[href="https://github.com/${u.repo}"]`).first()).toBeAttached();
+		expect(md).toContain(`[${u.title}](https://github.com/${u.repo})`);
+	}
+});
+
+test('every optional skill in the marketplace is on the optional skills page', async ({ page }) => {
+	const market = JSON.parse(await readFile(new URL('../../.claude-plugin/marketplace.json', import.meta.url), 'utf8'));
+	await page.goto('/optional-skills/');
+	for (const p of market.plugins) await expect(page.getByRole('link', { name: p.name, exact: true })).toBeAttached();
 });
 
 /** Collects CSP violations and uncaught errors so a strict CSP cannot silently break the page. */
@@ -114,13 +109,13 @@ for (const path of PAGES) {
 
 test('dark theme passes axe', async ({ page }) => {
 	await page.emulateMedia({ colorScheme: 'dark' });
-	await page.goto('/instructions/security/');
+	await page.goto('/catalog/');
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 	expect(await axe(page)).toEqual([]);
 });
 
-test('stack pages show the last-verified date', async ({ page }) => {
-	await page.goto('/stacks/astro/');
+test('the catalog shows its last-verified date', async ({ page }) => {
+	await page.goto('/catalog/');
 	await expect(page.locator('.dvb-verified time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/);
 });
 
@@ -137,7 +132,7 @@ test('search returns results under the production CSP', async ({ page, isMobile 
 
 test('theme toggle switches to light and persists', async ({ page, isMobile }) => {
 	test.skip(isMobile, 'Theme select lives in the mobile menu; covered on desktop.');
-	await page.goto('/instructions/core/');
+	await page.goto('/catalog/');
 	await page.locator('starlight-theme-select select').first().selectOption('light');
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 	await page.reload();
@@ -153,30 +148,6 @@ test('unknown URL serves the custom 404', async ({ page }) => {
 	expect(await axe(page)).toEqual([]);
 });
 
-test('every instruction file is listed in the AGENTS.md template and on the homepage', async ({ page }) => {
-	const agents = await readFile(new URL('../../templates/AGENTS.md', import.meta.url), 'utf8');
-	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
-	await page.goto('/');
-	for (const f of files) {
-		expect(agents).toContain(`.devbook/instructions/${f}`);
-		await expect(page.locator(`a[href="/instructions/${f.replace(/\.md$/, '')}/"]`).first()).toBeAttached();
-	}
-});
-
-test('the setup skill names every instruction file and links every path-scoped one', async () => {
-	const skill = await readFile(new URL('../../skills/devbook-setup/SKILL.md', import.meta.url), 'utf8');
-	const files = (await readdir(new URL('../../instructions/', import.meta.url))).filter((f) => f.endsWith('.md'));
-	for (const f of files) {
-		const name = f.replace(/\.md$/, '');
-		expect(skill).toMatch(new RegExp(`\\b${name}\\b`));
-		const text = await readFile(new URL(`../../instructions/${f}`, import.meta.url), 'utf8');
-		if (/^paths:/m.test(text))
-			expect(skill, `${name} has paths, so setup must link it`).toMatch(new RegExp(`\\b${name}\\b[^\\n]*By file path`));
-	}
-	for (const s of await readdir(new URL('../../skills/', import.meta.url)))
-		if (s !== 'devbook-setup') expect(skill).toContain(s);
-});
-
 test('license page shows the full LICENSE text', async ({ page }) => {
 	const license = (await readFile(new URL('../../LICENSE', import.meta.url), 'utf8')).trim();
 	await page.goto('/license/');
@@ -185,27 +156,15 @@ test('license page shows the full LICENSE text', async ({ page }) => {
 	await expect(page.locator('footer a[href="/license/"], .dvb-site-footer a[href="/license/"]').first()).toBeAttached();
 });
 
-test('setup page method tabs switch between submodule and copy', async ({ page }) => {
-	await page.goto('/start-here/setup/');
-	const copyTab = page.getByRole('tab', { name: 'Copy (plain files)' }).first();
-	await expect(copyTab).toBeVisible();
-	await copyTab.click();
-	await expect(page.getByText('codeload.github.com').first()).toBeVisible();
-	await expect(page.getByRole('tab', { name: 'Copy (plain files)' }).last()).toHaveAttribute('aria-selected', 'true');
-	expect(await axe(page)).toEqual([]);
-});
-
-test('page Markdown is served and setup includes the templates', async ({ request }) => {
+test('page Markdown is served and setup includes the prompt', async ({ request }) => {
 	const res = await request.get('/start-here/setup/index.md');
 	expect(res.status()).toBe(200);
 	expect(res.headers()['content-type']).toContain('text/markdown');
 	const md = await res.text();
 	expect(md).toMatch(/^# Setup\n/);
-	expect(md).toContain('@.devbook/instructions/core.md');
-	const prompt = await readFile(new URL('../../templates/setup-prompt.md', import.meta.url), 'utf8');
-	const copyCommand = prompt.match(/(rm -rf \.devbook .+)$/m)?.[1];
-	expect(copyCommand).toBeTruthy();
-	expect(md).toContain(copyCommand!);
+	const prompt = await readFile(new URL('../../prompt/bootstrap.md', import.meta.url), 'utf8');
+	expect(md).toContain(prompt.trim().split('\n').at(-1)!);
+	expect(md).toContain('<!-- BEGIN:devbook-core');
 	expect(md).not.toContain('import ');
 });
 
@@ -232,7 +191,7 @@ test('security headers are applied', async ({ request }) => {
 });
 
 test('staleness notice is decided when the page is viewed, not when it was built', async ({ page }) => {
-	await page.goto('/stacks/astro/');
+	await page.goto('/catalog/');
 	const notice = page.locator('[data-stale-notice]');
 	const verified = Date.parse((await notice.getAttribute('data-verified'))!);
 	const days = Number(await notice.getAttribute('data-stale-days'));

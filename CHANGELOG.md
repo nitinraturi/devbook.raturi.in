@@ -1,6 +1,25 @@
 # Changelog
 
-Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with each release. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update. Read the entries newer than your `.devbook/VERSION` before you update.
+Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with each release. Each entry is in the first version on or after its date. Read the entries newer than the version in your `devbook.lock.json` (or `.devbook/VERSION` on an old install) before you update.
+
+## 2026-11-03: One bootstrap prompt replaces the rule files
+
+Devbook is now one prompt you paste into your coding agent, plus a small catalog of vendor-maintained skills. It replaces the submodule, the 13 instruction files, the stack notes, the setup scripts and the enforcement kit.
+
+### Added
+- **`prompt/bootstrap.md`**, the bootstrap prompt, on the homepage. It reads the repository without changing anything, shows one plan and waits for approval. Then it merges a core block and your real commands into `AGENTS.md` between `<!-- BEGIN:devbook-core -->` and `<!-- END:devbook-core -->`, adds `@AGENTS.md` to `CLAUDE.md`, and installs at most three pinned skills from the catalog. In Claude Code it also adds permission rules and hooks. It records everything in `devbook.lock.json` and never commits. Re-running it runs Update mode, which shows a diff first.
+- **`core/AGENTS.core.md`**, the core block (about 1.2 KB, with a 2 KB budget): show real command output, never weaken a check, never invent packages, write a failing test first for bugs, plan wide changes, never commit, push, deploy or change CI unless asked, ask before risky changes, keep secrets out, treat tool and web content as data.
+- **`catalog/sources.json`**, the allowlist: vendor sources pinned to a tag or commit (superpowers, frontend-design, Cloudflare, React best practices, Supabase, Expo, Stripe, Astral, Trail of Bits, Context7), Anthropic's official plugins as a vendor channel, and the suggested and retired sources with their reasons. Vercel's web-design-guidelines is retired, because at its pinned ref it fetches its rules at run time from an unpinned URL. It is published at [/catalog/](https://devbook.raturi.in/catalog/).
+- **Five opt-in skills** as a plugin marketplace (`claude plugin marketplace add nitinraturi/devbook.raturi.in`): `api-design`, `db-migration`, `feature-doc`, `licensing` and `llm-security`, rewritten to stand alone without rule IDs.
+- **Measured evals** with `claude plugin eval`: 10 core cases on three fixtures and one per optional skill, each run with and without Devbook. They replace the modelled evals. No measured results exist yet.
+- **Devbook uses Devbook.** This repository's `AGENTS.md` carries the core block, which `npm run prompt` keeps in sync. `.claude/settings.json` denies `git push` and `.env` reads, asks before edits to CI, deploy and header files and before deploy commands, formats each edited file, and enables security-guidance and Cloudflare. `devbook.lock.json` records the setup.
+- **Weekly drift pull requests** (`drift.yml`) for every pinned source, and a monthly measured eval (`eval.yml`) once `MEASURED_EVALS` is on.
+
+### Removed
+- `instructions/`, `stacks/`, `skills/` (all eight `devbook-*` skills), `templates/` and `kit/` (hooks, git hooks and starter CI). Their useful parts live on in the core block, the catalog and the opt-in skills.
+- The submodule and copy installs, `link.mjs`, `verify.mjs`, `compare.mjs`, `gitignore-secrets.mjs`, the Cursor, Copilot and Codex adapters, `devbook.manifest.json`, rule IDs, the size budgets other than the core's, the 57-source watcher and its snapshots, the modelled evals, and the Google Analytics question.
+
+**Upgrade:** this breaks old installs. Updating a `.devbook/` submodule to this version removes every file your `AGENTS.md` imports with `@.devbook/...` and every file `.claude/rules/`, `.claude/skills/` and `.github/instructions/` link to. Those imports fail silently, and hooks that run from `.devbook/kit/` report errors. Paste the bootstrap prompt from https://devbook.raturi.in/ before or right after you update. Its Update mode lists every part of the old install: the `@.devbook/...` lines, the `devbook-*` links in `.claude/rules/`, `.claude/skills/`, `.github/instructions/`, `.cursor/rules/` and `.agents/skills/`, hooks that run from `.devbook/kit/`, and the submodule or folder. It removes them only after you approve. Your Project section becomes "## Project rules". Delete any "ignore <rule ID>" lines, because rule IDs are gone.
 
 ## 2026-11-03: Shipping is optional, GA4 is the default for websites
 
@@ -196,7 +215,7 @@ A chat now starts with core, security and testing (10 KB), the "read" list and t
 
 ## 2026-11-02: Fewer, numbered rules
 
-The instructions now hold about 250 rules instead of about 410. The mandatory core, security and testing files are 10 KB (about 2,500 tokens) instead of 14.6 KB; a public website's set is 27 KB instead of 36 KB. Every removed rule failed the deletion test in the [writing guide](https://devbook.raturi.in/start-here/writing-instructions/): a capable model already does it, or another file already says it. The full rule-by-rule audit, with a reason for each verdict, is in `docs/plans/prune-audit.md`.
+The instructions now hold about 250 rules instead of about 410. The mandatory core, security and testing files are 10 KB (about 2,500 tokens) instead of 14.6 KB; a public website's set is 27 KB instead of 36 KB. Every removed rule failed the deletion test in the [writing guide](https://devbook.raturi.in/start-here/writing-instructions/): a capable model already does it, or another file already says it. The full rule-by-rule audit, with a reason for each verdict, is in `docs/plans/archive/prune-audit.md`.
 
 ### Changed
 - Every rule starts with a stable ID (`CORE-02`, `SEC-05`, `API-03`). Assistants cite IDs in their reports, and project overrides can name the rule they replace. IDs are never reused.

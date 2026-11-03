@@ -8,10 +8,11 @@ You'll get an acknowledgement within 7 days. Once a fix is ready, it ships in a 
 
 ## What counts
 
-- **The enforcement kit and scripts** (`kit/`, `skills/*/scripts/`, `scripts/`): anything that runs code in a project, such as a hook that can be bypassed into allowing what it should block, or a script that writes outside the project.
-- **Instruction text** that steers assistants into insecure code, such as a rule that weakens a security default. Name the rule ID.
+- **The bootstrap prompt and the catalog** (`prompt/`, `catalog/`): a step that can be steered into installing from outside the allowlist, touching CI or deploy config, or reading secrets; or a catalog source that ships something malicious.
+- **The core block and the optional skills** (`core/`, `optional/`): text that steers agents into insecure code.
+- **Code that runs in a project**: the hooks the prompt writes and the scripts (`scripts/`).
 - **The site** (devbook.raturi.in) and this repository's workflows.
 
 ## Supported versions
 
-Only the latest version on `main` gets fixes. Upgrade with "Is Devbook up to date?" or `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`.
+Only the latest version on `main` gets fixes. Re-run the bootstrap prompt to update; its Update mode shows what changed.

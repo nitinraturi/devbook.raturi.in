@@ -2,19 +2,16 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { posix } from 'node:path';
 import { changelogDays, formatDay } from '../../lib/changelog';
-import { latestResults, pct, resultsDate, taskCount, tokens } from '../../lib/evals';
-import { instructionRows, skillRows, stackTitles } from '../../lib/instruction-index';
+import { hostLabel, refLabel, repoUrl, upstreams } from '../../lib/catalog';
+import { delta, latest, score } from '../../lib/evals';
 
 // Serves each docs page's source as Markdown at <page>/index.md, used by the
 // "Copy page as Markdown" button. MDX components are turned into plain Markdown so the
 // file has the same content as the page: <Code> with a `?raw` import becomes a fenced
-// block, <Tabs> become headings, <Steps> the list inside, <Aside> a blockquote and
-// <CardGrid>/<LinkCard>/<Card> a link list, <History> the changelog timeline and
-// <InstructionIndex> the list of instruction files, <ManifestFiles>, <SkillIndex>, <EvalResults> and
-// <EvalClaim> their tables or sentence, and {taskCount()}/{resultsDate()} their values. scripts/check-markdown.mjs fails the build
-// if a component is left over.
+// block, <History> the changelog timeline, and <Catalog> and <EvalResults> their tables.
+// scripts/check-markdown.mjs fails the build if a component is left over.
 
-const raw = import.meta.glob<string>(['/templates/*.md', '/LICENSE', '/CHANGELOG.md'], {
+const raw = import.meta.glob<string>(['/prompt/bootstrap.md', '/core/AGENTS.core.md', '/LICENSE', '/CHANGELOG.md'], {
 	query: '?raw',
 	import: 'default',
 	eager: true,
@@ -25,13 +22,11 @@ export const getStaticPaths = (async () => {
 	return docs.map((entry) => ({ params: { slug: entry.id === 'index' ? undefined : entry.id }, props: { entry } }));
 }) satisfies GetStaticPaths;
 
-const attr = (tag: string, name: string) => tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
-
-function fence(code: string, lang: string, title: string | undefined, indent: string) {
+function fence(code: string, lang: string, title: string | undefined) {
 	const longest = Math.max(2, ...[...code.matchAll(/`{3,}/g)].map((m) => m[0].length));
 	const f = '`'.repeat(longest + 1);
 	const lines = [`${f}${lang}${title ? ` title="${title}"` : ''}`, ...code.trimEnd().split('\n'), f];
-	return lines.map((l) => (l ? indent + l : l)).join('\n');
+	return lines.join('\n');
 }
 
 /** The <History> timeline as a list: one item per day, with the day's entries nested. */
@@ -46,64 +41,36 @@ function history(perDay: number | undefined) {
 		.join('\n');
 }
 
-/** The <InstructionIndex> as a list, one line per instruction file plus the stack notes. */
-async function instructionIndex() {
-	const rows = (await instructionRows()).map(
-		(row) => `- [${row.title}](${row.href}) (\`${row.prefix}\`, ${row.loads.toLowerCase()}): ${row.description}`,
-	);
-	const stacks = `- [Stack notes](/stacks/astro/) (by task): short notes for one technology each: ${(await stackTitles()).join(', ')}.`;
-	return [...rows, stacks].join('\n');
-}
-
-/** <ManifestFiles>, <SkillIndex>, <EvalResults> and <EvalClaim> as Markdown, from the same data as the components. */
-async function generated(tag: string): Promise<string | undefined> {
-	if (tag === '<ManifestFiles />') {
-		const rows = (await instructionRows()).map(
-			(r) =>
-				`| [${r.title}](${r.href}) | ${r.loadWhen} | ${r.tier === 'path' ? `Files like ${r.globs.slice(0, 4).join(', ')}` : r.loads} |`,
-		);
+/** <Catalog> and <EvalResults> as Markdown tables, from the same data as the components. */
+function generated(tag: string): string | undefined {
+	const catalog = tag.match(/^<Catalog status="(\w+)" \/>$/);
+	if (catalog) {
+		const adopted = catalog[1] === 'adopted';
+		const rows = upstreams
+			.filter((u) => u.status === catalog[1])
+			.map(
+				(u) =>
+					`| [${u.title}](${repoUrl(u)})${u.counts ? '' : ' (doesn’t count toward the cap)'} | ${adopted ? u.use : u.reason} | ${hostLabel(u)} | \`${refLabel(u.ref)}\` |`,
+			);
 		return [
-			'| File | Set it up when | Loads |',
-			'|---|---|---|',
-			...rows,
-			'| [Stack notes](/stacks/astro/) | You use that technology | By task |',
-		].join('\n');
-	}
-	if (tag === '<SkillIndex />') {
-		const rows = skillRows().map((r) => `| \`${r.name}\` | ${r.description} | ${r.linked} |`);
-		return ["| Skill | What it does, and when it's used | Linked in |", '|---|---|---|', ...rows].join('\n');
-	}
-	if (tag === '<EvalResults />') {
-		const rows = latestResults().map(
-			(r) =>
-				`| ${r.variant}${r.commit ? ` (\`${r.commit.replace('+local', '')}\`)` : ''} | ${pct(r.overall.passRate)} of ${r.overall.runs} | ${pct(r.overall.coverageLoaded ?? 0)} | ${pct(r.overall.coverageReachable ?? 0)} | ${tokens(r.overall.meanInputTokens)} |`,
-		);
-		return [
-			'| Devbook version | Tasks passed | Rules in context | Rules in reach | Devbook tokens per task |',
-			'|---|---|---|---|---|',
+			`| Source | ${adopted ? 'Use' : 'Why not installed'} | Hosts | Pinned to |`,
+			'|---|---|---|---|',
 			...rows,
 		].join('\n');
 	}
-	if (tag === '<EvalResults view="failures" />') {
-		const newest =
-			latestResults().find((r) => r.variant === 'local') ?? latestResults().find((r) => r.variant === 'main');
-		return Object.entries(newest?.tasks ?? {})
-			.filter(([, t]) => t.passRate < 1)
-			.map(([id, t]) => `- \`${id}\`: ${t.failed[0] ?? ''}`)
-			.join('\n');
-	}
-	if (tag === '<EvalClaim />') {
-		const results = latestResults();
-		const v1 = results.find((r) => r.variant === 'local') ?? results.find((r) => r.variant === 'main');
-		const before = results.find((r) => r.variant === 'ref:9504d10');
-		return v1 && before
-			? `In modelled evals on ${taskCount()} tasks, Devbook puts the rules each task needs in front of the assistant in ${pct(v1.overall.passRate)} of tasks, using ${tokens(v1.overall.meanInputTokens)} tokens per task, against ${pct(before.overall.passRate)} at ${tokens(before.overall.meanInputTokens)} tokens before the prune. [What was measured, and what wasn't](/evals/)`
-			: '';
+	const evals = tag.match(/^<EvalResults suite="([\w-]+)" \/>$/);
+	if (evals) {
+		const result = latest()?.suites[evals[1]!];
+		if (!result) return 'No measured results yet.';
+		const rows = result.cases.map(
+			(c) => `| \`${c.name}\` | ${score(c.with)} | ${score(c.without)} | ${delta(c.delta)} |`,
+		);
+		return ['| Case | With Devbook | Without | Δ |', '|---|---|---|---|', ...rows].join('\n');
 	}
 	return undefined;
 }
 
-async function toMarkdown(body: string, filePath: string | undefined, index: string) {
+async function toMarkdown(body: string, filePath: string | undefined) {
 	const dir = posix.dirname(`/${filePath ?? ''}`);
 	const imports = new Map<string, string>();
 	for (const m of body.matchAll(/^import\s+(\w+)\s+from\s+['"]([^'"]+)\?raw['"];?\s*$/gm)) {
@@ -113,86 +80,42 @@ async function toMarkdown(body: string, filePath: string | undefined, index: str
 
 	const out: string[] = [];
 	let inFence: string | undefined;
-	let heading = 1; // level of the last heading, so tab labels nest under it
-	let aside: string[] | undefined;
-	let squeeze = false; // drop the blank line after a removed wrapper tag if one already precedes it
-	let listIndent: number | undefined; // content column of the open list item, if any
 	for (const line of body.replace(/^import\s.+$\n?/gm, '').split('\n')) {
 		const marker = line.match(/^\s*(`{3,}|~{3,})/)?.[1];
 		if (inFence) {
 			if (marker && marker[0] === inFence[0] && marker.length >= inFence.length) inFence = undefined;
-			(aside ?? out).push(line);
+			out.push(line);
 			continue;
 		}
 		if (marker) {
 			inFence = marker;
-			(aside ?? out).push(line);
+			out.push(line);
 			continue;
 		}
-		if (squeeze && !line.trim() && !out.at(-1)?.trim()) continue;
-		squeeze = false;
-		const indent = line.match(/^\s*/)![0];
 		const tag = line.trim();
-		const h = line.match(/^(#{1,6})\s/);
-		if (h) heading = h[1]!.length;
-		const item = line.match(/^\s*(?:\d+\.|[-*+])\s+/);
-		if (item) listIndent = item[0].length;
-		else if (tag && indent.length < (listIndent ?? 0)) listIndent = undefined;
-
-		if (/^<\/?(Tabs|Steps|CardGrid)\b[^>]*>$/.test(tag) || tag === '</TabItem>') {
-			squeeze = true;
-			continue;
-		}
-		if (tag.startsWith('<TabItem')) {
-			out.push(`${'#'.repeat(Math.min(heading + 1, 6))} ${attr(tag, 'label') ?? ''}`);
-			continue;
-		}
-		if (tag.startsWith('<Aside')) {
-			const type = attr(tag, 'type') ?? 'note';
-			aside = [`**${attr(tag, 'title') ?? type[0]!.toUpperCase() + type.slice(1)}**`, ''];
-			continue;
-		}
-		if (tag === '</Aside>' && aside) {
-			out.push(...aside.map((l) => (l ? `> ${l}` : '>')));
-			aside = undefined;
-			continue;
-		}
-		if (/^<(LinkCard|Card)\b.*\/>$/.test(tag)) {
-			const [title, href, description] = ['title', 'href', 'description'].map((n) => attr(tag, n));
-			const label = href ? `[${title}](${href})` : `**${title}**`;
-			out.push(`- ${label}${description ? `: ${description}` : ''}`);
-			continue;
-		}
-		const made = await generated(tag);
+		const made = generated(tag);
 		if (made !== undefined) {
-			(aside ?? out).push(made);
-			continue;
-		}
-		if (tag === '<InstructionIndex />') {
-			(aside ?? out).push(index);
+			out.push(made);
 			continue;
 		}
 		const timeline = tag.match(/^<History(?:\s+perDay=\{(\d+)\})?\s*\/>$/);
 		if (timeline) {
-			(aside ?? out).push(history(timeline[1] ? Number(timeline[1]) : undefined));
+			out.push(history(timeline[1] ? Number(timeline[1]) : undefined));
 			continue;
 		}
 		const code = tag.match(/^<Code\s+code=\{(\w+)\}\s+lang="(\w+)"(?:\s+title="([^"]*)")?\s*\/>$/);
 		const src = code ? imports.get(code[1]!) : undefined;
 		if (code && src !== undefined) {
-			// Indent only inside a list item; other indentation comes from HTML nesting.
-			const inList = listIndent !== undefined && indent.length >= listIndent;
-			(aside ?? out).push(fence(src, code[2]!, code[3], inList ? ' '.repeat(listIndent!) : ''));
+			out.push(fence(src, code[2]!, code[3]));
 			continue;
 		}
-		(aside ?? out).push(line.replace('{taskCount()}', String(taskCount())).replace('{resultsDate()}', resultsDate()));
+		out.push(line);
 	}
 	return out.join('\n').trim();
 }
 
 export const GET: APIRoute<{ entry: CollectionEntry<'docs'> }> = async ({ props }) => {
-	const { title, description, sources } = props.entry.data;
-	const cited = sources?.length ? `Sources: ${sources.join('; ')}.\n\n` : '';
-	const md = `# ${title}\n\n> ${description}\n\n${cited}${await toMarkdown(props.entry.body ?? '', props.entry.filePath, await instructionIndex())}\n`;
+	const { title, description } = props.entry.data;
+	const md = `# ${title}\n\n> ${description}\n\n${await toMarkdown(props.entry.body ?? '', props.entry.filePath)}\n`;
 	return new Response(md, { headers: { 'Content-Type': 'text/markdown; charset=utf-8' } });
 };

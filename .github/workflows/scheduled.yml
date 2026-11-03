@@ -42,13 +42,13 @@ jobs:
         with:
           persist-credentials: false
 
-      # Source URLs live in sources.json and are watched by sources.yml; this checks the links in the
-      # pages, templates and README. LinkedIn answers bots with 429/999.
+      # Catalog repositories are checked by drift.yml; this checks the links in the pages, prompt, skills and
+      # README. LinkedIn answers bots with 429/999.
       - name: External links
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           args: >-
             --no-progress --max-retries 3 --scheme https --scheme http --exclude 'linkedin\.com'
-            'instructions/*.md' 'stacks/*.md' 'templates/*.md' README.md
+            'prompt/*.md' 'optional/plugins/*/skills/*/SKILL.md' README.md
             'src/content/docs/*.md' 'src/content/docs/*.mdx' 'src/content/docs/start-here/*.md' 'src/content/docs/start-here/*.mdx'
           fail: true

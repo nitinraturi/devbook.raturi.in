@@ -1,96 +1,112 @@
-// Validates the eval definitions without running anything: task fields, checks, rule signals and coverage.
-// Coverage: every instruction file, every stack note a fixture loads, and every skill has at least
-// MIN_TASKS tasks, counted from each task's `rules`, `covers`, `skill` and `skillNot`.
-import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
-import { here, loadFixture, repo } from './install.mjs';
+#!/usr/bin/env node
+// Free structural check of every eval suite (evals/cases and optional/plugins/*/evals), run by `npm run check`:
+// prompt.md keys that `claude plugin eval` accepts, at least one grader per case with the options its type needs,
+// and scaffold scripts that exist and source fixtures that exist. It runs no model; `claude plugin eval` does that.
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { dirname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { parse } from 'yaml';
 
-export const MIN_TASKS = 3;
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const PROMPT_KEYS = new Set([
+	'schema_version',
+	'name',
+	'description',
+	'tags',
+	'plugins',
+	'runs',
+	'expected_outcome',
+	'model',
+	'max_turns',
+	'timeout_seconds',
+	'allowed_tools',
+	'append_system_prompt',
+	'env',
+]);
+const GRADERS = {
+	regex: ['pattern'],
+	tool_used: ['tool'],
+	tool_order: ['before', 'after'],
+	file_exists: ['path'],
+	llm: [],
+	baseline: ['baseline_file'],
+};
 
-export async function loadSignals() {
-	return JSON.parse(await readFile(join(here, 'rules.json'), 'utf8')).signals;
-}
+const frontmatter = (text) => {
+	const m = text.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+	return m ? { data: parse(m[1]) ?? {}, body: m[2].trim() } : { data: {}, body: text.trim() };
+};
 
-/** Map rule ID → { file, text } from the current instruction files. */
-export async function currentRules() {
-	const rules = new Map();
-	for (const name of (await readdir(join(repo, 'instructions'))).filter((n) => n.endsWith('.md'))) {
-		for (const line of (await readFile(join(repo, 'instructions', name), 'utf8')).split('\n')) {
-			const id = line.match(/^- ([A-Z]+-\d+): /)?.[1];
-			if (id) rules.set(id, { file: `instructions/${name}`, text: line });
-		}
-	}
-	return rules;
-}
-
-const checkNames = (checks) => checks.flatMap((c) => [c.check, ...checkNames(c.checks ?? [])]);
-
-export async function validate(tasks) {
-	const errors = [];
-	const ids = new Set();
-	const checks = new Set((await readdir(join(here, 'checks'))).map((n) => n.replace(/\.mjs$/, '')));
-	const signals = await loadSignals();
-	const rules = await currentRules();
-	const skills = (await readdir(join(repo, 'skills'))).filter((n) => n.startsWith('devbook-'));
-	const coverage = new Map();
-	const count = (key, id) => coverage.set(key, new Set([...(coverage.get(key) ?? []), id]));
-	const fixtureStacks = new Set();
-
-	for (const task of tasks) {
-		const where = `tasks/${task.file}`;
-		if (!task.id || `${task.id}.yaml` !== task.file) errors.push(`${where}: id must match the file name`);
-		if (ids.has(task.id)) errors.push(`${where}: duplicate id`);
-		ids.add(task.id);
-		if (!task.prompt) errors.push(`${where}: missing prompt`);
-		if (!task.behaviour) errors.push(`${where}: missing behaviour`);
-		try {
-			(await loadFixture(task.fixture)).stacks.forEach((s) => fixtureStacks.add(s));
-		} catch {
-			errors.push(`${where}: unknown fixture "${task.fixture}"`);
-		}
-		if (!task.checks?.length) errors.push(`${where}: needs at least one check`);
-		for (const c of checkNames(task.checks ?? [])) if (!checks.has(c)) errors.push(`${where}: unknown check "${c}"`);
-		if (!Array.isArray(task.rules))
-			errors.push(`${where}: needs rules (the rule IDs it tests; [] for skill-only tasks)`);
-		if (!task.touches?.length) errors.push(`${where}: needs touches (the files the task reads or edits)`);
-		if (!task.rules?.length && !task.skill && !task.skillNot) errors.push(`${where}: tests no rule and no skill`);
-		for (const id of [...(task.rules ?? []), ...(task.covers ?? [])]) {
-			if (!signals[id]) errors.push(`${where}: ${id} has no signal in rules.json`);
-			const file = id.includes('#') ? id.split('#')[0] : rules.get(id)?.file;
-			if (!file) errors.push(`${where}: ${id} is not a current rule`);
-			else count(file, task.id);
-		}
-		for (const skill of [task.skill, task.skillNot].filter(Boolean)) {
-			if (!skills.includes(skill)) errors.push(`${where}: unknown skill "${skill}"`);
-			count(`skills/${skill}`, task.id);
-		}
-	}
-
-	// Each signal must still identify its rule in the current text, or the modelled coverage is wrong.
-	for (const [id, signal] of Object.entries(signals)) {
-		const re = new RegExp(signal, 'i');
-		if (id.includes('#')) {
-			const text = await readFile(join(repo, id.split('#')[0]), 'utf8').catch(() => '');
-			if (!re.test(text)) errors.push(`rules.json: ${id} signal /${signal}/ no longer matches ${id.split('#')[0]}`);
-		} else if (!rules.has(id)) errors.push(`rules.json: ${id} is not a current rule`);
-		else if (!re.test(rules.get(id).text))
-			errors.push(`rules.json: ${id} signal /${signal}/ no longer matches its rule`);
-	}
-
-	const instructionFiles = (await readdir(join(repo, 'instructions'))).filter((n) => n.endsWith('.md'));
-	const wanted = [
-		...instructionFiles.map((n) => `instructions/${n}`),
-		...fixtureStacks,
-		...skills.map((s) => `skills/${s}`),
+export function suites() {
+	const plugins = join(root, 'optional/plugins');
+	return [
+		join(root, 'evals/cases'),
+		...readdirSync(plugins)
+			.map((p) => join(plugins, p, 'evals'))
+			.filter(existsSync),
 	];
-	// A pointer file that only links to its replacement has no rules to test.
-	const pointer = async (key) =>
-		key.startsWith('instructions/') && !(await readFile(join(repo, key), 'utf8')).match(/^- [A-Z]+-\d+: /m);
-	for (const key of wanted) {
-		const n = coverage.get(key)?.size ?? 0;
-		if (n < MIN_TASKS && !(await pointer(key)))
-			errors.push(`coverage: ${key} has ${n} task(s), needs at least ${MIN_TASKS}`);
+}
+
+/** Problems with one case directory, as messages. */
+export function checkCase(dir) {
+	const at = relative(root, dir);
+	const problems = [];
+	const promptFile = join(dir, 'prompt.md');
+	if (!existsSync(promptFile)) return [`${at}: missing prompt.md`];
+	const { data, body } = frontmatter(readFileSync(promptFile, 'utf8'));
+	for (const key of Object.keys(data)) if (!PROMPT_KEYS.has(key)) problems.push(`${at}/prompt.md: unknown key ${key}`);
+	if (!body) problems.push(`${at}/prompt.md: the prompt is empty`);
+	if (!data.description) problems.push(`${at}/prompt.md: add a description saying what the case shows`);
+
+	const caseFile = join(dir, 'case.yaml');
+	if (existsSync(caseFile)) {
+		const spec = parse(readFileSync(caseFile, 'utf8')) ?? {};
+		if (spec.schema_version !== '1.1') problems.push(`${at}/case.yaml: schema_version must be "1.1"`);
+		const script = spec.context?.scaffold_script;
+		if (script) {
+			const path = join(dir, script);
+			if (!existsSync(path)) problems.push(`${at}/case.yaml: scaffold ${script} is missing`);
+			else
+				for (const [, fixture] of readFileSync(path, 'utf8').matchAll(/fixtures\/([\w.-]+\.sh)/g))
+					if (!existsSync(join(root, 'evals/fixtures', fixture)))
+						problems.push(`${at}/${script}: fixture ${fixture} is missing`);
+		}
 	}
-	for (const name of checks) await import(join(here, 'checks', `${name}.mjs`));
-	return { errors, coverage };
+
+	const graderDir = join(dir, 'graders');
+	const graders = existsSync(graderDir) ? readdirSync(graderDir).filter((f) => f.endsWith('.md')) : [];
+	if (!graders.length) problems.push(`${at}: needs at least one grader in graders/`);
+	for (const file of graders) {
+		const { data: g, body: rubric } = frontmatter(readFileSync(join(graderDir, file), 'utf8'));
+		const where = `${at}/graders/${file}`;
+		if (!GRADERS[g.type]) {
+			problems.push(`${where}: type must be one of ${Object.keys(GRADERS).join(', ')}`);
+			continue;
+		}
+		for (const option of GRADERS[g.type])
+			if (g[option] === undefined) problems.push(`${where}: ${g.type} needs ${option}`);
+		if (g.type === 'llm' && !rubric && !g.criteria)
+			problems.push(`${where}: an llm grader needs PASS and FAIL criteria`);
+		if (g.type === 'regex')
+			try {
+				new RegExp(g.pattern, g.flags);
+			} catch (e) {
+				problems.push(`${where}: invalid pattern: ${e.message}`);
+			}
+	}
+	return problems;
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+	let cases = 0;
+	const problems = [];
+	for (const suite of suites())
+		for (const entry of readdirSync(suite, { withFileTypes: true }))
+			if (entry.isDirectory() && entry.name !== 'results') {
+				cases++;
+				problems.push(...checkCase(join(suite, entry.name)));
+			}
+	for (const p of problems) console.error(`ERROR ${p}`);
+	console.log(`Evals: ${cases} cases checked, ${problems.length} problem(s)`);
+	if (problems.length) process.exit(1);
 }

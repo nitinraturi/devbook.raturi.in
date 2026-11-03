@@ -7,8 +7,6 @@
 // - Code blocks and Markdown tables (Starlight renders tables as scrollable blocks) scroll
 //   horizontally on narrow screens; give each <pre> and <table> tabindex="0" so keyboard users
 //   can scroll them (axe "scrollable-region-focusable", serious).
-// - Instruction rules start with an ID ("CORE-01: ..."). Wrap the ID in a span so the design can
-//   set it as a margin label (docs/design-system.md, signature element).
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -33,11 +31,10 @@ for (const file of await htmlFiles(dist)) {
 			'<input type="checkbox" disabled aria-hidden="true" tabindex="-1">',
 		)
 		.replace(/<pre data-language="([\w-]*)">/g, '<pre data-language="$1" tabindex="0">')
-		.replace(/<table>/g, '<table tabindex="0">')
-		.replace(/<li>([A-Z]{2,5}-\d{2}): /g, '<li class="dvb-rule"><span class="dvb-rule-id">$1</span> ');
+		.replace(/<table>/g, '<table tabindex="0">');
 	if (next !== html) {
 		changed++;
 		await writeFile(file, next);
 	}
 }
-console.log(`HTML: task-list checkboxes, code-block and table focus, and rule IDs fixed in ${changed} page(s)`);
+console.log(`HTML: task-list checkboxes and code-block and table focus fixed in ${changed} page(s)`);

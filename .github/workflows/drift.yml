@@ -1,0 +1,74 @@
+# Weekly catalog drift (no model): checks every pinned source in catalog/sources.json for a newer tag or commit and
+# every vendor-channel plugin for its listing in Anthropic's official marketplace, then opens one `drift` pull
+# request per moved source with the upstream diff link. Nothing is merged automatically: the owner reviews the
+# diff, scans it and merges or closes.
+#
+# Pull requests are opened with the release App token (DEPLOY.md), so CI runs on them; until the App is set up the
+# job only writes the report to the run summary.
+name: Drift
+
+on:
+  schedule:
+    - cron: '41 3 * * 1' # Mondays 03:41 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drift
+  cancel-in-progress: false
+
+jobs:
+  report:
+    if: vars.RELEASE_APP_CLIENT_ID == ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Check the catalog
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/drift.mjs | tee -a "$GITHUB_STEP_SUMMARY"
+
+  pull-requests:
+    if: vars.RELEASE_APP_CLIENT_ID != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      # Actions pinned to commit SHAs (security/supply-chain).
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: app
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      # The job pushes branches with the App token, so it keeps the credential; it uploads no artifacts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app.outputs.token }} # zizmor: ignore[artipacked]
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Open drift pull requests
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          gh label create drift --color FBCA04 --description "A catalog source moved" --force
+          git config user.name "devbook-release[bot]"
+          git config user.email "devbook-release[bot]@users.noreply.github.com"
+          node scripts/drift.mjs --pr | tee -a "$GITHUB_STEP_SUMMARY"

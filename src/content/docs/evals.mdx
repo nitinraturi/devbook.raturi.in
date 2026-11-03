@@ -1,40 +1,57 @@
 ---
 title: Evals
-description: What Devbook's evals measure, the latest results for each version, how to reproduce them, and what they don't show yet. Built from the committed results.
+description: How Devbook measures its own effect - each case run with and without Devbook in Claude Code, scored by automated graders - and the latest results.
+sidebar:
+  order: 6
 ---
 
 import EvalResults from '../../components/EvalResults.astro';
-import { resultsDate, taskCount } from '../../lib/evals';
 
-Devbook is tested on {taskCount()} small tasks in three sample projects (an Astro site, a Django API and an Android app). Each task tests one or more rules, such as "fix the cause when a test fails" or "keep the CSP strict", or whether a skill loads for the right request. These results are from {resultsDate()}.
+Devbook's only claim is that a repository set up with it gets better agent work than one without it. The evals test that claim directly. Each case gives Claude Code a realistic request in a small sample repository, runs it three times with Devbook and three times without, and scores what the agent did with automated graders. Δ is the with-Devbook score minus the without-Devbook score.
 
-## Latest results
+## The core block
 
-<EvalResults />
+Ten cases, one per core rule, on three sample repositories: a Node library, a Python service on sqlite and a static site. Examples: fixing a bug starts with a failing test; a failing lint check is fixed at the cause, not by editing the check; a migration is proposed before it is written; a hidden instruction in an issue file is not followed.
 
-- **Tasks passed:** every rule the task tests is in the assistant's context or one file away, and the right skill loads (or, for near-miss requests, doesn't).
-- **Rules in context:** the share of tested rules loaded before the assistant does anything. **In reach:** loaded, or in a file the loaded text points to.
-- **Devbook tokens per task:** what Devbook adds to the context for a task, estimated as bytes / 4. The assistant's own system prompt and your code come on top.
+<EvalResults suite="core" />
 
-"Before the prune" loads every file in every chat, so its rules are almost always in context, at a much higher token cost. It has no skills, so it fails the skill tasks.
+## The optional skills
 
-## What these numbers are, and aren't
+One case per skill, with a grader that checks the skill loaded and one that checks the result.
 
-These are **modelled** results. For each task and version, the evals install Devbook into the sample project exactly as setup would, then work out what Claude Code loads, from its documented rules for `CLAUDE.md` imports, path-scoped rules and skills. No model is called, so the results are free, repeatable and identical on every run.
+### api-design
 
-What they don't show yet:
+<EvalResults suite="api-design" />
 
-- **Whether the assistant follows a rule it can see.** That needs measured runs, where Claude Code does each task and automated checks read the files it left and the commands it ran. The harness is ready; measured results will appear here once they are run.
-- **Other assistants.** Copilot, Cursor and Codex load files differently; the setup page lists what [each assistant loads](/start-here/setup/#which-assistants-load-the-rules).
-- **Skill triggering by a real model.** The modelled check matches the request's words against each skill's description, so it misses requests that use other words. These tasks fail it today:
+### db-migration
 
-<EvalResults view="failures" />
+<EvalResults suite="db-migration" />
 
-## Reproduce them
+### feature-doc
+
+<EvalResults suite="feature-doc" />
+
+### licensing
+
+<EvalResults suite="licensing" />
+
+### llm-security
+
+<EvalResults suite="llm-security" />
+
+## What these numbers don't show
+
+- **Other agents.** The harness is Claude Code's `claude plugin eval`. Codex, Cursor, Copilot and Gemini CLI read the same `AGENTS.md`, but they are not measured.
+- **The vendor skills in the catalog.** An eval run loads only the plugin under test, so catalog sources are judged by their vendors' own testing and by whether they stay maintained.
+- **Large or messy repositories.** The sample repositories are small on purpose, so each case tests one rule.
+- **How much the evidence supports any of this.** Published studies found modest gains from context files and skills, and the smallest gains for software engineering. Devbook keeps a source or a core line only while its Δ is not negative.
+
+## Run them yourself
 
 ```sh
 git clone https://github.com/nitinraturi/devbook.raturi.in && cd devbook.raturi.in && npm ci
-node evals/model.mjs --variant none,ref:9504d10,main --no-save
+node evals/run.mjs          # prints the commands; free
+node evals/run.mjs --yes    # runs them; spends model usage
 ```
 
-The tasks, checks and fixtures are in [`evals/`](https://github.com/nitinraturi/devbook.raturi.in/tree/main/evals), with a README on adding tasks and running measured evals.
+The cases, fixtures and graders are in [`evals/`](https://github.com/nitinraturi/devbook.raturi.in/tree/main/evals).

@@ -1,0 +1,38 @@
+---
+// The catalog's sources with one status, from catalog/sources.json (src/lib/catalog.ts), so this page and the
+// bootstrap prompt's allowlist can't disagree. The Markdown endpoint renders the same rows.
+import { hostLabel, refLabel, repoUrl, upstreams, type Upstream } from '../lib/catalog';
+
+interface Props {
+	status: Upstream['status'];
+}
+
+const { status } = Astro.props;
+const rows = upstreams.filter((u) => u.status === status);
+---
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Source</th>
+			<th scope="col">{status === 'adopted' ? 'Use' : 'Why not installed'}</th>
+			<th scope="col">Hosts</th>
+			<th scope="col">Pinned to</th>
+		</tr>
+	</thead>
+	<tbody>
+		{rows.map((u) => (
+			<tr>
+				<td>
+					<a href={repoUrl(u)}>{u.title}</a>
+					{!u.counts && ' (doesn’t count toward the cap)'}
+				</td>
+				<td>{status === 'adopted' ? u.use : u.reason}</td>
+				<td>{hostLabel(u)}</td>
+				<td>
+					<code>{refLabel(u.ref)}</code>
+				</td>
+			</tr>
+		))}
+	</tbody>
+</table>

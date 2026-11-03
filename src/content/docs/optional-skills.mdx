@@ -1,0 +1,35 @@
+---
+title: Optional skills
+description: Five opt-in skills Devbook maintains because no vendor does - API design, database migrations, feature docs, licensing and LLM feature security.
+sidebar:
+  order: 5
+---
+
+Devbook writes skills only where no vendor maintains one. Each stands alone, with no links to other Devbook files, and loads only when a request matches its description. Install the ones a project needs; the bootstrap prompt counts them toward its cap of three.
+
+| Skill | Use it for |
+|---|---|
+| [`api-design`](https://github.com/nitinraturi/devbook.raturi.in/blob/main/optional/plugins/api-design/skills/api-design/SKILL.md) | Adding or changing REST endpoints: OpenAPI first, RFC 9457 problem details, status codes, pagination, idempotency keys, ETags and Standard Webhooks |
+| [`db-migration`](https://github.com/nitinraturi/devbook.raturi.in/blob/main/optional/plugins/db-migration/skills/db-migration/SKILL.md) | Relational schema changes: a plan you approve, constraints and indexes, and expand-migrate-contract for live tables |
+| [`feature-doc`](https://github.com/nitinraturi/devbook.raturi.in/blob/main/optional/plugins/feature-doc/skills/feature-doc/SKILL.md) | `FEATURE.md` docs with EARS rules and stable IDs, only for features with business rules |
+| [`licensing`](https://github.com/nitinraturi/devbook.raturi.in/blob/main/optional/plugins/licensing/skills/licensing/SKILL.md) | Licences of dependencies, assets and copied code, with SPDX identifiers and the notices they need |
+| [`llm-security`](https://github.com/nitinraturi/devbook.raturi.in/blob/main/optional/plugins/llm-security/skills/llm-security/SKILL.md) | Features that call a language model: untrusted input and output, permissions in code, confirmation for actions, and cost caps |
+
+## Install
+
+In Claude Code, add Devbook's marketplace once, then install a skill as a plugin:
+
+```sh
+claude plugin marketplace add nitinraturi/devbook.raturi.in
+claude plugin install api-design@devbook --scope project
+```
+
+In Codex, Cursor, GitHub Copilot or Gemini CLI, install the skill with the GitHub CLI:
+
+```sh
+gh skill install nitinraturi/devbook.raturi.in api-design --agent codex
+```
+
+Use `--agent cursor`, `github-copilot` or `gemini-cli` for the other agents. Skills installed by `gh skill` record their source, so `gh skill update` finds new versions.
+
+The skills are licensed [CC BY 4.0](/license/). Each one has measured eval cases in its plugin folder, and the results are on the [evals page](/evals/).

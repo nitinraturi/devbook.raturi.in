@@ -1,25 +1,25 @@
-name: Suggest a source
-description: Suggest a primary source a rule or file should follow or be checked against.
+name: Suggest a catalog source
+description: Suggest a vendor-maintained skill, plugin or docs MCP for the catalog, or one to retire.
 labels: [suggest-source]
 body:
   - type: input
-    id: file
+    id: repo
     attributes:
-      label: Rule ID or file
-      placeholder: instructions/seo.md
+      label: Repository or plugin id
+      placeholder: owner/repo, or name@claude-plugins-official
     validations:
       required: true
   - type: input
     id: url
     attributes:
-      label: Source URL
-      description: Official docs, a standard or a recognised guideline.
+      label: The vendor's own page for it
+      description: Official docs that show the vendor maintains it.
       placeholder: https://
     validations:
       required: true
   - type: textarea
     id: why
     attributes:
-      label: What it supports or changes
+      label: What it does for code quality, and for which stack
     validations:
       required: true

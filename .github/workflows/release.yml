@@ -10,15 +10,14 @@ name: Release
 on:
   push:
     branches: [main]
-    paths:
-      - 'instructions/**'
-      - 'stacks/**'
-      - 'skills/**'
-      - 'templates/**'
-      - 'kit/**'
+    paths: # keep in step with SHIPPED in scripts/release-gate.mjs
+      - 'core/**'
+      - 'catalog/**'
+      - 'prompt/**'
+      - 'optional/**'
+      - '.claude-plugin/**'
       - 'LICENSE-CC-BY-4.0'
       - 'CHANGELOG.md'
-      - 'devbook.manifest.json'
   workflow_dispatch:
 
 permissions:
@@ -67,7 +66,7 @@ jobs:
       - name: Full check
         run: npm run check
 
-      # Shipped changes since the last release, a new changelog entry, and no modelled eval regression against it.
+      # Shipped changes since the last release, a new changelog entry, and no measured eval regression.
       - name: Release gate
         id: gate
         run: |
@@ -85,6 +84,7 @@ jobs:
           git config user.name "devbook-release[bot]"
           git config user.email "devbook-release[bot]@users.noreply.github.com"
           version=$(node scripts/bump-version.mjs)
+          node scripts/build-prompt.mjs # the prompt and the core markers carry the version
           git commit -qam "chore(release): $version"
           git push -q origin HEAD:main
           { echo "Released $version"; echo; cat "$RUNNER_TEMP/notes.md"; } >> "$GITHUB_STEP_SUMMARY"

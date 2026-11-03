@@ -1,4 +1,4 @@
-// Validates every skill in skills/ with the Agent Skills reference validator (skills-ref, from
+// Validates every skill (the opt-in skills in optional/plugins/*/skills/) with the Agent Skills reference validator (skills-ref, from
 // github.com/agentskills/agentskills, pinned to a commit), installed once into node_modules/.cache/skills-ref with
 // Python 3.11 or later. Also checks what the validator doesn't: each linked file exists, and references are one
 // level deep (SKILL.md may link to references/x.md; a reference file links to nothing else in the skill).
@@ -39,24 +39,28 @@ const links = (text) =>
 		(m) => m[1] ?? m[2],
 	);
 
-const skills = readdirSync(join(root, 'skills'), { withFileTypes: true }).filter((e) => e.isDirectory());
-for (const { name } of skills) {
-	const dir = join(root, 'skills', name);
+const dirs = (parent) =>
+	readdirSync(join(root, parent), { withFileTypes: true })
+		.filter((e) => e.isDirectory())
+		.map((e) => `${parent}/${e.name}`);
+const skills = dirs('optional/plugins').flatMap((plugin) => dirs(`${plugin}/skills`));
+for (const rel of skills) {
+	const dir = join(root, rel);
+	const name = rel.split('/').at(-1);
 	try {
 		execFileSync(bin, ['validate', dir], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 	} catch (e) {
-		error(`skills/${name}: ${(e.stdout || e.stderr || e.message).trim()}`);
+		error(`${rel}: ${(e.stdout || e.stderr || e.message).trim()}`);
 	}
 	const skill = readFileSync(join(dir, 'SKILL.md'), 'utf8');
 	const declared = skill.match(/^name:\s*(\S+)/m)?.[1];
-	if (declared !== name) error(`skills/${name}: name "${declared}" must match the folder`);
+	if (declared !== name) error(`${rel}: name "${declared}" must match the folder`);
 	for (const link of links(skill))
-		if (!existsSync(join(dir, normalize(link)))) error(`skills/${name}/SKILL.md links to ${link}, which is missing`);
+		if (!existsSync(join(dir, normalize(link)))) error(`${rel}/SKILL.md links to ${link}, which is missing`);
 	const refs = existsSync(join(dir, 'references')) ? readdirSync(join(dir, 'references')) : [];
 	for (const ref of refs.filter((r) => r.endsWith('.md'))) {
 		const deeper = links(readFileSync(join(dir, 'references', ref), 'utf8'));
-		if (deeper.length)
-			error(`skills/${name}/references/${ref} links on to ${deeper[0]}; keep references one level deep`);
+		if (deeper.length) error(`${rel}/references/${ref} links on to ${deeper[0]}; keep references one level deep`);
 	}
 }
 console.log(`Skills: ${skills.length} validated with skills-ref, ${errors} error(s)`);

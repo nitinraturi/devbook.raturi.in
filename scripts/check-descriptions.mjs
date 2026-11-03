@@ -2,7 +2,7 @@
 // Checks every page under src/content/docs for a title and a meta description.
 // Fails on a missing title or description; warns when a description is outside
 // 120–160 characters or a title is over 60. Page text is never changed here.
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
 const root = new URL('../src/content/docs/', import.meta.url).pathname;
@@ -11,8 +11,7 @@ async function files(dir) {
 	const out = [];
 	for (const e of await readdir(dir, { withFileTypes: true })) {
 		const p = join(dir, e.name);
-		// instructions/ and stacks/ are symlinked in, so follow links to directories.
-		if (e.isDirectory() || (e.isSymbolicLink() && (await stat(p)).isDirectory())) out.push(...(await files(p)));
+		if (e.isDirectory()) out.push(...(await files(p)));
 		else if (/\.mdx?$/.test(e.name)) out.push(p);
 	}
 	return out;

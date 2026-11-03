@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "deny": ["Bash(git push *)", "Read(.env)", "Read(.env.*)", "Read(!.env.example)", "Read(.dev.vars*)"],
+    "ask": [
+      "Edit(/.github/workflows/**)",
+      "Edit(/.github/zizmor.yml)",
+      "Edit(/.github/dependabot.yml)",
+      "Edit(/wrangler.jsonc)",
+      "Edit(/public/_headers)",
+      "Edit(/public/_redirects)",
+      "Bash(npm run deploy*)",
+      "Bash(npx wrangler deploy*)",
+      "Bash(wrangler deploy*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/format.mjs\""
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "security-guidance@claude-plugins-official": true,
+    "cloudflare@claude-plugins-official": true
+  }
+}

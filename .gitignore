@@ -23,4 +23,7 @@ dist/
 test-results/
 playwright-report/
 
-evals/runs/
+
+# claude plugin eval output
+evals/cases/results/
+optional/plugins/*/evals/results/

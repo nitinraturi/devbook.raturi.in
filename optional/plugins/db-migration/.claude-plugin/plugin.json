@@ -1,0 +1,8 @@
+{
+  "name": "db-migration",
+  "description": "Plans and writes safe relational schema changes: constraints, indexes and expand-migrate-contract across deploys.",
+  "author": { "name": "Nitin Raturi", "url": "https://devbook.raturi.in" },
+  "homepage": "https://devbook.raturi.in/optional-skills/",
+  "repository": "https://github.com/nitinraturi/devbook.raturi.in",
+  "license": "CC-BY-4.0"
+}
