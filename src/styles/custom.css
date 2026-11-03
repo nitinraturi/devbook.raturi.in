@@ -138,7 +138,7 @@ nav.sidebar .large {
 	box-shadow: inset 2px 0 0 var(--dvb-accent);
 }
 
-/* Page title extras: verified date, sources and the Markdown actions. */
+/* Page title extras: breadcrumb, verified date and the Markdown actions. */
 .dvb-verified {
 	margin-top: var(--dvb-space-1);
 	font-size: var(--sl-text-sm);
@@ -178,191 +178,7 @@ nav.sidebar .large {
 	background: var(--dvb-surface-sunken);
 }
 
-/* Home (splash) page. */
-[data-has-hero] .hero,
-[data-has-hero] .sl-markdown-content {
-	max-width: 68rem;
-	margin-inline: auto;
-}
-[data-has-hero] .hero {
-	padding-inline: clamp(var(--dvb-space-2), 3vw, var(--dvb-space-4));
-	padding-block: clamp(var(--dvb-space-4), 6vw, var(--dvb-space-8)) var(--dvb-space-4);
-	border-bottom: 1px solid var(--dvb-rule);
-}
-[data-has-hero] .hero .stack,
-[data-has-hero] .hero .copy {
-	align-items: start;
-	text-align: start;
-}
-[data-has-hero] .hero .copy > * {
-	max-width: 44rem;
-}
-[data-has-hero] .hero h1 {
-	font-size: clamp(2.6rem, 1.9rem + 3.2vw, 4.3rem);
-	letter-spacing: -0.03em;
-	line-height: 1.02;
-}
-[data-has-hero] .hero .tagline {
-	font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3rem);
-	line-height: 1.55;
-	color: var(--dvb-ink);
-}
-[data-has-hero] .hero .actions {
-	justify-content: start;
-}
-.sl-link-button {
-	border-radius: var(--dvb-radius-sm);
-	font-weight: 600;
-}
-.sl-link-button.primary {
-	border-color: var(--dvb-accent);
-	background: var(--dvb-accent);
-	color: var(--dvb-surface);
-}
-.sl-link-button.primary:hover {
-	border-color: var(--dvb-ink-strong);
-	background: var(--dvb-ink-strong);
-	color: var(--dvb-surface);
-}
-[data-has-hero] .sl-markdown-content {
-	padding-inline: clamp(var(--dvb-space-2), 3vw, var(--dvb-space-4));
-}
-[data-has-hero] .sl-markdown-content > section {
-	margin-block: clamp(var(--dvb-space-6), 7vw, var(--dvb-space-8));
-}
-.dvb-home-eyebrow {
-	margin: 0 0 var(--dvb-space-1);
-	font-family: var(--__sl-font-mono);
-	font-size: var(--dvb-label);
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--dvb-accent-text);
-}
-.dvb-home-section-heading {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: end;
-	justify-content: space-between;
-	gap: var(--dvb-space-2);
-	margin-bottom: var(--dvb-space-3);
-}
-.dvb-home-section-heading > * {
-	min-width: 0;
-}
-.dvb-home-section-heading h2 {
-	margin: 0;
-}
-.dvb-home-text-link {
-	font-size: var(--sl-text-sm);
-	font-weight: 600;
-}
-
-/* Setup prompt: a sunken band rather than a card. */
-.sl-markdown-content .dvb-quick-start {
-	margin-top: var(--dvb-space-4);
-	padding: clamp(var(--dvb-space-2), 4vw, var(--dvb-space-4));
-	border-radius: var(--dvb-radius);
-	background: var(--dvb-surface-sunken);
-}
-.dvb-quick-start pre {
-	max-height: 30rem;
-}
-
-/* "The core block": three short notes under the block, separated by rules. */
-.sl-markdown-content .dvb-home-layer-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-	gap: var(--dvb-space-3);
-	margin-top: var(--dvb-space-3);
-}
-.sl-markdown-content .dvb-home-layer-grid article {
-	margin: 0;
-	padding-top: var(--dvb-space-1);
-	border-top: 2px solid var(--dvb-ink-strong);
-}
-.sl-markdown-content .dvb-home-layer-grid h3 {
-	margin: 0 0 var(--dvb-space-1);
-	font-size: var(--sl-text-h5);
-}
-.sl-markdown-content .dvb-home-layer-grid p {
-	margin: 0;
-	color: var(--dvb-ink-muted);
-	font-size: var(--sl-text-sm);
-}
-
-/* How it works: numbered steps and loading tiers. */
-.sl-markdown-content .dvb-flow-steps {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-	gap: var(--dvb-space-3);
-	margin: var(--dvb-space-3) 0 0;
-	padding: 0;
-	list-style: none;
-	counter-reset: none;
-}
-.sl-markdown-content .dvb-flow-steps li {
-	position: relative;
-	margin: 0;
-	padding-top: var(--dvb-space-3);
-	border-top: 2px solid var(--dvb-ink-strong);
-}
-.sl-markdown-content .dvb-flow-num {
-	position: absolute;
-	top: 0;
-	left: 0;
-	transform: translateY(-50%);
-	display: inline-grid;
-	place-items: center;
-	width: 1.75rem;
-	height: 1.75rem;
-	border-radius: 50%;
-	background: var(--dvb-accent-wash);
-	border: 2px solid var(--dvb-accent);
-	color: var(--dvb-accent-text);
-	font-size: var(--sl-text-sm);
-	font-weight: 600;
-}
-.sl-markdown-content .dvb-flow-steps h3,
-.sl-markdown-content .dvb-flow-tiers h3,
-.sl-markdown-content .dvb-flow-tiers h4 {
-	margin: 0 0 var(--dvb-space-1);
-	font-size: var(--sl-text-h5);
-}
-.sl-markdown-content .dvb-flow-steps p,
-.sl-markdown-content .dvb-flow-tiers p {
-	margin: 0;
-	color: var(--dvb-ink-muted);
-	font-size: var(--sl-text-sm);
-}
-.sl-markdown-content .dvb-flow-tiers {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-	gap: var(--dvb-space-2);
-	margin-top: var(--dvb-space-2);
-}
-.sl-markdown-content .dvb-flow-tiers article {
-	margin: 0;
-	padding: var(--dvb-space-2);
-	background: var(--dvb-surface-raised);
-	border: 1px solid var(--dvb-rule);
-	border-left: 3px solid var(--dvb-accent);
-	border-radius: var(--dvb-radius-sm);
-}
-.sl-markdown-content .dvb-flow-tiers .dvb-flow-tier-label {
-	margin: 0 0 var(--dvb-space-1);
-	color: var(--dvb-accent-text);
-	font-size: var(--dvb-label);
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-
-.sl-markdown-content .dvb-skill-note {
-	margin-top: var(--dvb-space-2);
-	color: var(--dvb-ink-muted);
-	font-size: var(--sl-text-sm);
-}
-
-/* History timeline (homepage and /about/). */
+/* History timeline (/changelog/). */
 .sl-markdown-content .dvb-timeline {
 	display: grid;
 	gap: var(--dvb-space-3);
@@ -402,47 +218,726 @@ nav.sidebar .large {
 	}
 }
 
-/* Content tabs: a segmented control, so the choice is obvious. */
-.sl-markdown-content starlight-tabs [role='tablist'] {
-	display: inline-flex;
-	flex-wrap: wrap;
-	gap: 0.25rem;
-	padding: 0.25rem;
-	border: 1px solid var(--dvb-rule);
-	border-radius: var(--dvb-radius);
-	background: var(--dvb-surface-raised);
+/* Starlight spaces every element after the first in page content; inside these layouts, the grid gap and padding
+   set the spacing instead. */
+.sl-markdown-content
+	:is(
+		.dvb-hero,
+		.dvb-hero-copy,
+		.dvb-stats,
+		.dvb-prompt-card,
+		.dvb-prompt-links,
+		.dvb-card-links,
+		.dvb-section-head,
+		.dvb-phases,
+		.dvb-tabs,
+		.dvb-core,
+		.dvb-facts,
+		.dvb-cards,
+		.dvb-filter,
+		.dvb-segmented,
+		.dvb-group-head,
+		.dvb-columns,
+		.dvb-note
+	)
+	> * {
+	margin-top: 0;
 }
-.sl-markdown-content starlight-tabs [role='tablist'] .tab {
-	margin: 0;
-}
-.sl-markdown-content starlight-tabs [role='tab'] {
-	padding: 0.45rem 0.9rem;
-	border: 0;
-	border-radius: var(--dvb-radius-sm);
-	color: var(--dvb-ink-muted);
-	font-weight: 600;
-	box-shadow: none;
-}
-.sl-markdown-content starlight-tabs [role='tab']:hover {
-	color: var(--dvb-ink-strong);
-}
-.sl-markdown-content starlight-tabs [role='tab'][aria-selected='true'] {
-	background: var(--dvb-surface);
-	color: var(--dvb-ink-strong);
-	box-shadow: inset 0 -2px 0 var(--dvb-accent);
+.sl-markdown-content .dvb-hero-copy > * + * {
+	margin-top: var(--dvb-space-2);
 }
 
-/* Site footer line (author, privacy, consent). */
+/* The homepage renders its own H1, so Starlight's title panel above it is empty. */
+:root:not([data-has-sidebar]) .content-panel:has(> .sl-container:empty) {
+	display: none;
+}
+
+/* Shared pieces: mono labels, stat strips, text links, chips. */
+.dvb-eyebrow,
+.dvb-stats dt,
+.dvb-mono-meta {
+	margin: 0;
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	letter-spacing: 0.04em;
+}
+.dvb-eyebrow {
+	color: var(--dvb-accent-text);
+}
+.sl-markdown-content .dvb-stats {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin: var(--dvb-space-3) 0;
+	border-block: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content .dvb-stats-4 {
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+}
+.sl-markdown-content .dvb-stats > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: 0;
+	padding: 0.75rem var(--dvb-space-2) 0.75rem 0;
+}
+.sl-markdown-content .dvb-stats > div + div {
+	padding-left: var(--dvb-space-2);
+	border-left: 1px solid var(--dvb-rule);
+}
+.dvb-stats dt {
+	color: var(--dvb-ink-muted);
+	text-transform: uppercase;
+}
+.sl-markdown-content .dvb-stats dd {
+	margin: 0.25rem 0 0;
+	padding: 0;
+	color: var(--dvb-ink-strong);
+	font-weight: 600;
+}
+.dvb-text-link {
+	color: var(--dvb-accent-text);
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+}
+.dvb-chip {
+	display: inline-block;
+	padding: 0 0.4rem;
+	border: 1px solid var(--dvb-ink-strong);
+	border-radius: var(--dvb-radius-sm);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	line-height: 1.6;
+	white-space: nowrap;
+}
+.dvb-chip-yes,
+.dvb-chip-enforced {
+	background: var(--dvb-ink-strong);
+	color: var(--dvb-surface);
+}
+.dvb-chip-free {
+	border-style: dashed;
+	color: var(--dvb-ink);
+}
+.dvb-chip-no {
+	border-color: var(--dvb-rule);
+	color: var(--dvb-ink-muted);
+}
+
+/* Header: version, section links, search and the prompt button. */
+.dvb-header {
+	display: flex;
+	align-items: center;
+	gap: var(--sl-nav-gap);
+	height: 100%;
+}
+.dvb-header .title-wrapper {
+	align-items: center;
+	gap: 0.75rem;
+	min-width: 0;
+}
+.dvb-version {
+	padding: 0.05rem 0.4rem;
+	border: 1px solid var(--dvb-rule);
+	border-radius: var(--dvb-radius-sm);
+	color: var(--dvb-ink-muted);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	white-space: nowrap;
+}
+.dvb-nav {
+	display: none;
+	gap: 1.25rem;
+	font-size: var(--sl-text-sm);
+}
+.dvb-nav a {
+	color: var(--dvb-ink);
+	text-decoration: none;
+}
+.dvb-nav a:hover,
+.dvb-nav a[aria-current='page'] {
+	color: var(--dvb-accent-text);
+}
+.dvb-header-search {
+	margin-inline-start: auto;
+}
+.dvb-header-right {
+	align-items: center;
+	gap: 1rem;
+}
+.dvb-header-cta {
+	padding: 0.45rem 0.9rem;
+	border-radius: var(--dvb-radius-sm);
+	background: var(--dvb-accent);
+	color: var(--dvb-surface);
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+}
+:root[data-theme='light'] .dvb-header-cta,
+:root[data-theme='light'] .dvb-copy-button {
+	color: oklch(0.985 0.004 60);
+}
+.dvb-header-cta:hover {
+	background: var(--dvb-accent-text);
+}
+@media (min-width: 72rem) {
+	.dvb-nav {
+		display: flex;
+	}
+}
+
+/* Dismissible banner. */
+.dvb-banner {
+	display: flex;
+	align-items: center;
+	gap: var(--dvb-space-2);
+	padding: 0.75rem var(--sl-nav-pad-x);
+	border-bottom: 1px solid var(--dvb-rule);
+	background: var(--dvb-accent-wash);
+	color: var(--dvb-ink-strong);
+	font-size: var(--sl-text-sm);
+}
+.dvb-banner[hidden] {
+	display: none;
+}
+.dvb-banner p {
+	flex: 1;
+	margin: 0 auto;
+	max-width: 68rem;
+}
+.dvb-banner a {
+	color: var(--dvb-accent-text);
+	font-weight: 600;
+	white-space: nowrap;
+}
+.dvb-banner button {
+	display: inline-grid;
+	place-items: center;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	border: 0;
+	border-radius: var(--dvb-radius-sm);
+	background: transparent;
+	color: var(--dvb-ink);
+	cursor: pointer;
+}
+.dvb-banner button:hover {
+	background: var(--dvb-surface);
+}
+
+/* Breadcrumb above page titles. */
+.dvb-breadcrumb {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: var(--dvb-space-1);
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.dvb-breadcrumb [aria-current] {
+	color: var(--dvb-ink-strong);
+}
+
+/* Homepage: a wide splash page built from components. */
+:root:not([data-has-sidebar]) .sl-container {
+	max-width: 68rem;
+}
+.sl-markdown-content :is(.dvb-hero, .dvb-band, .dvb-section, .dvb-cards) {
+	margin-top: 0;
+	padding-block: clamp(var(--dvb-space-4), 6vw, var(--dvb-space-8));
+}
+.sl-markdown-content :is(.dvb-band, .dvb-section, .dvb-cards) + * {
+	margin-top: 0;
+}
+.dvb-hero {
+	display: grid;
+	gap: var(--dvb-space-4);
+	align-items: start;
+}
+.sl-markdown-content .dvb-hero h1 {
+	margin: var(--dvb-space-2) 0 0;
+	color: var(--dvb-ink-strong);
+	font-size: clamp(2.2rem, 1.6rem + 2.6vw, 3.4rem);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+}
+.sl-markdown-content .dvb-lede {
+	max-width: 36rem;
+	color: var(--dvb-ink);
+	font-size: var(--sl-text-lg);
+}
+.dvb-prompt-card {
+	overflow: hidden;
+	border: 1px solid var(--dvb-ink-strong);
+	border-radius: var(--dvb-radius);
+	background: var(--dvb-surface);
+	scroll-margin-top: calc(var(--sl-nav-height) + var(--dvb-space-2));
+}
+.sl-markdown-content .dvb-prompt-head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--dvb-space-1);
+	margin: 0;
+	padding: var(--dvb-space-2);
+}
+.sl-markdown-content .dvb-prompt-head h2 {
+	margin: 0;
+	font-size: var(--sl-text-base);
+}
+.dvb-mono-meta {
+	color: var(--dvb-ink-muted);
+}
+.sl-markdown-content .dvb-prompt-text {
+	max-height: 9.5rem;
+	margin: 0;
+	padding: var(--dvb-space-2);
+	overflow: auto;
+	border: 0;
+	border-radius: 0;
+	background: oklch(0.2 0.006 60);
+	color: oklch(0.88 0.008 60);
+	font-size: var(--sl-text-xs);
+	line-height: 1.6;
+	white-space: pre-wrap;
+	mask-image: linear-gradient(to bottom, #000 70%, transparent);
+}
+:root:not([data-theme='light']) .sl-markdown-content .dvb-prompt-text {
+	background: oklch(0.15 0.005 60);
+}
+.sl-markdown-content .dvb-prompt-text:focus-visible {
+	mask-image: none;
+	outline-offset: -2px;
+}
+.sl-markdown-content .dvb-prompt-actions {
+	margin: 0;
+	padding: var(--dvb-space-2);
+}
+.dvb-copy-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.6rem;
+	width: 100%;
+	min-height: 3rem;
+	border: 0;
+	border-radius: var(--dvb-radius-sm);
+	background: var(--dvb-accent);
+	color: var(--dvb-surface);
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+.dvb-copy-button:hover {
+	background: var(--dvb-accent-text);
+}
+.sl-markdown-content .dvb-prompt-actions p {
+	margin: 0.75rem 0 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-prompt-links,
+.sl-markdown-content .dvb-card-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.25rem;
+}
+.dvb-prompt-links a,
+.dvb-card-links a {
+	color: var(--dvb-accent-text);
+}
+@media (min-width: 60rem) {
+	.dvb-hero {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: var(--dvb-space-6);
+	}
+}
+
+/* Section headings with a trailing link. */
+.sl-markdown-content .dvb-section-head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--dvb-space-1);
+}
+.sl-markdown-content :is(.dvb-band, .dvb-section, .dvb-cards) h2 {
+	margin: 0;
+	font-size: var(--sl-text-h3);
+}
+.sl-markdown-content .dvb-section-lede {
+	margin-top: 0.5rem;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+
+/* Phases: a ruled row on wide screens, a list with a left rule on narrow ones. The dashed line is the approval. */
+.dvb-band {
+	margin-inline: calc(50% - 50vw);
+	padding-inline: calc(50vw - 50%);
+	background: var(--dvb-surface-sunken);
+	border-block: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content .dvb-phases {
+	display: grid;
+	margin: var(--dvb-space-3) 0 0;
+	padding: 0 0 0 var(--dvb-space-2);
+	border-left: 2px solid var(--dvb-ink-strong);
+	list-style: none;
+	counter-reset: phase;
+}
+.sl-markdown-content .dvb-phases li {
+	margin: 0;
+	padding: 0.6rem 0;
+	counter-increment: phase;
+}
+.sl-markdown-content .dvb-phases li::before {
+	content: counter(phase);
+	display: block;
+	color: var(--dvb-accent-text);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+}
+.sl-markdown-content .dvb-phases li.dvb-gate {
+	border-bottom: 2px dashed var(--dvb-accent);
+}
+.sl-markdown-content .dvb-phases h3 {
+	margin: 0;
+	font-size: var(--sl-text-base);
+}
+.sl-markdown-content .dvb-phases p {
+	margin: 0.25rem 0 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-gate-note {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin-top: var(--dvb-space-2);
+	font-size: var(--sl-text-sm);
+}
+.dvb-gate-note span {
+	width: 1.5rem;
+	border-top: 2px dashed var(--dvb-accent);
+}
+@media (min-width: 64rem) {
+	.sl-markdown-content .dvb-phases {
+		grid-template-columns: repeat(7, minmax(0, 1fr));
+		gap: 0 var(--dvb-space-2);
+		padding: 0;
+		border-left: 0;
+	}
+	.sl-markdown-content .dvb-phases li {
+		padding: 0.75rem var(--dvb-space-1) 0 0;
+		border-top: 2px solid var(--dvb-ink-strong);
+	}
+	.sl-markdown-content .dvb-phases li.dvb-gate {
+		border-bottom: 0;
+		border-right: 2px dashed var(--dvb-accent);
+	}
+}
+
+/* Agent tabs and the matrix of what each agent gets. */
+.dvb-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: var(--dvb-space-3);
+}
+.dvb-tabs [role='tab'] {
+	min-height: 2.75rem;
+	padding: 0 1rem;
+	border: 1px solid var(--dvb-rule);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--dvb-ink);
+	font: inherit;
+	font-size: var(--sl-text-sm);
+	cursor: pointer;
+}
+.dvb-tabs [role='tab'][aria-selected='true'] {
+	border-color: var(--dvb-ink-strong);
+	background: var(--dvb-ink-strong);
+	color: var(--dvb-surface);
+	font-weight: 600;
+}
+.sl-markdown-content .dvb-matrix,
+.sl-markdown-content .dvb-catalog-table {
+	display: table;
+	width: 100%;
+	margin-top: var(--dvb-space-2);
+	border-collapse: collapse;
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content :is(.dvb-matrix, .dvb-catalog-table) :is(th, td) {
+	padding: 0.75rem 0.75rem 0.75rem 0;
+	border: 0;
+	border-bottom: 1px solid var(--dvb-rule);
+	background: transparent;
+	text-align: start;
+	vertical-align: top;
+}
+.sl-markdown-content .dvb-matrix {
+	border-top: 1px solid var(--dvb-ink-strong);
+}
+.sl-markdown-content .dvb-matrix th {
+	color: var(--dvb-ink-strong);
+	font-weight: 600;
+	width: 30%;
+}
+.sl-markdown-content .dvb-matrix td:first-child {
+	width: 7rem;
+}
+.sl-markdown-content .dvb-matrix td:last-child {
+	color: var(--dvb-ink-muted);
+}
+@media (max-width: 40rem) {
+	.sl-markdown-content .dvb-matrix tr {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.25rem 0.75rem;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid var(--dvb-rule);
+	}
+	.sl-markdown-content .dvb-matrix :is(th, td) {
+		width: auto;
+		padding: 0;
+		border: 0;
+	}
+	.sl-markdown-content .dvb-matrix td:last-child {
+		grid-column: 1 / -1;
+	}
+}
+
+/* The core block: facts on the left, the rules on the right. */
+.dvb-core {
+	display: grid;
+	gap: var(--dvb-space-3);
+}
+.sl-markdown-content .dvb-core-intro p {
+	color: var(--dvb-ink-muted);
+}
+.sl-markdown-content .dvb-facts {
+	margin-top: var(--dvb-space-2);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-facts > div {
+	display: flex;
+	justify-content: space-between;
+	gap: var(--dvb-space-2);
+	margin: 0;
+	padding: 0.5rem 0;
+	border-top: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content .dvb-facts dt {
+	color: var(--dvb-ink-muted);
+}
+.sl-markdown-content .dvb-facts dd {
+	margin: 0;
+	text-align: end;
+}
+.sl-markdown-content .dvb-core-lines {
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--dvb-ink-strong);
+	list-style: none;
+}
+.sl-markdown-content .dvb-core-lines li {
+	margin: 0;
+	padding: 0.7rem 0 0.7rem 1rem;
+	border-bottom: 1px solid var(--dvb-rule);
+	box-shadow: inset 2px 0 0 var(--dvb-accent);
+}
+@media (min-width: 56rem) {
+	.dvb-core {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr);
+		gap: var(--dvb-space-6);
+	}
+}
+
+/* Evidence and catalog cards. */
+.dvb-cards {
+	display: grid;
+	gap: var(--dvb-space-2);
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+.sl-markdown-content .dvb-cards article {
+	margin: 0;
+	padding: var(--dvb-space-3);
+	border: 1px solid var(--dvb-rule);
+	border-radius: var(--dvb-radius);
+}
+.sl-markdown-content .dvb-cards h2 {
+	margin-top: 0.5rem;
+}
+.sl-markdown-content .dvb-cards article p:not(.dvb-eyebrow) {
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+
+/* Catalog: filter, groups and the suggested and retired columns. */
+.sl-markdown-content .dvb-filter {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: var(--sl-text-sm);
+}
+.dvb-segmented {
+	display: inline-flex;
+	padding: 0.2rem;
+	border-radius: var(--dvb-radius);
+	background: var(--dvb-surface-sunken);
+}
+.dvb-segmented button {
+	min-height: 2.5rem;
+	padding: 0 0.9rem;
+	border: 0;
+	border-radius: var(--dvb-radius-sm);
+	background: transparent;
+	color: var(--dvb-ink);
+	font: inherit;
+	cursor: pointer;
+}
+.dvb-segmented button[aria-pressed='true'] {
+	background: var(--dvb-surface);
+	color: var(--dvb-ink-strong);
+	font-weight: 600;
+	box-shadow: var(--dvb-shadow);
+}
+.dvb-filter-count,
+.sl-markdown-content .dvb-legend {
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-catalog-group {
+	margin-top: var(--dvb-space-4);
+}
+.sl-markdown-content :is(.dvb-catalog-group, .dvb-catalog-table tr)[hidden] {
+	display: none;
+}
+.sl-markdown-content .dvb-group-head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 0.5rem;
+	padding-bottom: 0.4rem;
+	border-bottom: 1px solid var(--dvb-ink-strong);
+}
+.sl-markdown-content .dvb-group-head h2 {
+	margin: 0;
+	font-size: var(--sl-text-h4);
+}
+.sl-markdown-content .dvb-group-head p {
+	margin: 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-catalog-table {
+	margin-top: 0;
+}
+.sl-markdown-content .dvb-catalog-table th[scope='row'] a {
+	color: var(--dvb-ink-strong);
+	font-weight: 600;
+	text-decoration: none;
+}
+.sl-markdown-content .dvb-catalog-table th[scope='row'] a:hover {
+	text-decoration: underline;
+}
+.dvb-repo {
+	display: block;
+	color: var(--dvb-ink-muted);
+	font-family: var(--__sl-font-mono);
+	font-size: var(--dvb-label);
+	font-weight: 400;
+}
+.dvb-muted {
+	color: var(--dvb-ink-muted);
+}
+.sl-markdown-content .dvb-catalog-table td:last-child {
+	white-space: nowrap;
+}
+.sl-markdown-content .dvb-catalog-table td:last-child .dvb-chip {
+	margin-left: 0.4rem;
+}
+@media (max-width: 40rem) {
+	.sl-markdown-content .dvb-catalog-table tr {
+		display: grid;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid var(--dvb-rule);
+	}
+	.sl-markdown-content .dvb-catalog-table :is(th, td) {
+		padding: 0.15rem 0;
+		border: 0;
+	}
+}
+.sl-markdown-content .dvb-columns {
+	display: grid;
+	gap: var(--dvb-space-4);
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+	margin-top: var(--dvb-space-6);
+}
+.sl-markdown-content .dvb-columns h2 {
+	margin: 0;
+	padding-bottom: 0.4rem;
+	border-bottom: 1px solid var(--dvb-ink-strong);
+	font-size: var(--sl-text-h4);
+}
+.sl-markdown-content .dvb-reasons {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sl-markdown-content .dvb-reasons li {
+	margin: 0;
+	padding: 0.75rem 0;
+	border-bottom: 1px solid var(--dvb-rule);
+}
+.sl-markdown-content .dvb-reasons a {
+	color: var(--dvb-ink-strong);
+	font-weight: 600;
+}
+.sl-markdown-content .dvb-reasons p {
+	margin: 0.25rem 0 0;
+	color: var(--dvb-ink-muted);
+	font-size: var(--sl-text-sm);
+}
+.sl-markdown-content .dvb-note {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--dvb-space-2);
+	margin-top: var(--dvb-space-6);
+	padding: var(--dvb-space-2) var(--dvb-space-3);
+	border-radius: var(--dvb-radius);
+	background: var(--dvb-surface-sunken);
+}
+.sl-markdown-content .dvb-note p {
+	flex: 1 1 20rem;
+	margin: 0;
+	font-size: var(--sl-text-sm);
+}
+
+/* Site footer line (author, site links, consent). */
 .dvb-site-footer {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--dvb-space-1) 1.25rem;
-	justify-content: center;
+	justify-content: space-between;
 	margin-top: var(--dvb-space-4);
 	padding-top: var(--dvb-space-2);
 	border-top: 1px solid var(--dvb-rule);
 	font-size: var(--sl-text-xs);
 	color: var(--dvb-ink-muted);
+}
+.dvb-site-footer nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--dvb-space-1) 1.25rem;
 }
 .dvb-site-footer a,
 .dvb-site-footer button {
@@ -495,5 +990,18 @@ nav.sidebar .large {
 @media (prefers-reduced-motion: reduce) {
 	.dvb-actions button {
 		transition: none;
+	}
+}
+
+/* The site sets its own focus and copy states; keep the sunken prompt band and the cards from printing heavy. */
+@media print {
+	.dvb-banner,
+	.dvb-copy-button,
+	.dvb-tabs {
+		display: none;
+	}
+	.sl-markdown-content .dvb-prompt-text {
+		max-height: none;
+		mask-image: none;
 	}
 }

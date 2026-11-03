@@ -27,6 +27,7 @@ test('the committed catalog is valid', () => {
 test('rejects auto-consent flags, bad refs and unexplained suggestions', () => {
 	const bad = {
 		maxOptional: 3,
+		groups: catalog.groups,
 		upstreams: [
 			source({ id: 'a', install: { any: 'npx skills add o/x -y' } }),
 			source({ id: 'b', ref: 'latest' }),
@@ -41,6 +42,7 @@ test('rejects auto-consent flags, bad refs and unexplained suggestions', () => {
 
 test('the allowlist pins each command and leaves out retired and suggested sources', () => {
 	const text = renderAllowlist({
+		groups: catalog.groups,
 		upstreams: [source(), source({ id: 'r', title: 'Retired', status: 'retired', reason: 'gone' })],
 	});
 	assert.match(text, /--pin v1\.0\.0/);

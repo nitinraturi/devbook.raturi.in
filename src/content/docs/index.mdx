@@ -2,132 +2,24 @@
 title: Devbook
 description: One bootstrap prompt that sets up a repository for careful agent coding - a small core block in AGENTS.md, real commands, pinned vendor skills and hooks.
 template: splash
-hero:
-  tagline: One prompt that sets up your repository for careful agent coding. It writes a 1 KB core block and your real commands into AGENTS.md, installs at most three pinned vendor skills, and adds hooks where your agent supports them. It never touches CI or deploys.
-  actions:
-    - text: Copy the bootstrap prompt
-      link: '#setup'
-      icon: right-arrow
-    - text: How it works
-      link: /start-here/how-it-works/
-      variant: minimal
+tableOfContents: false
+lastUpdated: false
+banner:
+  content: '<strong>Using the old .devbook/ install?</strong> Updating removes the files your AGENTS.md imports. Run the prompt below first; its Update mode migrates you. <a href="/start-here/setup/#move-from-the-old-devbook-install">Migration steps →</a>'
 ---
 
-import { Code } from '@astrojs/starlight/components';
-import History from '../../components/History.astro';
-import bootstrap from '../../../prompt/bootstrap.md?raw';
-import core from '../../../core/AGENTS.core.md?raw';
+import HomeHero from '../../components/HomeHero.astro';
+import Phases from '../../components/Phases.astro';
+import AgentMatrix from '../../components/AgentMatrix.astro';
+import CoreBlock from '../../components/CoreBlock.astro';
+import ProofCards from '../../components/ProofCards.astro';
 
-<section class="dvb-home-flow" aria-labelledby="flow-title">
-  <div class="dvb-home-section-heading">
-    <div>
-      <p class="dvb-home-eyebrow">Seven phases, one approval</p>
-      <h2 id="flow-title">What the prompt does</h2>
-    </div>
-    <a class="dvb-home-text-link" href="/start-here/how-it-works/">The full explanation <span aria-hidden="true">→</span></a>
-  </div>
+<HomeHero />
 
-  <ol class="dvb-flow-steps">
-    <li>
-      <span class="dvb-flow-num" aria-hidden="true">1</span>
-      <h3>Reads, writes nothing</h3>
-      <p>Finds your agent, your stack and the format, lint, typecheck, test and build commands your repository already uses, and runs each once.</p>
-    </li>
-    <li>
-      <span class="dvb-flow-num" aria-hidden="true">2</span>
-      <h3>Shows a plan and waits</h3>
-      <p>One table: each file it would write, each skill with its source and pinned version, each hook. Nothing happens until you say yes.</p>
-    </li>
-    <li>
-      <span class="dvb-flow-num" aria-hidden="true">3</span>
-      <h3>Merges, never overwrites</h3>
-      <p>Writes the Devbook block into <code>AGENTS.md</code> between markers and keeps every line you wrote. Claude Code gets <code>@AGENTS.md</code> in <code>CLAUDE.md</code>.</p>
-    </li>
-    <li>
-      <span class="dvb-flow-num" aria-hidden="true">4</span>
-      <h3>Installs a little, pinned</h3>
-      <p>At most three skills from vendor-maintained sources, read in full before install. It records everything in <code>devbook.lock.json</code> and leaves the commit to you.</p>
-    </li>
-  </ol>
-</section>
+<Phases />
 
-<section class="dvb-quick-start" id="setup" aria-labelledby="setup-title">
-  <div class="dvb-home-section-heading">
-    <div>
-      <p class="dvb-home-eyebrow">Claude Code, Codex, Cursor, Copilot or Gemini CLI</p>
-      <h2 id="setup-title">The bootstrap prompt</h2>
-    </div>
-    <a class="dvb-home-text-link" href="/start-here/setup/">Setup, updates and moving from .devbook/ <span aria-hidden="true">→</span></a>
-  </div>
-  <p>Open your agent in the repository, paste the prompt, and review the plan it shows. Re-run the same prompt later to update: it reads <code>devbook.lock.json</code> and shows a diff instead of starting over.</p>
-  <Code code={bootstrap} lang="md" title="Paste into your coding agent" />
-</section>
+<AgentMatrix />
 
-<section class="dvb-home-layers" aria-labelledby="result-title">
-  <div class="dvb-home-section-heading">
-    <div>
-      <p class="dvb-home-eyebrow">The only always-loaded part</p>
-      <h2 id="result-title">The core block</h2>
-    </div>
-  </div>
-  <p>These lines go into your <code>AGENTS.md</code>, followed by your repository's real commands. They cover only what agents get wrong without being told: proving work with real output, staying out of commits and deploys, asking before risky changes, and keeping secrets out.</p>
-  <Code code={core} lang="md" title="AGENTS.md (Devbook block)" />
-  <div class="dvb-home-layer-grid">
-    <article>
-      <h3>Never touched</h3>
-      <p>CI and deploy config, git hooks, branch protection, <code>.env</code> files and your own instructions. The prompt reads CI only to learn your commands.</p>
-    </article>
-    <article>
-      <h3>Enforced where possible</h3>
-      <p>In Claude Code, permission rules block <code>git push</code> and reads of <code>.env</code>, and a hook stops edits to CI and deploy paths. A hook runs every time; a line of text is only advice.</p>
-    </article>
-    <article>
-      <h3>Yours wins</h3>
-      <p>Your request beats your project rules, and your project rules beat the Devbook block. Put your own rules under "Project rules" in <code>AGENTS.md</code>.</p>
-    </article>
-  </div>
-</section>
+<CoreBlock />
 
-<section class="dvb-home-daily" aria-labelledby="why-title">
-  <div class="dvb-home-section-heading">
-    <div>
-      <p class="dvb-home-eyebrow">Curated, not written</p>
-      <h2 id="why-title">Why it is this small</h2>
-    </div>
-    <a class="dvb-home-text-link" href="/catalog/">The catalog <span aria-hidden="true">→</span></a>
-  </div>
-  <div class="dvb-flow-tiers">
-    <article>
-      <p class="dvb-flow-tier-label">Context files</p>
-      <h3>Only what agents can't discover</h3>
-      <p>Hand-written context files help when they hold facts the agent can't find on its own. Generated ones lowered success rates and raised cost by about 20% (<a href="https://arxiv.org/html/2602.11988v1">arXiv 2602.11988</a>).</p>
-    </article>
-    <article>
-      <p class="dvb-flow-tier-label">Skills</p>
-      <h3>Two or three, not ten</h3>
-      <p>Curated skills help, but four or more cut most of the gain, and software engineering gains least of any domain (<a href="https://arxiv.org/html/2602.12670v1">SkillsBench</a>). Hence the cap of three.</p>
-    </article>
-    <article>
-      <p class="dvb-flow-tier-label">Stack knowledge</p>
-      <h3>From the vendor</h3>
-      <p>Cloudflare, Expo, Stripe, Supabase and others now maintain their own skills. Devbook pins them instead of writing its own copies.</p>
-    </article>
-    <article>
-      <p class="dvb-flow-tier-label">Supply chain</p>
-      <h3>Pinned and read first</h3>
-      <p>Public skill registries have shipped malicious skills (<a href="https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/">Snyk</a>). The prompt installs only from an allowlist, pinned, after reading every file.</p>
-    </article>
-  </div>
-  <p class="dvb-skill-note">The evidence that any of this improves code is modest. Devbook measures its own effect monthly against no Devbook at all, and publishes the result. <a href="/evals/">The evals</a></p>
-</section>
-
-<section class="dvb-home-history" aria-labelledby="history-title">
-  <div class="dvb-home-section-heading">
-    <div>
-      <p class="dvb-home-eyebrow">Built in the open since October 2026</p>
-      <h2 id="history-title">How Devbook was made</h2>
-    </div>
-    <a class="dvb-home-text-link" href="/about/">The full story, and how AI was used <span aria-hidden="true">→</span></a>
-  </div>
-  <History perDay={3} />
-</section>
+<ProofCards />

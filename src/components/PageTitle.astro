@@ -1,9 +1,16 @@
 ---
+// Page title with a breadcrumb (the sidebar group), the last-verified date and the Markdown actions. The homepage
+// renders its own H1 in HomeHero, so this renders nothing there.
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 import { Aside } from '@astrojs/starlight/components';
 import { STALE_AFTER_DAYS } from '../lib/site';
 
 const route = Astro.locals.starlightRoute;
+const isHome = route.id === '';
+const group = route.sidebar.find(
+	(e): e is Extract<typeof e, { type: 'group' }> =>
+		e.type === 'group' && e.entries.some((c) => c.type === 'link' && c.isCurrent),
+)?.label;
 const { lastVerified } = route.entry.data as { lastVerified?: Date };
 const isStale = lastVerified ? Date.now() - lastVerified.getTime() > STALE_AFTER_DAYS * 864e5 : false;
 const verifiedIso = lastVerified?.toISOString().slice(0, 10);
@@ -13,25 +20,36 @@ const verifiedLabel = lastVerified?.toLocaleDateString('en-GB', {
 	year: 'numeric',
 	timeZone: 'UTC',
 });
-// Raw Markdown for the page is served at <page>/index.md (src/pages/[...slug]/index.md.ts).
+// The stale notice's `hidden` is the build-time answer (the no-JS fallback); src/scripts/site.ts recomputes it
+// when the page is viewed. Raw Markdown for the page is served at <page>/index.md (src/pages/[...slug]/index.md.ts).
 const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
 ---
 
-<Default />
-{lastVerified && (
-	<p class="dvb-verified">
-		Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
-	</p>
+{!isHome && (
+	<>
+		{group && (
+			<nav class="dvb-breadcrumb" aria-label="Breadcrumb">
+				<span>{group}</span>
+				<span aria-hidden="true">/</span>
+				<span aria-current="page">{route.entry.data.title}</span>
+			</nav>
+		)}
+		<Default />
+		{lastVerified && (
+			<p class="dvb-verified">
+				Last verified: <time datetime={verifiedIso}>{verifiedLabel}</time>
+			</p>
+		)}
+		{lastVerified && (
+			<div data-stale-notice data-verified={verifiedIso} data-stale-days={STALE_AFTER_DAYS} hidden={!isStale}>
+				<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
+			</div>
+		)}
+		<div class="dvb-actions">
+			<button type="button" data-copy-md={mdHref}>
+				Copy page as Markdown
+			</button>
+			<a href={mdHref}>View Markdown</a>
+		</div>
+	</>
 )}
-{/* `hidden` is the build-time answer (the no-JS fallback); src/scripts/site.ts recomputes it when the page is viewed. */}
-{lastVerified && (
-	<div data-stale-notice data-verified={verifiedIso} data-stale-days={STALE_AFTER_DAYS} hidden={!isStale}>
-		<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
-	</div>
-)}
-<div class="dvb-actions">
-	<button type="button" data-copy-md={mdHref}>
-		Copy page as Markdown
-	</button>
-	<a href={mdHref}>View Markdown</a>
-</div>

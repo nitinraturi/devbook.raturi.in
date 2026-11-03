@@ -1,38 +1,128 @@
 ---
-// The catalog's sources with one status, from catalog/sources.json (src/lib/catalog.ts), so this page and the
-// bootstrap prompt's allowlist can't disagree. The Markdown endpoint renders the same rows.
-import { hostLabel, refLabel, repoUrl, upstreams, type Upstream } from '../lib/catalog';
+// The catalog page body, from catalog/sources.json (src/lib/catalog.ts) in the same groups the bootstrap prompt
+// uses, so the page and the prompt's allowlist can't disagree. The agent filter needs JavaScript; without it every
+// source shows. The Markdown endpoint renders the same rows.
+import { adopted, builtins, groups, hostLabel, maxOptional, refLabel, repoUrl, upstreams } from '../lib/catalog';
 
-interface Props {
-	status: Upstream['status'];
-}
-
-const { status } = Astro.props;
-const rows = upstreams.filter((u) => u.status === status);
+const lastVerified = upstreams
+	.map((u) => u.lastChecked)
+	.sort()
+	.at(-1)!;
+const verifiedLabel = new Date(lastVerified).toLocaleDateString('en-GB', {
+	day: 'numeric',
+	month: 'short',
+	year: 'numeric',
+	timeZone: 'UTC',
+});
+const facts = [
+	{ label: 'Installable', value: `${adopted.length} sources` },
+	{ label: 'Per repository', value: `${maxOptional} optional at most` },
+	{ label: 'Drift check', value: 'Weekly pull request' },
+	{ label: 'Last verified', value: verifiedLabel },
+];
+const sections = Object.entries(groups)
+	.map(([id, g]) => ({ id, ...g, rows: adopted.filter((u) => u.group === id) }))
+	.filter((s) => s.rows.length);
+const side = (status: 'suggested' | 'retired') => upstreams.filter((u) => u.status === status);
 ---
 
-<table>
-	<thead>
-		<tr>
-			<th scope="col">Source</th>
-			<th scope="col">{status === 'adopted' ? 'Use' : 'Why not installed'}</th>
-			<th scope="col">Hosts</th>
-			<th scope="col">Pinned to</th>
-		</tr>
-	</thead>
-	<tbody>
-		{rows.map((u) => (
-			<tr>
-				<td>
-					<a href={repoUrl(u)}>{u.title}</a>
-					{!u.counts && ' (doesn’t count toward the cap)'}
-				</td>
-				<td>{status === 'adopted' ? u.use : u.reason}</td>
-				<td>{hostLabel(u)}</td>
-				<td>
-					<code>{refLabel(u.ref)}</code>
-				</td>
-			</tr>
+<dl class="dvb-stats dvb-stats-4">
+	{facts.map((f) => (
+		<div>
+			<dt>{f.label}</dt>
+			<dd>{f.value}</dd>
+		</div>
+	))}
+</dl>
+
+<div class="dvb-filter" data-catalog-filter>
+	<span id="dvb-filter-label">Show sources for</span>
+	<div class="dvb-segmented" role="group" aria-labelledby="dvb-filter-label">
+		<button type="button" aria-pressed="true" data-host="all">
+			All agents
+		</button>
+		<button type="button" aria-pressed="false" data-host="claude-code">
+			Claude Code
+		</button>
+		<button type="button" aria-pressed="false" data-host="other">
+			Other agents
+		</button>
+	</div>
+	<span class="dvb-filter-count" aria-live="polite" data-filter-count>
+		{adopted.length} of {adopted.length} sources
+	</span>
+</div>
+<p class="dvb-legend">
+	<span class="dvb-chip dvb-chip-free">free</span> Hooks or a language server: doesn’t use one of your {maxOptional}{' '}
+	slots. Everything else uses one.
+</p>
+
+{sections.map((s) => (
+	<section class="dvb-catalog-group" aria-labelledby={`dvb-group-${s.id}`}>
+		<div class="dvb-group-head">
+			<h2 id={`dvb-group-${s.id}`}>{s.title}</h2>
+			<p>{s.note[0]!.toUpperCase() + s.note.slice(1)}</p>
+		</div>
+		<table class="dvb-catalog-table">
+			<thead class="sr-only">
+				<tr>
+					<th scope="col">Source</th>
+					<th scope="col">Use</th>
+					<th scope="col">Agents</th>
+					<th scope="col">Pinned to</th>
+				</tr>
+			</thead>
+			<tbody>
+				{s.rows.map((u) => (
+					<tr data-hosts={u.hosts.join(' ')}>
+						<th scope="row">
+							<a href={repoUrl(u)}>{u.title}</a>
+							<span class="dvb-repo">{u.repo}</span>
+						</th>
+						<td>{u.use}</td>
+						<td class="dvb-muted">{hostLabel(u)}</td>
+						<td>
+							<code>{refLabel(u.ref)}</code>
+							{!u.counts && <span class="dvb-chip dvb-chip-free">free</span>}
+						</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</section>
+))}
+
+<div class="dvb-columns">
+	{(['suggested', 'retired'] as const).map((status) => (
+		<section aria-labelledby={`dvb-${status}`}>
+			<h2 id={`dvb-${status}`}>{status === 'suggested' ? 'Suggested, never installed' : 'Retired'}</h2>
+			<ul class="dvb-reasons">
+				{side(status).map((u) => (
+					<li>
+						<a href={repoUrl(u)}>{u.title}</a>
+						<p>{u.reason}.</p>
+					</li>
+				))}
+			</ul>
+		</section>
+	))}
+</div>
+
+<aside class="dvb-note">
+	<p>
+		Claude Code already has{' '}
+		{builtins.map((b, i) => (
+			<>
+				<code>{b.command}</code>
+				{i < builtins.length - 2 ? ', ' : i === builtins.length - 2 ? ' and ' : ''}
+			</>
 		))}
-	</tbody>
-</table>
+		, so the catalog has no review skills.
+	</p>
+	<a
+		class="dvb-text-link"
+		href="https://github.com/nitinraturi/devbook.raturi.in/issues/new?template=suggest-source.yml"
+	>
+		Suggest a source <span aria-hidden="true">→</span>
+	</a>
+</aside>

@@ -1,0 +1,46 @@
+---
+// Evidence and curation, side by side. The evals card shows the newest committed measured result, or says there is
+// none; the catalog card counts what is actually pinned.
+import { adopted, pinned } from '../lib/catalog';
+import { delta, latest, score } from '../lib/evals';
+
+const core = latest()?.suites.core;
+const own = adopted.length - pinned.length;
+---
+
+<section class="dvb-cards" aria-label="Evidence and catalog">
+	<article>
+		<p class="dvb-eyebrow">Measured with and without Devbook</p>
+		{core ? (
+			<h2>
+				{score(core.score)} with Devbook, {delta(core.meanDelta)}
+			</h2>
+		) : (
+			<h2>No results yet</h2>
+		)}
+		<p>
+			Ten core cases and one per optional skill, each run three times with Devbook and three times without in Claude
+			Code.
+			{core ? ' Rerun monthly.' : ' Results appear here after the first run, then monthly.'}
+		</p>
+		<p class="dvb-card-links">
+			<a href="/evals/">See the cases</a>
+			<a href="/evals/#run-them-yourself">Run them yourself</a>
+		</p>
+	</article>
+	<article>
+		<p class="dvb-eyebrow">Curated, not written</p>
+		<h2>
+			{pinned.length} pinned sources{own ? ` and Devbook’s own` : ''}
+		</h2>
+		<p>
+			Vendor-maintained skills for Cloudflare, React, Supabase, Expo, Stripe, Python and more. The prompt reads each one
+			in full before installing it.
+		</p>
+		<p class="dvb-card-links">
+			<a href="/catalog/">
+				Browse the catalog <span aria-hidden="true">→</span>
+			</a>
+		</p>
+	</article>
+</section>

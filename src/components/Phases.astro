@@ -1,0 +1,24 @@
+---
+// The prompt's seven phases, with the one approval gate drawn as a dashed line after phase 2.
+import { phases } from '../lib/home';
+---
+
+<section class="dvb-band" aria-labelledby="dvb-phases-title">
+	<div class="dvb-section-head">
+		<h2 id="dvb-phases-title">Seven phases, one approval</h2>
+		<a class="dvb-text-link" href="/start-here/how-it-works/">
+			Every phase in detail <span aria-hidden="true">→</span>
+		</a>
+	</div>
+	<ol class="dvb-phases">
+		{phases.map((p) => (
+			<li class:list={{ 'dvb-gate': p.gate }}>
+				<h3>{p.title}</h3>
+				<p>{p.text}</p>
+			</li>
+		))}
+	</ol>
+	<p class="dvb-gate-note">
+		<span aria-hidden="true"></span>Nothing is written until you answer “yes” to the plan in phase 2.
+	</p>
+</section>

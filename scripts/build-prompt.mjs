@@ -12,15 +12,6 @@ const root = join(fileURLToPath(import.meta.url), '../..');
 export const CORE_BUDGET_BYTES = 2000;
 const STATUSES = ['adopted', 'suggested', 'retired'];
 const TYPES = ['plugin', 'skill', 'mcp', 'hook'];
-const GROUPS = {
-	always: 'Always (Claude Code)',
-	discipline: 'Engineering discipline (opt-in)',
-	design: 'Design and UI (projects with a UI)',
-	stack: 'Stacks (only when detected)',
-	security: 'Security audits (opt-in)',
-	docs: 'Docs MCP (optional; ask first)',
-	devbook: "Devbook's own opt-in skills",
-};
 const HOSTS = { 'claude-code': 'Claude Code', other: 'other hosts', any: 'any host (Claude Code too)' };
 const REF = /^(vendor-channel|main|[0-9a-f]{40}|v?\d[\w.-]*)$/;
 
@@ -28,6 +19,8 @@ const REF = /^(vendor-channel|main|[0-9a-f]{40}|v?\d[\w.-]*)$/;
 export function validateCatalog(catalog) {
 	const problems = [];
 	const ids = new Set();
+	for (const [id, g] of Object.entries(catalog.groups ?? {}))
+		if (!g.title || !g.note) problems.push(`group ${id}: needs a title and a note`);
 	if (!Number.isInteger(catalog.maxOptional) || catalog.maxOptional < 1) problems.push('maxOptional must be >= 1');
 	for (const u of catalog.upstreams ?? []) {
 		const at = `upstream ${u.id ?? '?'}`;
@@ -35,7 +28,7 @@ export function validateCatalog(catalog) {
 		ids.add(u.id);
 		for (const key of ['title', 'group', 'use', 'repo', 'ref', 'license', 'lastChecked'])
 			if (typeof u[key] !== 'string' || !u[key]) problems.push(`${at}: ${key} is required`);
-		if (!GROUPS[u.group]) problems.push(`${at}: unknown group ${u.group}`);
+		if (!catalog.groups?.[u.group]) problems.push(`${at}: unknown group ${u.group}`);
 		if (!TYPES.includes(u.type)) problems.push(`${at}: type must be one of ${TYPES.join(', ')}`);
 		if (!STATUSES.includes(u.status)) problems.push(`${at}: status must be one of ${STATUSES.join(', ')}`);
 		if (u.status !== 'adopted' && !u.reason) problems.push(`${at}: a ${u.status} source needs a reason`);
@@ -70,10 +63,11 @@ function entry(u) {
 /** The ALLOWLIST section: adopted sources by group. */
 export function renderAllowlist(catalog) {
 	const adopted = catalog.upstreams.filter((u) => u.status === 'adopted');
-	return Object.entries(GROUPS)
-		.map(([group, label]) => {
+	// The site's catalog page uses the same groups, titles and notes (src/lib/catalog.ts).
+	return Object.entries(catalog.groups)
+		.map(([group, { title, note }]) => {
 			const items = adopted.filter((u) => u.group === group);
-			return items.length ? [`${label}:`, ...items.map(entry)].join('\n') : '';
+			return items.length ? [`${title} (${note}):`, ...items.map(entry)].join('\n') : '';
 		})
 		.filter(Boolean)
 		.join('\n');
