@@ -11,6 +11,7 @@ const PAGES = [
 	'/catalog/',
 	'/optional-skills/',
 	'/evals/',
+	'/changelog/',
 	'/about/',
 	'/start-here/writing-instructions/',
 	'/license/',
@@ -31,20 +32,55 @@ const codeText = async (page: Page, title: string) => {
 		.trim();
 };
 
-test('homepage shows the complete bootstrap prompt and core block', async ({ page, request }) => {
-	const prompt = (await readFile(new URL('../../prompt/bootstrap.md', import.meta.url), 'utf8')).trim();
-	const core = (await readFile(new URL('../../core/AGENTS.core.md', import.meta.url), 'utf8')).trim();
+test('homepage shows the complete bootstrap prompt and every core line', async ({ page, request }) => {
+	const prompt = await readFile(new URL('../../prompt/bootstrap.md', import.meta.url), 'utf8');
+	const core = await readFile(new URL('../../core/AGENTS.core.md', import.meta.url), 'utf8');
 	await page.goto('/');
-	await expect(
-		page
-			.locator('.expressive-code')
-			.filter({ hasText: 'Paste into your coding agent' })
-			.getByRole('button', { name: 'Copy to clipboard' }),
-	).toBeAttached();
-	expect(await codeText(page, 'Paste into your coding agent')).toBe(prompt);
-	expect(await codeText(page, 'AGENTS.md (Devbook block)')).toBe(core);
+	expect(await page.locator('#dvb-prompt-text').textContent()).toBe(prompt);
+	await expect(page.getByRole('button', { name: 'Copy the bootstrap prompt' })).toBeVisible();
+	const lines = core
+		.split('\n')
+		.filter((l) => l.startsWith('- '))
+		.map((l) => l.slice(2));
+	expect(await page.locator('.dvb-core-lines li').allTextContents()).toEqual(lines);
 	expect(await page.locator('html').evaluate((element) => element.scrollWidth <= window.innerWidth)).toBe(true);
-	expect(await (await request.get('/index.md')).text()).toContain(prompt);
+	const md = await (await request.get('/index.md')).text();
+	expect(md).toContain(prompt.trim());
+	expect(md).toContain(core.trim());
+});
+
+test('the copy button puts the whole prompt on the clipboard', async ({ page, context, browserName }) => {
+	test.skip(browserName !== 'chromium', 'Clipboard permissions are Chromium-only in Playwright.');
+	await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+	const prompt = await readFile(new URL('../../prompt/bootstrap.md', import.meta.url), 'utf8');
+	await page.goto('/');
+	await page.getByRole('button', { name: 'Copy the bootstrap prompt' }).click();
+	await expect(page.getByRole('button', { name: /Copied/ })).toBeVisible();
+	expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(prompt);
+});
+
+test('agent tabs switch panels by click and arrow key', async ({ page }) => {
+	await page.goto('/');
+	const claude = page.getByRole('tab', { name: 'Claude Code' });
+	await expect(claude).toHaveAttribute('aria-selected', 'true');
+	await expect(page.locator('#dvb-panel-claude-code')).toBeVisible();
+	await page.getByRole('tab', { name: 'Codex' }).click();
+	await expect(page.locator('#dvb-panel-codex')).toBeVisible();
+	await expect(page.locator('#dvb-panel-claude-code')).toBeHidden();
+	await page.keyboard.press('ArrowRight');
+	await expect(page.getByRole('tab', { name: 'Cursor' })).toBeFocused();
+	await expect(page.locator('#dvb-panel-cursor')).toBeVisible();
+	expect(await axe(page)).toEqual([]);
+});
+
+test('the old-install banner can be dismissed and stays dismissed', async ({ page }) => {
+	await page.goto('/');
+	const banner = page.locator('[data-banner]');
+	await expect(banner).toBeVisible();
+	await banner.getByRole('button', { name: 'Dismiss this notice' }).click();
+	await expect(banner).toBeHidden();
+	await page.goto('/start-here/setup/');
+	await expect(page.locator('[data-banner]')).toBeHidden();
 });
 
 test('the catalog page links every adopted, suggested and retired source', async ({ page, request }) => {
@@ -112,6 +148,19 @@ test('dark theme passes axe', async ({ page }) => {
 	await page.goto('/catalog/');
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 	expect(await axe(page)).toEqual([]);
+});
+
+test('the catalog filter shows only the sources an agent can install', async ({ page }) => {
+	const catalog = JSON.parse(await readFile(new URL('../../catalog/sources.json', import.meta.url), 'utf8'));
+	const adopted = catalog.upstreams.filter((u: { status: string }) => u.status === 'adopted');
+	const others = adopted.filter((u: { hosts: string[] }) => u.hosts.includes('other'));
+	await page.goto('/catalog/');
+	await page.getByRole('button', { name: 'Other agents' }).click();
+	await expect(page.locator('tr[data-hosts]:visible')).toHaveCount(others.length);
+	await expect(page.locator('[data-filter-count]')).toHaveText(`${others.length} of ${adopted.length} sources`);
+	await expect(page.getByRole('heading', { name: 'Always on' })).toBeHidden();
+	await page.getByRole('button', { name: 'All agents' }).click();
+	await expect(page.locator('tr[data-hosts]:visible')).toHaveCount(adopted.length);
 });
 
 test('the catalog shows its last-verified date', async ({ page }) => {
@@ -211,12 +260,10 @@ test('local server answers a malformed URL with 400 and keeps serving', async ({
 	expect((await request.get('/')).status()).toBe(200);
 });
 
-test('the history timeline is built from the changelog', async ({ page }) => {
+test('the changelog page is built from CHANGELOG.md', async ({ page }) => {
 	const changelog = await readFile(new URL('../../CHANGELOG.md', import.meta.url), 'utf8');
 	const newest = changelog.match(/^## \d{4}-\d{2}-\d{2}: (.+)$/m)?.[1];
 	expect(newest).toBeTruthy();
-	await page.goto('/about/');
+	await page.goto('/changelog/');
 	await expect(page.locator('.dvb-timeline').getByText(newest!, { exact: true })).toBeVisible();
-	await page.goto('/');
-	await expect(page.locator('.dvb-home-history .dvb-timeline > li').first()).toBeVisible();
 });

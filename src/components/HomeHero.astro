@@ -1,0 +1,63 @@
+---
+// Homepage hero: the one sentence, the three numbers, and the prompt card with the copy button. The card holds the
+// whole prompt as text (clipped visually, scrollable), so it is readable without JavaScript and by screen readers.
+import { PROMPT, VERSION, promptLines, stats } from '../lib/home';
+---
+
+<section class="dvb-hero" aria-labelledby="dvb-hero-title">
+	<div class="dvb-hero-copy">
+		<p class="dvb-eyebrow">A prompt, not a package</p>
+		<h1 id="dvb-hero-title">One prompt that sets up your repo for careful agent coding.</h1>
+		<p class="dvb-lede">
+			Paste it into your coding agent. It reads your repository, shows you one plan, and only then writes a small core
+			block and your real commands into <code>AGENTS.md</code>.
+		</p>
+		<dl class="dvb-stats">
+			{stats.map((s) => (
+				<div>
+					<dt>{s.label}</dt>
+					<dd>{s.value}</dd>
+				</div>
+			))}
+		</dl>
+		<a class="dvb-text-link" href="/start-here/how-it-works/">
+			How Devbook works <span aria-hidden="true">→</span>
+		</a>
+	</div>
+
+	<div class="dvb-prompt-card" id="prompt">
+		<div class="dvb-prompt-head">
+			<h2>The bootstrap prompt</h2>
+			<p class="dvb-mono-meta">
+				{promptLines} lines · {VERSION}
+			</p>
+		</div>
+		<pre class="dvb-prompt-text" id="dvb-prompt-text" tabindex="0" aria-label="The bootstrap prompt">{PROMPT}</pre>
+		<div class="dvb-prompt-actions">
+			<button type="button" class="dvb-copy-button" data-copy-target="dvb-prompt-text">
+				<svg
+					aria-hidden="true"
+					width="18"
+					height="18"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<rect x="9" y="9" width="12" height="12" rx="2"></rect>
+					<path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
+				</svg>
+				<span data-copy-label>Copy the bootstrap prompt</span>
+			</button>
+			<p>
+				Paste it into Claude Code, Codex, Cursor, Copilot or Gemini CLI in your repository. It shows a plan before it
+				changes anything. Hooks are Claude Code only.
+			</p>
+			<p class="dvb-prompt-links">
+				<a href="/start-here/setup/#run-the-prompt">Setup steps</a>
+				<a href="/start-here/setup/#update">Update an existing setup</a>
+				<a href="/start-here/setup/#remove-devbook">Remove Devbook</a>
+			</p>
+		</div>
+	</div>
+</section>

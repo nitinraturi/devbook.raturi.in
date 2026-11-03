@@ -2,6 +2,22 @@
 
 Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with each release. Each entry is in the first version on or after its date. Read the entries newer than the version in your `devbook.lock.json` (or `.devbook/VERSION` on an old install) before you update.
 
+## 2026-11-03: Day-to-day recipes, and lock file refs
+
+### Changed
+- **[Use Devbook day to day](https://devbook.raturi.in/start-here/using-devbook/)** is now a guide: how to name a skill in each agent and check it ran, the shape, plan, build, verify, review loop, and recipes with skills, an example prompt and a "done when" for a home page, code structure, an API endpoint, a fullstack feature, an iOS screen and an Astro site.
+- **Lock file refs:** the bootstrap prompt now says which ref to record in `devbook.lock.json`: `vendor-channel` for a plugin installed from Anthropic's official marketplace, otherwise the ref in its install command. The catalog's `$comment` says the same, and that `main` is the ref for Devbook's own skills.
+- **Superpowers:** its catalog entry now says that some of its steps commit or offer to push, which the core block leaves to you.
+
+### Fixed
+- **Removing skills:** the setup page said to uninstall skills "with `gh skill`", which has no remove command. Delete the skill's folder instead.
+
+## 2026-11-03: One set of catalog groups, and a redesigned site
+
+### Changed
+- **Catalog groups:** `catalog/sources.json` now defines five groups with a title and a note each: Always on, Your stack, Ways of working, Docs and From Devbook. The bootstrap prompt's ALLOWLIST and the catalog page both read them, so the two can't list sources differently. No source was added or removed.
+- **The site:** a new homepage, with the prompt card and copy button, the seven phases with the approval gate, what each agent gets, the core block and the evidence. The catalog page gains an agent filter. There is a new `/changelog/` page, and the old-install notice can be dismissed. Devbook's own skills are shown as tracking `main`, not as pinned.
+
 ## 2026-11-03: One bootstrap prompt replaces the rule files
 
 Devbook is now one prompt you paste into your coding agent, plus a small catalog of vendor-maintained skills. It replaces the submodule, the 13 instruction files, the stack notes, the setup scripts and the enforcement kit.
@@ -21,10 +37,10 @@ Devbook is now one prompt you paste into your coding agent, plus a small catalog
 
 **Upgrade:** this breaks old installs. Updating a `.devbook/` submodule to this version removes every file your `AGENTS.md` imports with `@.devbook/...` and every file `.claude/rules/`, `.claude/skills/` and `.github/instructions/` link to. Those imports fail silently, and hooks that run from `.devbook/kit/` report errors. Paste the bootstrap prompt from https://devbook.raturi.in/ before or right after you update. Its Update mode lists every part of the old install: the `@.devbook/...` lines, the `devbook-*` links in `.claude/rules/`, `.claude/skills/`, `.github/instructions/`, `.cursor/rules/` and `.agents/skills/`, hooks that run from `.devbook/kit/`, and the submodule or folder. It removes them only after you approve. Your Project section becomes "## Project rules". Delete any "ignore <rule ID>" lines, because rule IDs are gone.
 
-## 2026-11-03: Shipping is optional, GA4 is the default for websites
+## 2026-11-03: Shipping and GA4 are optional
 
 ### Changed
-- **Setup asks first.** `devbook-setup` now asks three questions in one message. How does the project ship today? Should a public website or web app use Google Analytics 4 (default yes)? Which kit parts are wanted (default none)? It never adds, edits or removes existing CI, git hooks, branch protection or deploy config unless asked.
+- **Setup asks first.** `devbook-setup` now asks three questions in one message. How does the project ship today? Should a public website or web app use Google Analytics 4 (optional; setup suggests yes)? Which kit parts are wanted (default none)? It never adds, edits or removes existing CI, git hooks, branch protection or deploy config unless asked.
 - **`templates/AGENTS.md`** has two new Project lines: `Workflow`, which overrides Devbook's CI, branch and deploy rules, and `Analytics`.
 - **Rules that assumed CI or a deploy process are now conditional:** TEST-08 (where the project has CI), CORE-20, SEC-19 and SEC-28 (any CI), PERF-14 (keep the project's own deploy process), PERF-02 and DES-05 (automated checks rather than CI specifically). The rules for how the assistant writes code are unchanged.
 

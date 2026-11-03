@@ -1,0 +1,45 @@
+---
+// What each agent gets from the prompt. The agent tabs live here, next to the rows they change; the prompt itself is
+// the same for every agent. Without JavaScript the first agent shows.
+import { agents } from '../lib/home';
+---
+
+<section class="dvb-section" aria-labelledby="dvb-agents-title">
+	<h2 id="dvb-agents-title">What you get in your agent</h2>
+	<p class="dvb-section-lede">
+		The prompt is the same everywhere; what it can set up differs. Rules written as text are advice; hooks run every
+		time.
+	</p>
+	<div class="dvb-tabs" role="tablist" aria-label="Agent" data-tabs>
+		{agents.map((a, i) => (
+			<button
+				type="button"
+				role="tab"
+				id={`dvb-tab-${a.id}`}
+				aria-controls={`dvb-panel-${a.id}`}
+				aria-selected={i === 0 ? 'true' : 'false'}
+				tabindex={i === 0 ? 0 : -1}
+			>
+				{a.name}
+			</button>
+		))}
+	</div>
+	{agents.map((a, i) => (
+		<div role="tabpanel" id={`dvb-panel-${a.id}`} aria-labelledby={`dvb-tab-${a.id}`} hidden={i !== 0}>
+			<table class="dvb-matrix">
+				<caption class="sr-only">What {a.name} gets</caption>
+				<tbody>
+					{a.rows.map((r) => (
+						<tr>
+							<td>
+								<span class:list={['dvb-chip', `dvb-chip-${r.support.toLowerCase()}`]}>{r.support}</span>
+							</td>
+							<th scope="row">{r.what}</th>
+							<td>{r.how}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	))}
+</section>

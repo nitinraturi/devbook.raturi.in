@@ -1,6 +1,126 @@
 {
-  "$comment": "Devbook's allowlist: every upstream the bootstrap prompt may install, and the primary docs the core block and prompt are checked against. scripts/build-prompt.mjs renders `adopted` upstreams into prompt/bootstrap.md as the ALLOWLIST and `suggested` ones as suggest-only; `retired` ones stay listed with the reason so the decision is public. `ref` is a tag or full commit SHA, or `vendor-channel` for Anthropic's official marketplace, which pins third-party plugins itself and auto-updates. `counts` is false for hook-only and LSP plugins, which add no skill descriptions and so don't count toward the cap of three. scripts/drift.mjs checks refs weekly; `evalDelta` is the latest measured Δ from evals/, or null until measured.",
+  "$comment": "Devbook's allowlist: every upstream the bootstrap prompt may install, and the primary docs the core block and prompt are checked against. scripts/build-prompt.mjs renders `adopted` upstreams into prompt/bootstrap.md as the ALLOWLIST and `suggested` ones as suggest-only; `retired` ones stay listed with the reason so the decision is public. `ref` is a tag or full commit SHA, `main` for Devbook's own skills, which ship with each Devbook version, or `vendor-channel` for Anthropic's official marketplace, which pins third-party plugins itself and auto-updates. When a source has a pinned ref and a Claude Code install from the official marketplace, the ref pins the other hosts' `gh skill` install, and devbook.lock.json records the Claude Code install as `vendor-channel`. `counts` is false for hook-only and LSP plugins, which add no skill descriptions and so don't count toward the cap of three. scripts/drift.mjs checks refs weekly; `evalDelta` is the latest measured Δ from evals/, or null until measured.",
   "maxOptional": 3,
+  "builtins": [
+    {
+      "command": "/code-review",
+      "use": "review the current diff for correctness bugs"
+    },
+    {
+      "command": "/security-review",
+      "use": "review the branch for vulnerabilities"
+    },
+    {
+      "command": "/verify",
+      "use": "build, run and observe a change in the real app"
+    },
+    {
+      "command": "/simplify",
+      "use": "clean up the changed code"
+    }
+  ],
+  "docs": [
+    {
+      "id": "claude-code-memory",
+      "title": "Claude Code: memory and AGENTS.md",
+      "url": "https://code.claude.com/docs/en/memory"
+    },
+    {
+      "id": "claude-code-best-practices",
+      "title": "Claude Code: best practices",
+      "url": "https://code.claude.com/docs/en/best-practices"
+    },
+    {
+      "id": "claude-code-hooks",
+      "title": "Claude Code: hooks",
+      "url": "https://code.claude.com/docs/en/hooks"
+    },
+    {
+      "id": "claude-code-plugins",
+      "title": "Claude Code: install plugins",
+      "url": "https://code.claude.com/docs/en/plugins/install"
+    },
+    {
+      "id": "claude-code-plugin-evals",
+      "title": "Claude Code: plugin evals",
+      "url": "https://code.claude.com/docs/en/plugin-evals"
+    },
+    {
+      "id": "agents-md",
+      "title": "AGENTS.md",
+      "url": "https://agents.md/"
+    },
+    {
+      "id": "agent-skills-spec",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification"
+    },
+    {
+      "id": "gh-skill",
+      "title": "GitHub CLI: gh skill",
+      "url": "https://cli.github.com/manual/gh_skill_install"
+    },
+    {
+      "id": "codex-skills",
+      "title": "OpenAI Codex: skills",
+      "url": "https://learn.chatgpt.com/docs/build-skills"
+    },
+    {
+      "id": "gemini-cli-context",
+      "title": "Gemini CLI: context files",
+      "url": "https://geminicli.com/docs/cli/gemini-md/"
+    },
+    {
+      "id": "copilot-agent-skills",
+      "title": "GitHub Copilot: agent skills",
+      "url": "https://docs.github.com/en/copilot/concepts/customizations/agent-skills"
+    },
+    {
+      "id": "owasp-llm-top-10",
+      "title": "OWASP Top 10 for LLM applications",
+      "url": "https://genai.owasp.org/llm-top-10/"
+    }
+  ],
+  "evidence": [
+    {
+      "title": "Evaluating AGENTS.md files (arXiv 2602.11988)",
+      "url": "https://arxiv.org/html/2602.11988v1"
+    },
+    {
+      "title": "SkillsBench (arXiv 2602.12670)",
+      "url": "https://arxiv.org/html/2602.12670v1"
+    },
+    {
+      "title": "Snyk: ToxicSkills",
+      "url": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/"
+    },
+    {
+      "title": "Vercel: AGENTS.md outperforms skills in our agent evals",
+      "url": "https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals"
+    }
+  ],
+  "groups": {
+    "always": {
+      "title": "Always on",
+      "note": "Claude Code; doesn’t count toward the cap"
+    },
+    "stack": {
+      "title": "Your stack",
+      "note": "only when phase 1 detects it"
+    },
+    "practice": {
+      "title": "Ways of working",
+      "note": "opt-in"
+    },
+    "docs": {
+      "title": "Docs",
+      "note": "optional; ask first"
+    },
+    "devbook": {
+      "title": "From Devbook",
+      "note": "only where no vendor maintains one"
+    }
+  },
   "upstreams": [
     {
       "id": "security-guidance",
@@ -43,8 +163,8 @@
     {
       "id": "superpowers",
       "title": "Superpowers",
-      "group": "discipline",
-      "use": "Test-driven development, verification before completion, systematic debugging and planning; opt-in, because it is heavy for small edits",
+      "group": "practice",
+      "use": "Test-driven development, verification before completion, systematic debugging and planning; opt-in, because it is heavy for small edits, and some of its steps commit or offer to push, which the core block leaves to the user",
       "type": "plugin",
       "hosts": ["claude-code", "other"],
       "repo": "obra/superpowers",
@@ -63,7 +183,7 @@
     {
       "id": "frontend-design",
       "title": "Frontend design",
-      "group": "design",
+      "group": "practice",
       "use": "Distinctive, production-grade UI",
       "type": "plugin",
       "hosts": ["claude-code", "other"],
@@ -83,7 +203,7 @@
     {
       "id": "web-design-guidelines",
       "title": "Web design guidelines",
-      "group": "design",
+      "group": "practice",
       "use": "Accessibility and interface review against web guidelines",
       "type": "skill",
       "hosts": ["claude-code", "other"],
@@ -225,7 +345,7 @@
     {
       "id": "trailofbits",
       "title": "Trail of Bits skills",
-      "group": "security",
+      "group": "practice",
       "use": "Security audits on request (static analysis, differential review, insecure defaults); link to it, never vendor modified copies (CC BY-SA)",
       "type": "plugin",
       "hosts": ["claude-code"],
@@ -341,104 +461,6 @@
       "lastChecked": "2026-11-03",
       "scan": "not-run",
       "evalDelta": null
-    }
-  ],
-  "builtins": [
-    {
-      "command": "/code-review",
-      "use": "review the current diff for correctness bugs"
-    },
-    {
-      "command": "/security-review",
-      "use": "review the branch for vulnerabilities"
-    },
-    {
-      "command": "/verify",
-      "use": "build, run and observe a change in the real app"
-    },
-    {
-      "command": "/simplify",
-      "use": "clean up the changed code"
-    }
-  ],
-  "docs": [
-    {
-      "id": "claude-code-memory",
-      "title": "Claude Code: memory and AGENTS.md",
-      "url": "https://code.claude.com/docs/en/memory"
-    },
-    {
-      "id": "claude-code-best-practices",
-      "title": "Claude Code: best practices",
-      "url": "https://code.claude.com/docs/en/best-practices"
-    },
-    {
-      "id": "claude-code-hooks",
-      "title": "Claude Code: hooks",
-      "url": "https://code.claude.com/docs/en/hooks"
-    },
-    {
-      "id": "claude-code-plugins",
-      "title": "Claude Code: install plugins",
-      "url": "https://code.claude.com/docs/en/plugins/install"
-    },
-    {
-      "id": "claude-code-plugin-evals",
-      "title": "Claude Code: plugin evals",
-      "url": "https://code.claude.com/docs/en/plugin-evals"
-    },
-    {
-      "id": "agents-md",
-      "title": "AGENTS.md",
-      "url": "https://agents.md/"
-    },
-    {
-      "id": "agent-skills-spec",
-      "title": "Agent Skills specification",
-      "url": "https://agentskills.io/specification"
-    },
-    {
-      "id": "gh-skill",
-      "title": "GitHub CLI: gh skill",
-      "url": "https://cli.github.com/manual/gh_skill_install"
-    },
-    {
-      "id": "codex-skills",
-      "title": "OpenAI Codex: skills",
-      "url": "https://learn.chatgpt.com/docs/build-skills"
-    },
-    {
-      "id": "gemini-cli-context",
-      "title": "Gemini CLI: context files",
-      "url": "https://geminicli.com/docs/cli/gemini-md/"
-    },
-    {
-      "id": "copilot-agent-skills",
-      "title": "GitHub Copilot: agent skills",
-      "url": "https://docs.github.com/en/copilot/concepts/customizations/agent-skills"
-    },
-    {
-      "id": "owasp-llm-top-10",
-      "title": "OWASP Top 10 for LLM applications",
-      "url": "https://genai.owasp.org/llm-top-10/"
-    }
-  ],
-  "evidence": [
-    {
-      "title": "Evaluating AGENTS.md files (arXiv 2602.11988)",
-      "url": "https://arxiv.org/html/2602.11988v1"
-    },
-    {
-      "title": "SkillsBench (arXiv 2602.12670)",
-      "url": "https://arxiv.org/html/2602.12670v1"
-    },
-    {
-      "title": "Snyk: ToxicSkills",
-      "url": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/"
-    },
-    {
-      "title": "Vercel: AGENTS.md outperforms skills in our agent evals",
-      "url": "https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals"
     }
   ]
 }

@@ -3,6 +3,8 @@ title: Setup
 description: Run the bootstrap prompt in any coding agent, update with the same prompt, move an old .devbook/ install over, and remove Devbook again.
 sidebar:
   order: 2
+banner:
+  content: '<strong>Using the old .devbook/ install?</strong> Updating removes the files your AGENTS.md imports. Run the prompt first; its Update mode migrates you. <a href="#move-from-the-old-devbook-install">Migration steps →</a>'
 ---
 
 import { Code } from '@astrojs/starlight/components';
@@ -30,6 +32,8 @@ If a teammate uses Claude Code, they run the `claude plugin install … --scope 
 | GitHub Copilot | `AGENTS.md` | `.agents/skills/` |
 | Gemini CLI | `AGENTS.md`, listed in `context.fileName` in `.gemini/settings.json` | `.agents/skills/` |
 
+Cursor and GitHub Copilot also read `.claude/skills/`, so in a repository you use with Claude Code and one of them, install each skill in one folder only, or the agent sees it twice.
+
 Claude Code cloud sessions don't load plugins that a repository's `.claude/settings.json` turns on, so they get the core block but not the plugins.
 
 ## Update
@@ -48,4 +52,4 @@ Rule IDs such as `CORE-02` or `SEC-05` are gone. If your own rules turned one of
 
 ## Remove Devbook
 
-Delete the block between `<!-- BEGIN:devbook-core -->` and `<!-- END:devbook-core -->` in `AGENTS.md`, the `@AGENTS.md` line in `CLAUDE.md` if you don't want it, `devbook.lock.json`, and the hooks and permission rules it added to `.claude/settings.json`. Uninstall the skills and plugins listed in the lock file with the same tool that installed them: `claude plugin uninstall <name> --scope project`, or `gh skill` for skills in `.agents/skills/`.
+Delete the block between `<!-- BEGIN:devbook-core -->` and `<!-- END:devbook-core -->` in `AGENTS.md`, the `@AGENTS.md` line in `CLAUDE.md` if you don't want it, `devbook.lock.json`, and the hooks and permission rules it added to `.claude/settings.json`. Uninstall the skills and plugins listed in the lock file with the same tool that installed them: `claude plugin uninstall <name> --scope project` for plugins. `gh skill` has no remove command, so for a skill it installed, delete the skill's folder in `.claude/skills/` or `.agents/skills/`.

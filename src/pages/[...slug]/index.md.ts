@@ -2,16 +2,18 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { posix } from 'node:path';
 import { changelogDays, formatDay } from '../../lib/changelog';
-import { hostLabel, refLabel, repoUrl, upstreams } from '../../lib/catalog';
+import { adopted, builtins, groups, hostLabel, pinned, refLabel, repoUrl, upstreams } from '../../lib/catalog';
 import { delta, latest, score } from '../../lib/evals';
+import { agents, CORE, coreBytes, coreLines, phases, PROMPT, stats } from '../../lib/home';
 
 // Serves each docs page's source as Markdown at <page>/index.md, used by the
 // "Copy page as Markdown" button. MDX components are turned into plain Markdown so the
 // file has the same content as the page: <Code> with a `?raw` import becomes a fenced
-// block, <History> the changelog timeline, and <Catalog> and <EvalResults> their tables.
+// block, <History> the changelog timeline, <Catalog> and <EvalResults> their tables, and the homepage
+// sections (<HomeHero>, <Phases>, <AgentMatrix>, <CoreBlock>, <ProofCards>) headings, lists and fenced blocks.
 // scripts/check-markdown.mjs fails the build if a component is left over.
 
-const raw = import.meta.glob<string>(['/prompt/bootstrap.md', '/core/AGENTS.core.md', '/LICENSE', '/CHANGELOG.md'], {
+const raw = import.meta.glob<string>(['/prompt/bootstrap.md', '/LICENSE', '/CHANGELOG.md'], {
 	query: '?raw',
 	import: 'default',
 	eager: true,
@@ -42,30 +44,99 @@ function history(perDay: number | undefined) {
 }
 
 /** <Catalog> and <EvalResults> as Markdown tables, from the same data as the components. */
-function generated(tag: string): string | undefined {
-	const catalog = tag.match(/^<Catalog status="(\w+)" \/>$/);
-	if (catalog) {
-		const adopted = catalog[1] === 'adopted';
-		const rows = upstreams
-			.filter((u) => u.status === catalog[1])
-			.map(
-				(u) =>
-					`| [${u.title}](${repoUrl(u)})${u.counts ? '' : ' (doesn’t count toward the cap)'} | ${adopted ? u.use : u.reason} | ${hostLabel(u)} | \`${refLabel(u.ref)}\` |`,
-			);
+const table = (head: string[], rows: string[][]) =>
+	[`| ${head.join(' | ')} |`, `|${head.map(() => '---').join('|')}|`, ...rows.map((r) => `| ${r.join(' | ')} |`)].join(
+		'\n',
+	);
+
+/** The catalog page body: one table per group, then the suggested and retired sources and the built-ins. */
+function catalogMarkdown() {
+	const sections = Object.entries(groups).flatMap(([id, g]) => {
+		const rows = adopted.filter((u) => u.group === id);
+		if (!rows.length) return [];
 		return [
-			`| Source | ${adopted ? 'Use' : 'Why not installed'} | Hosts | Pinned to |`,
-			'|---|---|---|---|',
-			...rows,
-		].join('\n');
+			`## ${g.title}`,
+			`${g.note[0]!.toUpperCase()}${g.note.slice(1)}.`,
+			table(
+				['Source', 'Use', 'Agents', 'Pinned to'],
+				rows.map((u) => [
+					`[${u.title}](${repoUrl(u)}) (\`${u.repo}\`)`,
+					u.use,
+					hostLabel(u),
+					`\`${refLabel(u.ref)}\`${u.counts ? '' : ' (free)'}`,
+				]),
+			),
+		];
+	});
+	const side = (status: string, title: string) => [
+		`## ${title}`,
+		upstreams
+			.filter((u) => u.status === status)
+			.map((u) => `- [${u.title}](${repoUrl(u)}): ${u.reason}.`)
+			.join('\n'),
+	];
+	return [
+		`- Installable: ${adopted.length} sources`,
+		...sections,
+		...side('suggested', 'Suggested, never installed'),
+		...side('retired', 'Retired'),
+		`Claude Code already has ${builtins.map((b) => `\`${b.command}\``).join(', ')}, so the catalog has no review skills.`,
+	].join('\n\n');
+}
+
+/** Generated components as Markdown, from the same data as the components. */
+function generated(tag: string): string | undefined {
+	if (tag === '<Catalog />') return catalogMarkdown();
+	if (tag === '<HomeHero />')
+		return [
+			'One prompt that sets up your repo for careful agent coding. Paste it into your coding agent. It reads your repository, shows you one plan, and only then writes a small core block and your real commands into `AGENTS.md`.',
+			stats.map((s) => `- ${s.label}: ${s.value}`).join('\n'),
+			'## The bootstrap prompt',
+			'Paste it into Claude Code, Codex, Cursor, Copilot or Gemini CLI in your repository. It shows a plan before it changes anything. Hooks are Claude Code only.',
+			fence(PROMPT, 'md', 'Bootstrap prompt'),
+		].join('\n\n');
+	if (tag === '<Phases />')
+		return [
+			'## Seven phases, one approval',
+			phases.map((p, i) => `${i + 1}. **${p.title}.** ${p.text}`).join('\n'),
+			'Nothing is written until you answer “yes” to the plan in phase 2.',
+		].join('\n\n');
+	if (tag === '<AgentMatrix />')
+		return [
+			'## What you get in your agent',
+			...agents.flatMap((a) => [
+				`### ${a.name}`,
+				table(
+					['', 'What', 'How'],
+					a.rows.map((r) => [r.support, r.what, r.how]),
+				),
+			]),
+		].join('\n\n');
+	if (tag === '<CoreBlock />')
+		return [
+			'## The core block',
+			`The only part loaded in every session: ${coreLines.length} lines, ${coreBytes.toLocaleString('en')} bytes against a 2 KB budget, merged into \`AGENTS.md\` between markers. Precedence: your request, then your rules, then this block.`,
+			fence(CORE, 'md', 'AGENTS.md (Devbook block)'),
+		].join('\n\n');
+	if (tag === '<ProofCards />') {
+		const core = latest()?.suites.core;
+		return [
+			`## Measured with and without Devbook`,
+			core
+				? `${score(core.score)} with Devbook, ${delta(core.meanDelta)} against no Devbook. [The evals](/evals/)`
+				: 'No results yet. [The evals](/evals/)',
+			`## Curated, not written`,
+			`${pinned.length} pinned sources and Devbook’s own. [The catalog](/catalog/)`,
+		].join('\n\n');
 	}
 	const evals = tag.match(/^<EvalResults suite="([\w-]+)" \/>$/);
 	if (evals) {
 		const result = latest()?.suites[evals[1]!];
 		if (!result) return 'No measured results yet.';
-		const rows = result.cases.map(
-			(c) => `| \`${c.name}\` | ${score(c.with)} | ${score(c.without)} | ${delta(c.delta)} |`,
+		return table(
+			['Case', 'With Devbook', 'Without', 'Δ'],
+			result.cases.map((c) => [`\`${c.name}\``, score(c.with), score(c.without), delta(c.delta)]),
 		);
-		return ['| Case | With Devbook | Without | Δ |', '|---|---|---|---|', ...rows].join('\n');
 	}
 	return undefined;
 }

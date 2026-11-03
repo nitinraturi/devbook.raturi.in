@@ -73,25 +73,23 @@ github-copilot, gemini-cli); check `gh skill install --help` if a flag fails.
 - Built-ins to mention, not install: /code-review (review the current diff for correctness bugs), /security-review (review the branch for vulnerabilities), /verify (build, run and observe a change in the real app), /simplify (clean up the changed code).
 
 ALLOWLIST
-Always (Claude Code):
+Always on (Claude Code; doesn’t count toward the cap):
 - Security guidance (official marketplace; doesn't count): Pattern-based security warnings on edits, as hooks. Claude Code: `claude plugin install security-guidance@claude-plugins-official --scope project`
 - Language server plugin (official marketplace; doesn't count): Diagnostics and code navigation for the main language, only when its language server binary is on PATH: pyright-lsp, typescript-lsp, swift-lsp, gopls-lsp or rust-analyzer-lsp. Claude Code: `claude plugin install <language>-lsp@claude-plugins-official --scope project`
-Engineering discipline (opt-in):
-- Superpowers (obra/superpowers): Test-driven development, verification before completion, systematic debugging and planning; opt-in, because it is heavy for small edits. Claude Code: `claude plugin install superpowers@claude-plugins-official --scope project`; other hosts: `gh skill install obra/superpowers test-driven-development --pin v7.0.1 --agent <host>`
-Design and UI (projects with a UI):
-- Frontend design (anthropics/skills): Distinctive, production-grade UI. Claude Code: `claude plugin install frontend-design@claude-plugins-official --scope project`; other hosts: `gh skill install anthropics/skills frontend-design --pin ca45fc496a3436251f191354091d557da31c15b5 --agent <host>`
-Stacks (only when detected):
+Your stack (only when phase 1 detects it):
 - Cloudflare skills (cloudflare/skills; when wrangler.* or @cloudflare/* dependencies): Workers, Durable Objects, Wrangler, web performance; bundles the Cloudflare docs MCP. Claude Code: `claude plugin install cloudflare@claude-plugins-official --scope project`; other hosts: `gh skill install cloudflare/skills workers-best-practices --pin 1a33048817d06df12882cb881dfc754e7039954a --agent <host>`
 - React best practices (vercel-labs/agent-skills; when react or next in package.json): React and Next.js performance and composition; keep any AGENTS.md block Next.js writes itself. any host (Claude Code too): `gh skill install vercel-labs/agent-skills react-best-practices --pin 1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62 --agent <host>`
 - Supabase skills (supabase/agent-skills; when supabase/ directory or @supabase/* dependencies): Supabase and Postgres best practices. any host (Claude Code too): `gh skill install supabase/agent-skills supabase-postgres-best-practices --pin v0.1.9 --agent <host>`
 - Expo skills (expo/skills; when app.json or eas.json with expo): Building, upgrading and debugging Expo and React Native apps. Claude Code: `claude plugin install expo@claude-plugins-official --scope project`; other hosts: `gh skill install expo/skills --all --pin a9e5bd3fa00b4e61f632e43f85da73aee1942582 --agent <host>`
 - Stripe plugin (official marketplace; when stripe dependency): Stripe integration best practices. Claude Code: `claude plugin install stripe@claude-plugins-official --scope project`
 - Astral (uv, ruff) (astral-sh/claude-code-plugins; when pyproject.toml or uv.lock): Python projects with uv and ruff. Claude Code: `claude plugin marketplace add astral-sh/claude-code-plugins#f3ce88a7ba830f53afd6d944c1d0278ed318e142 && claude plugin install astral@astral-sh --scope project`
-Security audits (opt-in):
+Ways of working (opt-in):
+- Superpowers (obra/superpowers): Test-driven development, verification before completion, systematic debugging and planning; opt-in, because it is heavy for small edits, and some of its steps commit or offer to push, which the core block leaves to the user. Claude Code: `claude plugin install superpowers@claude-plugins-official --scope project`; other hosts: `gh skill install obra/superpowers test-driven-development --pin v7.0.1 --agent <host>`
+- Frontend design (anthropics/skills): Distinctive, production-grade UI. Claude Code: `claude plugin install frontend-design@claude-plugins-official --scope project`; other hosts: `gh skill install anthropics/skills frontend-design --pin ca45fc496a3436251f191354091d557da31c15b5 --agent <host>`
 - Trail of Bits skills (trailofbits/skills): Security audits on request (static analysis, differential review, insecure defaults); link to it, never vendor modified copies (CC BY-SA). Claude Code: `claude plugin marketplace add trailofbits/skills#711af095215ad4ecde5b90cd1d0124b3f1c4ca9e && claude plugin install <plugin>@trailofbits --scope project`
-Docs MCP (optional; ask first):
+Docs (optional; ask first):
 - Context7 docs MCP (official marketplace): Version-matched library docs when the vendor has no docs MCP of its own; ask first, because CLIs cost less context. Claude Code: `claude plugin install context7@claude-plugins-official --scope project`
-Devbook's own opt-in skills:
+From Devbook (only where no vendor maintains one):
 - Devbook optional skills (nitinraturi/devbook.raturi.in): Domain skills with no maintained equivalent: api-design, db-migration, feature-doc, licensing, llm-security. Claude Code: `claude plugin marketplace add nitinraturi/devbook.raturi.in && claude plugin install <skill>@devbook --scope project`; other hosts: `gh skill install nitinraturi/devbook.raturi.in <skill> --agent <host>`
 
 Suggest only (tell me why, never install):
@@ -112,7 +110,8 @@ Run each hook once on a harmless input to show it fires.
 Write devbook.lock.json at the root: {"devbook": "2026.11.02.5", "host": [...], "stack": [...],
 "core_block_sha256": "<sha256 of the lines between the markers>", "commands": {...}, "sources": [{"id",
 "type": "plugin|skill|mcp|hook", "repo", "ref", "installed_to", "why", "scan": "pass|findings|not-run"}],
-"skipped": [...]}.
+"skipped": [...]}. Each "ref" is what you installed: `vendor-channel` for a plugin from Anthropic's official
+marketplace, otherwise the ref in its install command.
 Then report: AGENTS.md size; that CLAUDE.md starts with @AGENTS.md; each command's real output; what is installed
 (`claude plugin list` or the host's equivalent); that the hooks fired; and `git status` plus `git diff --stat`
 showing nothing changed under the protected CI and deploy paths. End with the files changed, the one-time command

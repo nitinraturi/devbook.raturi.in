@@ -1,0 +1,38 @@
+---
+// The core block, read from core/AGENTS.core.md. Plain bullets, not numbers: line numbers would read as rule IDs
+// and shift whenever a line changes.
+import { coreBytes, coreLines } from '../lib/home';
+---
+
+<section class="dvb-section dvb-core" aria-labelledby="dvb-core-title">
+	<div class="dvb-core-intro">
+		<h2 id="dvb-core-title">The core block</h2>
+		<p>
+			The only part loaded in every session. {coreLines.length} lines covering what agents get wrong when nobody tells
+			them, merged between markers so your own lines stay yours.
+		</p>
+		<dl class="dvb-facts">
+			<div>
+				<dt>Size</dt>
+				<dd>
+					<code>{coreBytes.toLocaleString('en')} bytes · budget 2 KB</code>
+				</dd>
+			</div>
+			<div>
+				<dt>Lives in</dt>
+				<dd>
+					<code>AGENTS.md</code>
+				</dd>
+			</div>
+			<div>
+				<dt>Precedence</dt>
+				<dd>Your request › your rules › this block</dd>
+			</div>
+		</dl>
+	</div>
+	<ul class="dvb-core-lines">
+		{coreLines.map((l) => (
+			<li>{l}</li>
+		))}
+	</ul>
+</section>

@@ -9,23 +9,21 @@ import { GA_ID, PERSON } from '../lib/site';
 		Written by{' '}
 		<a href={PERSON.url} rel="author">
 			{PERSON.name}
-		</a>
+		</a>{' '}
+		· Built in the open since October 2026
 	</span>
-	<a href="/start-here/contact/">Contact</a>
-	<a href="https://www.linkedin.com/in/nitinraturi/" rel="me noopener noreferrer">
-		LinkedIn
-	</a>
-	<a href="https://x.com/raturitechmedia" rel="me noopener noreferrer">
-		X
-	</a>
-	<a href={`mailto:${PERSON.contactEmail}`}>Email</a>
-	<a href="/license/">License</a>
-	<a href="/privacy/">Privacy</a>
-	{GA_ID && (
-		<button type="button" data-consent-open>
-			Cookie settings
-		</button>
-	)}
+	<nav aria-label="Site">
+		<a href="/about/">About</a>
+		<a href="/start-here/writing-instructions/">Writing instructions</a>
+		<a href="/start-here/contact/">Contact</a>
+		<a href="/license/">License</a>
+		<a href="/privacy/">Privacy</a>
+		{GA_ID && (
+			<button type="button" data-consent-open>
+				Cookie settings
+			</button>
+		)}
+	</nav>
 </div>
 {GA_ID && (
 	<div class="dvb-consent" role="region" aria-label="Analytics consent" data-consent hidden>

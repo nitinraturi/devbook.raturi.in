@@ -81,7 +81,8 @@ Run each hook once on a harmless input to show it fires.
 Write devbook.lock.json at the root: {"devbook": "{{VERSION}}", "host": [...], "stack": [...],
 "core_block_sha256": "<sha256 of the lines between the markers>", "commands": {...}, "sources": [{"id",
 "type": "plugin|skill|mcp|hook", "repo", "ref", "installed_to", "why", "scan": "pass|findings|not-run"}],
-"skipped": [...]}.
+"skipped": [...]}. Each "ref" is what you installed: `vendor-channel` for a plugin from Anthropic's official
+marketplace, otherwise the ref in its install command.
 Then report: AGENTS.md size; that CLAUDE.md starts with @AGENTS.md; each command's real output; what is installed
 (`claude plugin list` or the host's equivalent); that the hooks fired; and `git status` plus `git diff --stat`
 showing nothing changed under the protected CI and deploy paths. End with the files changed, the one-time command

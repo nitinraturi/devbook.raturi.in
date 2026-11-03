@@ -1,0 +1,47 @@
+---
+// Site header: title with the shipped version, the main sections on wide screens, search, and a "Get the prompt"
+// button on every page but the homepage (whose hero already has it).
+import Search from '@astrojs/starlight/components/Search.astro';
+import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
+import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
+import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
+import { VERSION } from '../lib/home';
+
+const isHome = Astro.locals.starlightRoute.id === '';
+const path = Astro.url.pathname;
+const nav = [
+	{ label: 'How it works', href: '/start-here/how-it-works/' },
+	{ label: 'Setup', href: '/start-here/setup/' },
+	{ label: 'Catalog', href: '/catalog/' },
+	{ label: 'Evals', href: '/evals/' },
+	{ label: 'Changelog', href: '/changelog/' },
+];
+---
+
+<div class="header dvb-header">
+	<div class="title-wrapper sl-flex">
+		<SiteTitle />
+		<span class="dvb-version" title="Devbook version">
+			{VERSION}
+		</span>
+	</div>
+	<nav class="dvb-nav" aria-label="Sections">
+		{nav.map((n) => (
+			<a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>
+				{n.label}
+			</a>
+		))}
+	</nav>
+	<div class="sl-flex print:hidden dvb-header-search">
+		<Search />
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden dvb-header-right">
+		{!isHome && (
+			<a class="dvb-header-cta" href="/#prompt">
+				Get the prompt
+			</a>
+		)}
+		<SocialIcons />
+		<ThemeSelect />
+	</div>
+</div>
