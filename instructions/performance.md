@@ -14,7 +14,7 @@ Load for any app, site or service. Pagination is in the REST API instructions, a
 
 ## First
 - PERF-01: Meet Core Web Vitals at the 75th percentile: LCP ≤ 2.5 s (aim for 2.0 s on content sites), INP ≤ 200 ms, CLS ≤ 0.1.
-- PERF-02: Measure before optimising, and enforce budgets (page weight, JavaScript size, Lighthouse scores) in CI rather than by review.
+- PERF-02: Measure before optimising, and enforce budgets (page weight, JavaScript size, Lighthouse scores) with automated checks rather than by review.
 - PERF-03: Ship JavaScript only for interactive parts, so content reads without it. Split code by route and lazy-load what first render doesn't need.
 - PERF-04: Every network call has a timeout. Retry only idempotent operations, with backoff, jitter and a limit, so retries can't duplicate work or overload a struggling service.
 
@@ -32,4 +32,4 @@ Load for any app, site or service. Pagination is in the REST API instructions, a
 
 ## Operations
 - PERF-13: Track errors with release versions and set up uptime checks before launch. Alert on what users feel (error rate, latency), not on every log line.
-- PERF-14: Deploy from CI on `main` with health checks, so a rollback takes minutes. Run migrations as an explicit step.
+- PERF-14: Keep the project's deploy process. When setting one up, deploy from CI on `main` with health checks, so a rollback takes minutes. Run migrations as an explicit step.

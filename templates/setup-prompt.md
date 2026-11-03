@@ -22,6 +22,8 @@ Method: submodule
 2. Connect it
 - Read .devbook/skills/devbook-setup/SKILL.md and follow it. It chooses
   the instruction files, writes AGENTS.md, CLAUDE.md and the Copilot file,
-  links path rules and skills, and asks me about the optional enforcement
-  kit. Do not install the kit unless I say yes. Do not commit, push or
+  links path rules and skills, and asks me how the project ships today,
+  whether to use Google Analytics, and which optional enforcement kit
+  parts I want. Keep the existing CI, git hooks and deploy config as they
+  are, and install no kit part unless I say yes. Do not commit, push or
   deploy.

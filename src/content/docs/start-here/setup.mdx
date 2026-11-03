@@ -98,6 +98,8 @@ A load probe asks a question only Devbook answers (CORE-02, and DES-04 after ope
 
 ## 3. Optional: add the enforcement kit
 
+Devbook requires only the rules for how the assistant writes code. How code ships is up to you. Setup asks how the project ships today and records the answer in `AGENTS.md`, and that answer overrides Devbook's CI, branch and deploy rules. Setup never changes existing CI, git hooks or deploy config. For public websites and web apps, it also asks whether to use Google Analytics 4. The answer defaults to yes, and the assistant then follows the [GA4 and consent](/stacks/ga4-consent/) note.
+
 Instructions are context, so an assistant can still miss a rule. The kit in `.devbook/kit/` turns a few of them into checks that tools run. The setup prompt asks before installing any part, and you can add it later:
 
 - **Claude Code hooks** that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook release is out.

@@ -16,4 +16,4 @@ lastVerified: 2026-11-02
 - TEST-05: Test boundaries (database, HTTP handlers, queues) against real dependencies, such as local services or test containers, where practical.
 - TEST-06: Use synthetic data from factories or fixtures, never production personal data.
 - TEST-07: Fix a flaky test at once, or quarantine it with a tracked issue. Re-running until green hides real bugs.
-- TEST-08: Every pull request runs format, lint, typecheck, tests and build in CI, and a failure blocks the merge.
+- TEST-08: Where the project has CI, every pull request runs format, lint, typecheck, tests and build, and a failure blocks the merge.

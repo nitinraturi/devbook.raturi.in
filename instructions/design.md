@@ -31,7 +31,7 @@ Load for any project with a user interface. The project's own look lives in `doc
 - DES-02: Be distinctive through a few deliberate choices (a characterful display face, a palette from the product's world, one signature element) and keep everything else quiet. Customise any UI kit's theme, and avoid the template look: one default sans everywhere, purple-to-blue gradients, glassmorphism, a centred hero over three identical icon cards, emoji as icons, and the same rounded, shadowed card around everything.
 - DES-03: Design with real content at its longest and shortest, never lorem ipsum.
 - DES-04: Design mobile first at 360 px. Check every UI change in a browser at about 360 px and 1440 px, in light and dark themes, and by keyboard.
-- DES-05: Run axe (or equivalent) on every page template in CI with zero serious or critical issues; it covers contrast, names, landmarks and heading order.
+- DES-05: Run axe (or equivalent) on every page template in automated tests with zero serious or critical issues; it covers contrast, names, landmarks and heading order.
 
 ## Craft and layout
 - DES-06: Honest UI: label estimates and illustrations, and never imitate system dialogs, live data or official seals. No dark patterns, fake urgency or fake social proof.

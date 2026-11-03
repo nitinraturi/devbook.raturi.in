@@ -2,6 +2,15 @@
 
 Notable changes to Devbook, newest first. Devbook ships from `main`, and `VERSION` holds the version number, which goes up with each release. Each entry is in the first version on or after its date. Read the entries newer than your `.devbook/VERSION` before you update. Read the entries newer than your `.devbook/VERSION` before you update.
 
+## 2026-11-03: Shipping is optional, GA4 is the default for websites
+
+### Changed
+- **Setup asks first.** `devbook-setup` now asks three questions in one message. How does the project ship today? Should a public website or web app use Google Analytics 4 (default yes)? Which kit parts are wanted (default none)? It never adds, edits or removes existing CI, git hooks, branch protection or deploy config unless asked.
+- **`templates/AGENTS.md`** has two new Project lines: `Workflow`, which overrides Devbook's CI, branch and deploy rules, and `Analytics`.
+- **Rules that assumed CI or a deploy process are now conditional:** TEST-08 (where the project has CI), CORE-20, SEC-19 and SEC-28 (any CI), PERF-14 (keep the project's own deploy process), PERF-02 and DES-05 (automated checks rather than CI specifically). The rules for how the assistant writes code are unchanged.
+
+**Upgrade:** add `- Workflow (overrides Devbook's CI, branch and deploy rules): <how changes ship>` and `- Analytics: <GA4, another tool, or none>` to the Project section of `AGENTS.md`. For GA4, also add the `.devbook/stacks/ga4-consent.md` read-when line.
+
 ## 2026-11-02: Swift stack note for iOS and macOS apps
 
 ### Added

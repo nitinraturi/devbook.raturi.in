@@ -40,5 +40,5 @@ The project's `AGENTS.md` overrides Devbook only where it says so; the user's di
 - CORE-17: Make one small, reviewable change at a time, without unrelated refactors.
 - CORE-18: Update docs, config examples and the changelog in the same change as the behaviour; delete docs that are no longer true. Keep project facts in `AGENTS.md`, short and current.
 - CORE-19: Record significant decisions (framework, data store, hosting, auth, major dependency) as short ADRs in `docs/adr/NNNN-title.md` (context, decision, alternatives, consequences); supersede them rather than rewrite.
-- CORE-20: Let the formatter, linter and strictest practical type checking enforce style, with CI failing on warnings. Every type escape or lint ignore has a comment saying why.
+- CORE-20: Let the formatter, linter and strictest practical type checking enforce style, failing on warnings. Every type escape or lint ignore has a comment saying why.
 - CORE-21: Write Conventional Commits (`feat:`, `fix:`) that say why. Name branches `type/short-description`.

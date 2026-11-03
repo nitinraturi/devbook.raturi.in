@@ -5,6 +5,8 @@
 - What: <one sentence: what this project is and who it is for>
 - Stack: <language, framework, hosting, database, package manager>
 - Commands: install `<cmd>` · dev `<cmd>` · lint `<cmd>` · typecheck `<cmd>` · test `<cmd>` · build `<cmd>`
+- Workflow (overrides Devbook's CI, branch and deploy rules): <how changes ship today: CI, branches, review, deploy; or `none`>
+- Analytics: <GA4 with `.devbook/stacks/ga4-consent.md` and the measurement ID, another tool, or none>
 - Layout: <where pages, components, content, tests and scripts live>
 - Project docs: <links to design system, specs or domain rules, if any>
 - Features: <one line per feature doc, `- <feature>: <path to FEATURE.md>`, if any>
