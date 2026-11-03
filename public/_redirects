@@ -1,28 +1,32 @@
-# Pages removed in the minimal redesign (2026-10-23). Specific rules come before splats.
-# Never add a splat that matches a live section (/start-here/, /instructions/, /stacks/).
+# Removed pages, newest first. Specific rules come before splats, and every target is a live page (no chains).
+# Never add a splat that matches a live section (/start-here/).
+
+# The bootstrap prompt replaced the instruction files, stack notes, kit and skills guides (2026-11-03).
+/instructions/core/ /start-here/how-it-works/ 301
+/instructions/security/ /start-here/how-it-works/ 301
+/instructions/testing/ /start-here/how-it-works/ 301
+/instructions/api-data/ /optional-skills/ 301
+/instructions/database/ /optional-skills/ 301
+/instructions/feature-docs/ /optional-skills/ 301
+/instructions/licensing/ /optional-skills/ 301
+/instructions/* /catalog/ 301
+/stacks/* /catalog/ 301
+/start-here/enforcement-kit/ /start-here/how-it-works/ 301
+/start-here/skills-and-instructions/ /optional-skills/ 301
+
+# Pages removed in the minimal redesign (2026-10-23).
 /start-here/introduction/ / 301
 /start-here/adopt-in-a-project/ /start-here/setup/ 301
 /start-here/baseline-rules/ /start-here/setup/ 301
 /start-here/versions/ /start-here/setup/ 301
 /start-here/doc-set-for-a-project/ /start-here/setup/ 301
-/workflow/* /instructions/core/ 301
-/engineering/* /instructions/core/ 301
-/security/* /instructions/security/ 301
-/quality/accessibility/ /instructions/design/ 301
-/quality/* /instructions/core/ 301
-/web/ui-and-design-systems/ /instructions/design/ 301
-/web/content-standards/ /instructions/content/ 301
-/web/evidence-and-citation/ /instructions/content/ 301
-/web/* /instructions/seo/ 301
-/platforms/mobile/ /instructions/mobile/ 301
-/platforms/* / 301
-/stacks/css-tokens/ /instructions/design/ 301
-/stacks/testing-tooling/ /instructions/testing/ 301
-/llm-features/* /instructions/security/ 301
+/workflow/* /start-here/how-it-works/ 301
+/engineering/* /start-here/how-it-works/ 301
+/security/* /start-here/how-it-works/ 301
+/quality/* /start-here/how-it-works/ 301
+/web/* /catalog/ 301
+/platforms/* /catalog/ 301
+/llm-features/* /optional-skills/ 301
 /templates/* /start-here/setup/ 301
 /prompts/* / 301
-/checklists/* /instructions/core/ 301
-
-# Instruction files merged on 2026-10-23.
-/instructions/workflow/ /instructions/core/ 301
-/instructions/engineering/ /instructions/core/ 301
+/checklists/* /start-here/how-it-works/ 301

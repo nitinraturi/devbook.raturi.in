@@ -1,68 +1,39 @@
 ---
-// The latest committed eval result per variant, read from evals/results/*.json at build time, so the evals page
-// and the homepage claim always show the committed numbers.
-import { latestResults, pct, tokens } from '../lib/evals';
+// The newest committed measured eval (evals/results/*.json via src/lib/evals.ts): one row per case with the
+// with-Devbook score, the no-Devbook score and Δ. Before the first measured run it says so instead.
+import { delta, latest, score } from '../lib/evals';
 
 interface Props {
-	/** `overall` (one row per variant) or `failures` (tasks that don't pass on the newest Devbook variant). */
-	view?: 'overall' | 'failures';
+	suite: string;
 }
 
-const { view = 'overall' } = Astro.props;
-const results = latestResults();
-const newest = results.find((r) => r.variant === 'local') ?? results.find((r) => r.variant === 'main');
-const labels: Record<string, string> = {
-	none: 'No Devbook (project section only)',
-	'ref:9504d10': 'Before the prune (October 2026)',
-	main: 'Before v1',
-	local: 'v1',
-};
-const failures = newest
-	? Object.entries(newest.tasks)
-			.filter(([, t]) => t.passRate < 1)
-			.map(([id, t]) => ({ id, why: t.failed[0] ?? '' }))
-	: [];
+const { suite } = Astro.props;
+const result = latest()?.suites[suite];
 ---
 
-{view === 'overall' ? (
+{result ? (
 	<table>
 		<thead>
 			<tr>
-				<th scope="col">Devbook version</th>
-				<th scope="col">Tasks passed</th>
-				<th scope="col">Rules in context</th>
-				<th scope="col">Rules in reach</th>
-				<th scope="col">Devbook tokens per task</th>
+				<th scope="col">Case</th>
+				<th scope="col">With Devbook</th>
+				<th scope="col">Without</th>
+				<th scope="col">Δ</th>
 			</tr>
 		</thead>
 		<tbody>
-			{results.map((r) => (
+			{result.cases.map((c) => (
 				<tr>
 					<td>
-						{labels[r.variant] ?? r.variant}
-						{r.commit && (
-							<>
-								{' '}
-								(<code>{r.commit.replace('+local', '')}</code>)
-							</>
-						)}
+						<code>{c.name}</code>
 					</td>
-					<td>
-						{pct(r.overall.passRate)} of {r.overall.runs}
-					</td>
-					<td>{pct(r.overall.coverageLoaded ?? 0)}</td>
-					<td>{pct(r.overall.coverageReachable ?? 0)}</td>
-					<td>{tokens(r.overall.meanInputTokens)}</td>
+					<td>{score(c.with)}</td>
+					<td>{score(c.without)}</td>
+					<td>{delta(c.delta)}</td>
 				</tr>
 			))}
 		</tbody>
 	</table>
 ) : (
-	<ul>
-		{failures.map((f) => (
-			<li>
-				<code>{f.id}</code>: {f.why}
-			</li>
-		))}
-	</ul>
+	<p>No measured results yet.</p>
 )}

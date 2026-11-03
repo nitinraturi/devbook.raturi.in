@@ -1,32 +1,28 @@
 ---
 title: Devbook
-description: Short rule files AI coding assistants load from your project, so every chat follows the same engineering, security and design rules. Set up with one prompt.
+description: One bootstrap prompt that sets up a repository for careful agent coding - a small core block in AGENTS.md, real commands, pinned vendor skills and hooks.
 template: splash
 hero:
-  tagline: Devbook is a set of short rule files that AI coding assistants load from your project, so every chat follows the same engineering, security and design rules. Add it to any project with one prompt.
+  tagline: One prompt that sets up your repository for careful agent coding. It writes a 1 KB core block and your real commands into AGENTS.md, installs at most three pinned vendor skills, and adds hooks where your agent supports them. It never touches CI or deploys.
   actions:
-    - text: Copy the setup prompt
+    - text: Copy the bootstrap prompt
       link: '#setup'
       icon: right-arrow
-    - text: Read the instructions
-      link: /instructions/core/
+    - text: How it works
+      link: /start-here/how-it-works/
       variant: minimal
 ---
 
 import { Code } from '@astrojs/starlight/components';
-import InstructionIndex from '../../components/InstructionIndex.astro';
 import History from '../../components/History.astro';
-import EvalClaim from '../../components/EvalClaim.astro';
-import setupPrompt from '../../../templates/setup-prompt.md?raw';
-import agentsTemplate from '../../../templates/AGENTS.md?raw';
-
-<EvalClaim />
+import bootstrap from '../../../prompt/bootstrap.md?raw';
+import core from '../../../core/AGENTS.core.md?raw';
 
 <section class="dvb-home-flow" aria-labelledby="flow-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">Four steps, then it runs itself</p>
-      <h2 id="flow-title">How Devbook works</h2>
+      <p class="dvb-home-eyebrow">Seven phases, one approval</p>
+      <h2 id="flow-title">What the prompt does</h2>
     </div>
     <a class="dvb-home-text-link" href="/start-here/how-it-works/">The full explanation <span aria-hidden="true">→</span></a>
   </div>
@@ -34,171 +30,95 @@ import agentsTemplate from '../../../templates/AGENTS.md?raw';
   <ol class="dvb-flow-steps">
     <li>
       <span class="dvb-flow-num" aria-hidden="true">1</span>
-      <h3>Paste one prompt</h3>
-      <p>Into Claude Code or Copilot agent mode, in your project.</p>
+      <h3>Reads, writes nothing</h3>
+      <p>Finds your agent, your stack and the format, lint, typecheck, test and build commands your repository already uses, and runs each once.</p>
     </li>
     <li>
       <span class="dvb-flow-num" aria-hidden="true">2</span>
-      <h3>The assistant wires it up</h3>
-      <p>Adds <code>.devbook/</code>, picks the files your project needs and links them. Nothing is committed.</p>
+      <h3>Shows a plan and waits</h3>
+      <p>One table: each file it would write, each skill with its source and pinned version, each hook. Nothing happens until you say yes.</p>
     </li>
     <li>
       <span class="dvb-flow-num" aria-hidden="true">3</span>
-      <h3>You review and commit</h3>
-      <p>Check <code>AGENTS.md</code>, fill in the TODOs about your project, commit, start a new chat.</p>
+      <h3>Merges, never overwrites</h3>
+      <p>Writes the Devbook block into <code>AGENTS.md</code> between markers and keeps every line you wrote. Claude Code gets <code>@AGENTS.md</code> in <code>CLAUDE.md</code>.</p>
     </li>
     <li>
       <span class="dvb-flow-num" aria-hidden="true">4</span>
-      <h3>Every chat follows it</h3>
-      <p>Rules load as they apply. You keep working as before; the output gets better.</p>
+      <h3>Installs a little, pinned</h3>
+      <p>At most three skills from vendor-maintained sources, read in full before install. It records everything in <code>devbook.lock.json</code> and leaves the commit to you.</p>
     </li>
   </ol>
-
-  <h3 class="dvb-flow-subhead">Three terms</h3>
-  <ul class="dvb-home-terms">
-    <li><strong><code>AGENTS.md</code></strong>: the instruction file at your project's root that coding assistants read at the start of a chat.</li>
-    <li><strong>Path rules</strong>: instruction files that load only when the assistant opens a matching file, such as design rules for a <code>.css</code> file.</li>
-    <li><strong>Skills</strong>: step-by-step procedures, such as a security review, that load only when a request matches them.</li>
-  </ul>
-
-  <h3 class="dvb-flow-subhead">What loads, and when</h3>
-  <div class="dvb-flow-tiers">
-    <article>
-      <p class="dvb-flow-tier-label">Every chat</p>
-      <h4>Rules</h4>
-      <p>Core, security and testing (about 9 KB). The standing rules for how work is done and checked.</p>
-    </article>
-    <article>
-      <p class="dvb-flow-tier-label">When a matching file is opened</p>
-      <h4>Path-scoped rules</h4>
-      <p>Web security, design, APIs, database, SEO, content and mobile. A backend-only chat never loads design or SEO.</p>
-    </article>
-    <article>
-      <p class="dvb-flow-tier-label">When the task calls for it</p>
-      <h4>Read-when notes</h4>
-      <p>Performance, licensing, feature docs and stack notes. The assistant opens them as needed.</p>
-    </article>
-    <article>
-      <p class="dvb-flow-tier-label">When your request matches</p>
-      <h4>Skills</h4>
-      <p>Step-by-step procedures: security review, release check, API endpoint, database migration and more. Only the name and description sit in context until one is used.</p>
-    </article>
-  </div>
-
-  <h3 class="dvb-flow-subhead">Why use it</h3>
-  <div class="dvb-home-layer-grid">
-    <article>
-      <h3>Same standard in every chat</h3>
-      <p>Security, testing and accessibility rules apply without you repeating them in each prompt.</p>
-    </article>
-    <article>
-      <h3>Small and cheap</h3>
-      <p>Only what a task needs is loaded, and the always-loaded part is the same every time, so providers can cache it.</p>
-    </article>
-    <article>
-      <h3>Versioned and yours</h3>
-      <p>Devbook changes only when you update to a newer version, and and every update is a diff you review. Your project rules override it where they say so.</p>
-    </article>
-  </div>
 </section>
 
 <section class="dvb-quick-start" id="setup" aria-labelledby="setup-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">New or existing project · about a minute</p>
-      <h2 id="setup-title">Set up with one prompt</h2>
+      <p class="dvb-home-eyebrow">Claude Code, Codex, Cursor, Copilot or Gemini CLI</p>
+      <h2 id="setup-title">The bootstrap prompt</h2>
     </div>
-    <a class="dvb-home-text-link" href="/start-here/how-it-works/">New to this? How Devbook works <span aria-hidden="true">→</span></a>
+    <a class="dvb-home-text-link" href="/start-here/setup/">Setup, updates and moving from .devbook/ <span aria-hidden="true">→</span></a>
   </div>
-
-  <p class="dvb-quick-start-intro">Open your project in Claude Code or VS Code Copilot agent mode, with file editing and terminal access turned on. Paste this prompt. The assistant adds Devbook at <code>.devbook/</code>, either as a git submodule (the default) or as copied files (change <code>Method</code> to <code>copy</code>). It then picks the files your project needs and connects them. It does not commit anything.</p>
-  <Code code={setupPrompt} lang="text" title="Paste into Claude or Copilot" />
-  <ol class="dvb-quick-start-notes">
-    <li><strong>Review.</strong> Check the new <code>AGENTS.md</code>, <code>CLAUDE.md</code> and <code>.github/copilot-instructions.md</code>, then fill in any TODOs about your project.</li>
-    <li><strong>Commit.</strong> Commit those files and the <code>devbook-*</code> links in <code>.claude/</code> and <code>.github/instructions/</code>, along with <code>.devbook</code>, plus <code>.gitmodules</code> for a submodule. Then start a new chat so the instructions load.</li>
-    <li><strong>Use it.</strong> Keep working as before. <a href="/start-here/using-devbook/">Use Devbook day to day</a> covers your own rules, checks and troubleshooting.</li>
-    <li><strong>Licences.</strong> The instructions, stack notes, skills and guides are <a href="/license/">CC BY 4.0</a>; keeping <code>.devbook/</code> with its licence file is enough credit. The templates, the kit and the code are MIT-0.</li>
-    <li><strong>Stay current.</strong> Setup takes the latest version from <code>main</code>, and <code>.devbook/VERSION</code> records its version number. Devbook changes in your project only when you update. Ask "Is Devbook up to date?" and the assistant compares your version with <code>main</code>, summarises the changelog and updates when you agree. With the <a href="/start-here/enforcement-kit/">enforcement kit</a>, Claude Code tells you when a newer version is out. See <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it up to date</a>.</li>
-  </ol>
+  <p>Open your agent in the repository, paste the prompt, and review the plan it shows. Re-run the same prompt later to update: it reads <code>devbook.lock.json</code> and shows a diff instead of starting over.</p>
+  <Code code={bootstrap} lang="md" title="Paste into your coding agent" />
 </section>
 
 <section class="dvb-home-layers" aria-labelledby="result-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">What the prompt creates</p>
-      <h2 id="result-title">One AGENTS.md that every assistant reads</h2>
+      <p class="dvb-home-eyebrow">The only always-loaded part</p>
+      <h2 id="result-title">The core block</h2>
     </div>
   </div>
-  <Code code={agentsTemplate} lang="md" title="AGENTS.md (template)" />
+  <p>These lines go into your <code>AGENTS.md</code>, followed by your repository's real commands. They cover only what agents get wrong without being told: proving work with real output, staying out of commits and deploys, asking before risky changes, and keeping secrets out.</p>
+  <Code code={core} lang="md" title="AGENTS.md (Devbook block)" />
   <div class="dvb-home-layer-grid">
     <article>
-      <h3>Claude Code</h3>
-      <p><code>CLAUDE.md</code> contains <code>@AGENTS.md</code>. Claude loads core, security and testing in every session, path-scoped rules when it opens a matching file, and skills when a task needs them.</p>
+      <h3>Never touched</h3>
+      <p>CI and deploy config, git hooks, branch protection, <code>.env</code> files and your own instructions. The prompt reads CI only to learn your commands.</p>
     </article>
     <article>
-      <h3>Copilot, Cursor and Codex</h3>
-      <p>Copilot reads <code>AGENTS.md</code> and attaches the path-scoped files to matching files. Setup can also generate Cursor rules and link skills for Codex. <a href="/start-here/setup/#which-assistants-load-the-rules">What each one loads</a></p>
+      <h3>Enforced where possible</h3>
+      <p>In Claude Code, permission rules block <code>git push</code> and reads of <code>.env</code>, and a hook stops edits to CI and deploy paths. A hook runs every time; a line of text is only advice.</p>
     </article>
     <article>
-      <h3>Your rules</h3>
-      <p>Put project facts and rules in the Project section. Your rules override Devbook where they say so.</p>
+      <h3>Yours wins</h3>
+      <p>Your request beats your project rules, and your project rules beat the Devbook block. Put your own rules under "Project rules" in <code>AGENTS.md</code>.</p>
     </article>
   </div>
 </section>
 
-<section class="dvb-home-daily" aria-labelledby="daily-title">
+<section class="dvb-home-daily" aria-labelledby="why-title">
   <div class="dvb-home-section-heading">
     <div>
-      <p class="dvb-home-eyebrow">After setup</p>
-      <h2 id="daily-title">Use it day to day</h2>
+      <p class="dvb-home-eyebrow">Curated, not written</p>
+      <h2 id="why-title">Why it is this small</h2>
     </div>
-    <a class="dvb-home-text-link" href="/start-here/using-devbook/">The day-to-day guide <span aria-hidden="true">→</span></a>
+    <a class="dvb-home-text-link" href="/catalog/">The catalog <span aria-hidden="true">→</span></a>
   </div>
-
   <div class="dvb-flow-tiers">
     <article>
-      <p class="dvb-flow-tier-label">Most of the time</p>
-      <h3>Just ask</h3>
-      <p>Describe the goal, the scope and when it's done. You don't repeat any rules; they load on their own. <a href="/start-here/using-devbook/#ask-for-work-in-a-way-that-gets-results">How to ask</a></p>
+      <p class="dvb-flow-tier-label">Context files</p>
+      <h3>Only what agents can't discover</h3>
+      <p>Hand-written context files help when they hold facts the agent can't find on its own. Generated ones lowered success rates and raised cost by about 20% (<a href="https://arxiv.org/html/2602.11988v1">arXiv 2602.11988</a>).</p>
     </article>
     <article>
-      <p class="dvb-flow-tier-label">For multi-step jobs</p>
-      <h3>Run a skill</h3>
-      <p>Ask in plain words, or type the skill name, such as <code>/devbook-release-check</code>, to be sure it runs. <a href="/start-here/using-devbook/#use-the-skills">Using skills</a></p>
+      <p class="dvb-flow-tier-label">Skills</p>
+      <h3>Two or three, not ten</h3>
+      <p>Curated skills help, but four or more cut most of the gain, and software engineering gains least of any domain (<a href="https://arxiv.org/html/2602.12670v1">SkillsBench</a>). Hence the cap of three.</p>
     </article>
     <article>
-      <p class="dvb-flow-tier-label">When it gets something wrong</p>
-      <h3>Add a project rule</h3>
-      <p>Add one line to the Project section of <code>AGENTS.md</code>. Your rules override Devbook. <a href="/start-here/using-devbook/#add-your-own-rules">Your own rules</a></p>
+      <p class="dvb-flow-tier-label">Stack knowledge</p>
+      <h3>From the vendor</h3>
+      <p>Cloudflare, Expo, Stripe, Supabase and others now maintain their own skills. Devbook pins them instead of writing its own copies.</p>
     </article>
     <article>
-      <p class="dvb-flow-tier-label">Every so often</p>
-      <h3>Upgrade</h3>
-      <p>Ask "Is Devbook up to date?" The assistant compares version numbers, reads the changelog and upgrades when you agree. <a href="/start-here/using-devbook/#keep-it-up-to-date">Keep it current</a></p>
+      <p class="dvb-flow-tier-label">Supply chain</p>
+      <h3>Pinned and read first</h3>
+      <p>Public skill registries have shipped malicious skills (<a href="https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/">Snyk</a>). The prompt installs only from an allowlist, pinned, after reading every file.</p>
     </article>
   </div>
-
-  <h3 class="dvb-flow-subhead">The skills, and what to say</h3>
-  <ul class="dvb-skill-list">
-    <li><code>/devbook-api-endpoint</code><span>"Add a <code>POST /orders</code> endpoint."</span></li>
-    <li><code>/devbook-db-migration</code><span>"Add a status column to orders."</span></li>
-    <li><code>/devbook-feature-doc</code><span>"Write a feature doc for checkout."</span></li>
-    <li><code>/devbook-security-review</code><span>"Do a security review of this branch."</span></li>
-    <li><code>/devbook-release-check</code><span>"Is this ready to ship?"</span></li>
-    <li><code>/devbook-seo-audit</code><span>"Run an SEO audit of the site."</span></li>
-    <li><code>/devbook-upgrade</code><span>"Is Devbook up to date?"</span></li>
-  </ul>
-  <p class="dvb-skill-note">Slash names work in Claude Code. In Copilot, write "use the devbook-release-check skill". Only the skills setup linked for your project are available. <a href="/start-here/skills-and-instructions/">Exactly how to use each skill and instruction</a></p>
-</section>
-
-<section class="dvb-home-modules" aria-labelledby="modules-title">
-  <div class="dvb-home-section-heading">
-    <div>
-      <p class="dvb-home-eyebrow">Loaded only when they apply</p>
-      <h2 id="modules-title">The instructions</h2>
-    </div>
-  </div>
-  <InstructionIndex />
+  <p class="dvb-skill-note">The evidence that any of this improves code is modest. Devbook measures its own effect monthly against no Devbook at all, and publishes the result. <a href="/evals/">The evals</a></p>
 </section>
 
 <section class="dvb-home-history" aria-labelledby="history-title">

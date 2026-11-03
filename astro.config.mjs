@@ -7,9 +7,6 @@ import starlightLlmsTxt from 'starlight-llms-txt';
 const SITE = 'https://devbook.raturi.in';
 const REPO = 'https://github.com/nitinraturi/devbook.raturi.in';
 
-/** @param {string} label @param {string} directory */
-const group = (label, directory) => ({ label, items: [{ autogenerate: { directory } }] });
-
 export default defineConfig({
 	site: SITE,
 	trailingSlash: 'always',
@@ -20,7 +17,7 @@ export default defineConfig({
 		starlight({
 			title: 'Devbook',
 			description:
-				'A few short instruction files that make Claude and Copilot build like a senior engineer: workflow, engineering, security, design, SEO and content.',
+				'One bootstrap prompt that sets up a repository for careful agent coding: a small core block in AGENTS.md, pinned vendor skills and hooks.',
 			logo: { light: './src/assets/logo.svg', dark: './src/assets/logo-dark.svg', alt: '' },
 			favicon: '/favicon.svg',
 			social: [{ icon: 'github', label: 'GitHub', href: REPO }],
@@ -41,7 +38,7 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
 				{
 					tag: 'meta',
-					attrs: { property: 'og:image:alt', content: 'Devbook: senior-engineer instructions for Claude and Copilot.' },
+					attrs: { property: 'og:image:alt', content: 'Devbook: one bootstrap prompt for careful agent coding.' },
 				},
 				{ tag: 'meta', attrs: { name: 'twitter:image', content: `${SITE}/og-default.png` } },
 			],
@@ -50,7 +47,7 @@ export default defineConfig({
 				starlightLlmsTxt({
 					projectName: 'Devbook',
 					details:
-						'Devbook is a small set of instruction files for AI coding assistants. Projects add it at .devbook, as a git submodule or copied files, and import the files from AGENTS.md. Core, security and testing are mandatory; other instructions load when they apply; stack notes add tool specifics; project rules in AGENTS.md override both.',
+						'Devbook is one bootstrap prompt for AI coding agents. Pasted into Claude Code, Codex, Cursor, Copilot or Gemini CLI, it detects the stack, shows a plan, writes a small core block and the real commands into AGENTS.md, installs at most three pinned vendor skills from an allowlist, adds hooks where the agent supports them, and never touches CI or deploys. Project rules in AGENTS.md override the block.',
 					exclude: ['privacy'],
 				}),
 			],
@@ -62,8 +59,8 @@ export default defineConfig({
 						'start-here/how-it-works',
 						'start-here/setup',
 						'start-here/using-devbook',
-						'start-here/skills-and-instructions',
-						'start-here/enforcement-kit',
+						'catalog',
+						'optional-skills',
 						'evals',
 						'start-here/writing-instructions',
 						'start-here/contact',
@@ -71,8 +68,6 @@ export default defineConfig({
 						'license',
 					],
 				},
-				group('Instructions', 'instructions'),
-				group('Stack notes', 'stacks'),
 			],
 		}),
 	],

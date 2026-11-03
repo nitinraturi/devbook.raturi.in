@@ -1,27 +1,27 @@
-name: A rule is wrong
-description: A Devbook rule is incorrect, out of date or contradicts another rule.
+name: Something Devbook ships is wrong
+description: A core rule, catalog entry, prompt step or opt-in skill is incorrect, out of date or contradicts another.
 labels: [rule-wrong]
 body:
   - type: input
     id: rule
     attributes:
-      label: Rule ID or file
-      description: The rule's ID, such as SEC-05, or the file, such as instructions/design.md.
-      placeholder: SEC-05
+      label: What is wrong, and where
+      description: Quote the line, or name the catalog id or skill, such as superpowers or api-design.
+      placeholder: catalog id supabase
     validations:
       required: true
   - type: textarea
     id: problem
     attributes:
       label: What is wrong
-      description: What the rule says, and what it should say instead.
+      description: What it says, and what it should say instead.
     validations:
       required: true
   - type: input
     id: source
     attributes:
       label: Primary source
-      description: A link to the official docs, standard or guideline that backs the change. Rules are based on primary sources only.
+      description: A link to the official docs, standard or vendor page that backs the change.
       placeholder: https://
     validations:
       required: true

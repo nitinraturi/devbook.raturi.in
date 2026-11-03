@@ -1,13 +1,14 @@
 # Owner TODOs and known gaps
 
-## v1 launch (owner)
-v1 (`2026.11.02.5`) is released on `main`. Until the steps below are done, the Release and Sources workflows and the Claude reviews are skipped, not failed.
-- [ ] **Release App:** create the GitHub App, set the `RELEASE_APP_CLIENT_ID` variable and `RELEASE_APP_PRIVATE_KEY` secret, and make the App a bypass actor on the `main` ruleset (`DEPLOY.md`, Releases). Later releases then run on their own.
+## Bootstrap prompt launch (owner)
+Until the steps below are done, the Release workflow and the Claude reviews are skipped, not failed, and Drift only reports.
+- [ ] **Release App:** create the GitHub App with Contents and Pull requests write, set the `RELEASE_APP_CLIENT_ID` variable and `RELEASE_APP_PRIVATE_KEY` secret, and make the App a bypass actor on the `main` ruleset (`DEPLOY.md`, Releases). Releases and drift pull requests then run on their own.
 - [ ] **Old token:** delete the `VERSION_PUSH_TOKEN` secret and revoke the token.
-- [ ] **Claude reviews:** run `claude setup-token`, save the token as the `CLAUDE_CODE_OAUTH_TOKEN` secret (paste it into `gh secret set`, never as an argument), then set the `CLAUDE_REVIEWS` variable to `true`. Leave `MEASURED_EVALS` unset to keep evals modelled.
-- [ ] **Settings:** turn on private vulnerability reporting (Security → Settings) and "Allow auto-merge" (General), and create the `rule-wrong`, `rule-ignored`, `suggest-source` and `make-eval` labels.
-- [ ] **Deploy the site** (`npm run deploy`) if Workers Builds isn't connected, and check `/evals/` and `/stacks/swift/`.
-- [ ] **Measured baseline (optional):** `node evals/run.mjs --task django-search --variant main --repeat 3 --yes` to see real usage per run before a full baseline.
+- [ ] **Claude reviews:** run `claude setup-token`, save the token as the `CLAUDE_CODE_OAUTH_TOKEN` secret (paste it into `gh secret set`, never as an argument), then set the `CLAUDE_REVIEWS` variable to `true`.
+- [ ] **Settings:** turn on private vulnerability reporting (Security → Settings) and "Allow auto-merge" (General), and create the `rule-wrong`, `rule-ignored`, `suggest-source`, `make-eval` and `drift` labels.
+- [ ] **Deploy the site** (`npm run deploy`) if Workers Builds isn't connected, and check `/catalog/`, `/evals/` and that `/instructions/core/` redirects.
+- [ ] **First measured baseline:** approve the spend, then run `node evals/run.mjs --yes` (or set `MEASURED_EVALS` to `true` and dispatch `eval.yml`) and commit `evals/results/<date>.json`. Until then `/evals/` says "No measured results yet". Start with one case (`claude plugin eval evals --case bug-test-first --runs 1 --scaffold …`) to confirm the scaffold scripts and the SessionStart hook load in a real run.
+- [ ] **Scan the catalog:** run `uvx mcp-scan@latest --skills` on each pinned non-official source and record the result in its `scan` field (all are `not-run`).
 
 ## Owner
 - [ ] **GA4:** the site uses the raturi.in property (`G-4343Y0SFZ5`). Confirm its data retention is **14 months**, the period `/privacy/` states (Admin → Data collection and modification → Data retention). Optionally add a hostname filter or comparison for `devbook.raturi.in` in reports.

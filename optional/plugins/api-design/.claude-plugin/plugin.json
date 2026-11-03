@@ -1,0 +1,8 @@
+{
+  "name": "api-design",
+  "description": "Adds or changes REST endpoints: contract first, problem-details errors, pagination, idempotency, ETags and webhooks.",
+  "author": { "name": "Nitin Raturi", "url": "https://devbook.raturi.in" },
+  "homepage": "https://devbook.raturi.in/optional-skills/",
+  "repository": "https://github.com/nitinraturi/devbook.raturi.in",
+  "license": "CC-BY-4.0"
+}

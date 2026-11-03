@@ -1,157 +1,51 @@
 ---
 title: Setup
-description: Add Devbook to a project by hand, see how Claude and Copilot load the instructions, and learn how to check its version, update or remove it.
+description: Run the bootstrap prompt in any coding agent, update with the same prompt, move an old .devbook/ install over, and remove Devbook again.
 sidebar:
   order: 2
 ---
 
-import { Code, Steps, Aside, Tabs, TabItem } from '@astrojs/starlight/components';
-import agentsTemplate from '../../../../templates/AGENTS.md?raw';
-import copilotTemplate from '../../../../templates/copilot-instructions.md?raw';
+import { Code } from '@astrojs/starlight/components';
+import bootstrap from '../../../../prompt/bootstrap.md?raw';
 
-The [setup prompt](/#setup) does all of this for you. The steps below show the same setup done by hand. New to instruction files? Read [How Devbook works](/start-here/how-it-works/) first.
+## Run the prompt
 
-**You need:** a git repository, and an assistant that reads `AGENTS.md` or `CLAUDE.md`, such as Claude Code or GitHub Copilot in agent mode, with file editing and terminal access turned on.
+1. Open your coding agent in the repository: Claude Code, Codex, Cursor, GitHub Copilot agent mode, Gemini CLI or another agent that can run commands.
+2. Paste the prompt below.
+3. The agent reads your repository and runs your commands once, without changing anything. Then it shows a plan: the files it would write, the skills it would install with their pinned versions, and the hooks.
+4. Answer "yes", or edit the plan.
+5. Review the diff it reports, commit it yourself, and start a new session so the agent loads the new `AGENTS.md`.
 
-## 1. Choose how to add Devbook
+If a teammate uses Claude Code, they run the `claude plugin install … --scope project` lines from the report once. Committing `.claude/settings.json` turns a plugin on for everyone, but it doesn't download the plugin to their machine.
 
-Both methods put the latest release, from `main`, in `.devbook/`, so the rest of the setup is the same. `.devbook/VERSION` holds its version number, such as `2026.11.02.1`, and Devbook changes in your project only when you update. Pick a tab.
+<Code code={bootstrap} lang="md" title="Bootstrap prompt" />
 
-<Tabs syncKey="method">
-<TabItem label="Submodule (tracks updates)">
+## What each agent loads
 
-Adds Devbook as a submodule that tracks `main`. You update with one command, and every update shows up as a reviewable change.
-
-```sh
-git submodule add -b main https://github.com/nitinraturi/devbook.raturi.in .devbook && git add .devbook
-```
-
-</TabItem>
-<TabItem label="Copy (plain files)">
-
-Downloads the latest release as plain files that you commit. It works offline afterwards, needs no submodule support from tools or cloud agents, and only changes when you download again.
-
-```sh
-P=devbook.raturi.in-main && rm -rf .devbook && mkdir -p .devbook && curl -fsSL https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main | tar -xz --strip-components=1 -C .devbook $P/instructions $P/stacks $P/templates $P/skills $P/kit $P/LICENSE-CC-BY-4.0 $P/VERSION $P/CHANGELOG.md $P/devbook.manifest.json
-```
-
-On Windows PowerShell, which has no `rm -rf` or `mkdir -p`, use the `curl.exe` and `tar.exe` that ship with Windows 10 and later:
-
-```powershell
-$p = "devbook.raturi.in-main"; Remove-Item -Recurse -Force .devbook -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path .devbook | Out-Null; curl.exe -fsSL "https://codeload.github.com/nitinraturi/devbook.raturi.in/tar.gz/main" -o devbook.tar.gz; tar.exe -xzf devbook.tar.gz --strip-components=1 -C .devbook "$p/instructions" "$p/stacks" "$p/templates" "$p/skills" "$p/kit" "$p/LICENSE-CC-BY-4.0" "$p/VERSION" "$p/CHANGELOG.md" "$p/devbook.manifest.json"; Remove-Item devbook.tar.gz
-```
-
-Without a terminal, download the [ZIP of `main`](https://github.com/nitinraturi/devbook.raturi.in/archive/refs/heads/main.zip). Copy its `instructions/`, `stacks/`, `templates/`, `skills/` and `kit/` folders and its `LICENSE-CC-BY-4.0`, `VERSION`, `CHANGELOG.md` and `devbook.manifest.json` files into `.devbook/`.
-
-</TabItem>
-</Tabs>
-
-## 2. Connect your assistants
-
-<Steps>
-
-1. Create `AGENTS.md` at the repository root and fill in the Project section with your real commands, layout and rules. In the Devbook section, keep the three `@` lines and only the "read" lines that apply: see [the table of when to load each file](/start-here/how-it-works/#mandatory-and-optional-files), plus one stack note for each technology you use.
-
-   <Code code={agentsTemplate} lang="md" title="AGENTS.md" />
-
-2. Create `CLAUDE.md` containing one line:
-
-   ```md
-   @AGENTS.md
-   ```
-
-3. Create `.github/copilot-instructions.md`:
-
-   <Code code={copilotTemplate} lang="md" title=".github/copilot-instructions.md" />
-
-4. Link the path-scoped files you chose and the skills that fit. The script reads the files your `AGENTS.md` lists, links each path-scoped one into `.claude/rules/` and `.github/instructions/` (so Claude Code and Copilot load it only for matching files), and links the matching skills into `.claude/skills/`. Where symlinks don't work, it copies the files instead. Then check the result:
-
-   ```sh
-   node .devbook/skills/devbook-setup/scripts/link.mjs
-   node .devbook/skills/devbook-setup/scripts/verify.mjs
-   ```
-
-   For other assistants, add them to the list: `--assistants claude,copilot,cursor,codex`. `cursor` generates `.cursor/rules/*.mdc`, `codex` links skills into `.agents/skills/`, and `copilot-review` writes copies Copilot code review can read. Pass the same list to `verify.mjs`, and note it on the `Assistants` line in `AGENTS.md`.
-
-5. Add the secret-file patterns to `.gitignore` (SEC-29):
-
-   ```sh
-   node .devbook/skills/devbook-setup/scripts/gitignore-secrets.mjs
-   ```
-
-6. Commit `.devbook` (plus `.gitmodules` for a submodule), `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/rules/`, `.claude/skills/` and `.github/instructions/`, then start a new chat.
-
-</Steps>
-
-## Which assistants load the rules
-
-A load probe asks a question only Devbook answers (CORE-02, and DES-04 after opening a `.css` file), so a pass shows the files reached the assistant. It is the `astro-load-probe` eval task.
-
-| Assistant | What setup writes | Load probe |
+| Agent | Reads the Devbook block from | Skills go in |
 |---|---|---|
-| Claude Code | `CLAUDE.md`, `.claude/rules/`, `.claude/skills/` | Modelled pass; not yet measured |
-| GitHub Copilot (VS Code, CLI, cloud agent) | `.github/copilot-instructions.md`, `.github/instructions/`, skills in `.claude/skills/` | Not yet tested |
-| Cursor | `.cursor/rules/devbook-*.mdc`, skills in `.claude/skills/` | Not yet tested |
-| Codex | `AGENTS.md`, skills in `.agents/skills/` | Not yet tested |
+| Claude Code | `CLAUDE.md`, which starts with `@AGENTS.md` | `.claude/skills/`, or plugins |
+| Codex | `AGENTS.md` | `.agents/skills/` |
+| Cursor | `AGENTS.md` | `.agents/skills/` |
+| GitHub Copilot | `AGENTS.md` | `.agents/skills/` |
+| Gemini CLI | `AGENTS.md`, listed in `context.fileName` in `.gemini/settings.json` | `.agents/skills/` |
 
-"Modelled" means the evals worked out, from each tool's documented loading rules, that the rules are in context; see [the evals](https://github.com/nitinraturi/devbook.raturi.in/tree/main/evals). Measured results replace these as they are run.
+Claude Code cloud sessions don't load plugins that a repository's `.claude/settings.json` turns on, so they get the core block but not the plugins.
 
-## 3. Optional: add the enforcement kit
+## Update
 
-Devbook requires only the rules for how the assistant writes code. How code ships is up to you. Setup asks how the project ships today and records the answer in `AGENTS.md`, and that answer overrides Devbook's CI, branch and deploy rules. Setup never changes existing CI, git hooks or deploy config. For public websites and web apps, it also asks whether to use Google Analytics 4. The answer defaults to yes, and the assistant then follows the [GA4 and consent](/stacks/ga4-consent/) note.
+Paste the same prompt again. When `devbook.lock.json` exists, the prompt runs in Update mode: it compares your pinned sources and your core block with the current version, shows what would change with each source's changelog, and applies only what you approve. Your lines outside the markers stay as they are.
 
-Instructions are context, so an assistant can still miss a rule. The kit in `.devbook/kit/` turns a few of them into checks that tools run. The setup prompt asks before installing any part, and you can add it later:
+## Move from the old .devbook/ install
 
-- **Claude Code hooks** that block `git push`, `.env` edits and recursive `rm` outside the project, and say when a newer Devbook release is out.
-- **Git hooks** that scan staged changes for secrets with gitleaks and check commit messages.
-- **Starter CI** for GitHub Actions, for Node.js or Python, with every action pinned to a commit SHA.
+Before November 2026, Devbook was a git submodule or a copied folder at `.devbook/`, with rule files linked into each assistant. Those files no longer exist on `main`: if you update the submodule, its `@` imports and links point at nothing, and hooks that ran from `.devbook/kit/` report errors. Move before you update it, or right after:
 
-[Use the enforcement kit](/start-here/enforcement-kit/) has the install steps, what a block looks like and the limits. The kit is MIT-0, so you can copy and change it without credit.
+1. Paste the bootstrap prompt into your agent.
+2. Its Update mode lists everything from the old install: the `@.devbook/...` lines, the `devbook-*` links in `.claude/rules/`, `.claude/skills/`, `.github/instructions/`, `.cursor/rules/` and `.agents/skills/`, hooks that run from `.devbook/kit/`, and the submodule or folder.
+3. Approve, and it removes them and writes the new block. Your Project section becomes "Project rules", and any Workflow, Analytics or Rules lines stay as your own rules.
 
-## How the instructions load
+Rule IDs such as `CORE-02` or `SEC-05` are gone. If your own rules turned one off ("ignore DES-12"), delete that line.
 
-Core, security and testing load in every chat through the `@` lines; Claude Code expands them, and Copilot, Codex and Cursor are asked to open them. The path-scoped files load when a matching file is read or edited (Claude Code) or edited (Copilot), and every assistant can open the files in the "read" list when a task calls for them. Skills load only their name and description until a task needs them. [How Devbook works](/start-here/how-it-works/#how-each-assistant-loads-the-rules) explains each assistant and which rule wins.
+## Remove Devbook
 
-To load everything in every chat instead, for example in a short-lived project where cost doesn't matter, replace the "read" lines with `@` lines (`@.devbook/instructions/design.md`) and skip the links. Write `@` paths as plain text, because an `@` path inside backticks is not imported.
-
-<Aside type="caution" title="Symlinks, cloud agents and submodules">
-On Windows, symlinks need Developer Mode and `git config core.symlinks true`; without them, skip steps 4 and 5 and rely on the "read" lines. Hosted agents only see a submodule's files if their checkout includes submodules. If an agent says the files are missing, add `git submodule update --init` to its setup steps. For the Copilot coding agent, those steps live in `.github/workflows/copilot-setup-steps.yml`. You can also switch to the Copy method, whose files are in the repository itself.
-</Aside>
-
-## Check it works
-
-Start a new chat and ask which Devbook files the assistant is following. [Use Devbook day to day](/start-here/using-devbook/#check-that-its-working) has the exact question and what to do if the answer is wrong. Sizes and token costs for each project type are in [How Devbook works](/start-here/how-it-works/#what-it-costs).
-
-## Update, clone or remove
-
-Before you update, read the [changelog](https://github.com/nitinraturi/devbook.raturi.in/blob/main/CHANGELOG.md) entries added since your version, or run `node .devbook/skills/devbook-upgrade/scripts/compare.mjs`, which lists them. Entries with an **Upgrade** note need a change in your project, such as a new line in `AGENTS.md` or a new link.
-
-<Tabs syncKey="method">
-<TabItem label="Submodule (tracks updates)">
-
-```sh
-cat .devbook/VERSION                                                                       # the version you use
-curl -fsSL https://raw.githubusercontent.com/nitinraturi/devbook.raturi.in/main/VERSION    # the newest release
-git -C .devbook fetch origin main                                                          # fetch the latest release
-git -C .devbook diff HEAD FETCH_HEAD -- CHANGELOG.md                                       # what changed since yours
-git -C .devbook checkout -q FETCH_HEAD && git add .devbook                                 # update, then commit
-git clone --recurse-submodules <your-repo>                                                 # clone a project that uses Devbook
-git submodule update --init                                                                # fetch .devbook in an existing clone
-git rm .devbook                                                                            # remove; then delete the Devbook section and links
-```
-
-</TabItem>
-<TabItem label="Copy (plain files)">
-
-`.devbook/VERSION` shows the version you use. Run the download command again, then review `git diff .devbook` and commit. The command replaces the whole folder, so files removed upstream are removed in your copy too. To remove Devbook, delete `.devbook/`, the Devbook section of `AGENTS.md` and the `devbook-*` links in `.claude/` and `.github/instructions/`.
-
-To switch from Copy to Submodule, delete `.devbook/`, commit the deletion, then run the submodule command.
-
-</TabItem>
-</Tabs>
-
-Either way, your repository records exactly which Devbook text it uses, so an update is a normal reviewable change. Review it before you commit: these files steer your assistant, so treat an update like a dependency upgrade. If a new version doesn't suit your project yet, don't commit the update.
-
-## License
-
-The instruction files, stack notes and skills are [CC BY 4.0](/license/): keep `.devbook/` with its `LICENSE-CC-BY-4.0` file and that counts as credit. The templates are MIT-0 and need no notice.
+Delete the block between `<!-- BEGIN:devbook-core -->` and `<!-- END:devbook-core -->` in `AGENTS.md`, the `@AGENTS.md` line in `CLAUDE.md` if you don't want it, `devbook.lock.json`, and the hooks and permission rules it added to `.claude/settings.json`. Uninstall the skills and plugins listed in the lock file with the same tool that installed them: `claude plugin uninstall <name> --scope project`, or `gh skill` for skills in `.agents/skills/`.

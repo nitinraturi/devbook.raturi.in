@@ -1,12 +1,13 @@
-name: An assistant ignored a rule
-description: An assistant had a Devbook rule loaded and didn't follow it. Reports become eval tasks.
+name: An assistant ignored a core rule
+description: An assistant had the Devbook core block in AGENTS.md and didn't follow it. Reports become measured eval cases.
 labels: [rule-ignored]
 body:
   - type: input
     id: rule
     attributes:
-      label: Rule ID
-      placeholder: CORE-02
+      label: Core rule
+      description: Quote the line from the Devbook core block.
+      placeholder: Commit, push, open pull requests or deploy only when asked.
     validations:
       required: true
   - type: input
@@ -20,8 +21,8 @@ body:
     id: version
     attributes:
       label: Devbook version
-      description: The contents of .devbook/VERSION.
-      placeholder: 2026.11.02.4
+      description: The `devbook` field of devbook.lock.json, or the version in the core block's BEGIN marker.
+      placeholder: 2026.11.03
     validations:
       required: true
   - type: textarea

@@ -1,0 +1,35 @@
+---
+title: Catalog
+description: Every skill, plugin and docs server the bootstrap prompt may install, pinned to a release or commit, plus the ones it only suggests and the ones it retired.
+sidebar:
+  order: 4
+lastVerified: 2026-11-03
+---
+
+import Catalog from '../../components/Catalog.astro';
+
+The bootstrap prompt installs only from this list, and at most three optional sources per repository. Every source is maintained by the vendor of the platform it covers, except Devbook's own [optional skills](/optional-skills/). The list comes from [`catalog/sources.json`](https://github.com/nitinraturi/devbook.raturi.in/blob/main/catalog/sources.json), the same file the prompt is built from.
+
+## Installed when they match your stack
+
+<Catalog status="adopted" />
+
+"Official marketplace" means Anthropic's `claude-plugins-official`, which pins the third-party plugins it lists and updates them automatically. The prompt reads every other source in full at its pinned ref before it installs it.
+
+## Suggested, never installed
+
+The prompt mentions these when they fit, and says why it didn't install them.
+
+<Catalog status="suggested" />
+
+## Retired
+
+<Catalog status="retired" />
+
+## Built in, so not installed
+
+Claude Code already has `/code-review`, `/security-review`, `/verify` and `/simplify`, so the catalog has no review skills.
+
+## How a source gets in, and out
+
+A source gets in when its vendor maintains it, it covers code quality for a common stack, and it doesn't touch deploys or CI. An automated check opens a pull request each week for every source with a new release or commit, and the maintainer reads the upstream diff before merging. A source is retired when its vendor drops it, when it takes over deploys, or when the [measured evals](/evals/) show it no longer helps. [Suggest a source](https://github.com/nitinraturi/devbook.raturi.in/issues/new/choose).

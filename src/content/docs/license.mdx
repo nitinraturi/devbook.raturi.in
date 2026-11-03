@@ -1,6 +1,6 @@
 ---
 title: License
-description: Devbook's instruction and stack text is licensed under CC BY 4.0, so reuse it with credit. Templates and site code are MIT-0, with no notice needed.
+description: Devbook's skills and guides are licensed under CC BY 4.0, so reuse them with credit. The prompt, the core block and all code are MIT-0, with no notice needed.
 ---
 
 import { Code } from '@astrojs/starlight/components';
@@ -10,18 +10,18 @@ Devbook uses two licenses: one for the guide text and one for everything else.
 
 | Material | License | Credit needed |
 |---|---|---|
-| Instruction files (`instructions/`), stack notes (`stacks/`), skills (`skills/`, except their `scripts/`) and the guides on this site (How Devbook works, Use Devbook day to day, Writing instructions) | [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) (SPDX: `CC-BY-4.0`) | Yes |
-| Templates (`templates/`), the enforcement kit (`kit/`), the skills' scripts (`skills/*/scripts/`), `devbook.manifest.json`, the site's code and the evals (`evals/`) | MIT No Attribution (SPDX: `MIT-0`) | No |
+| The optional skills (`optional/`) and the guides on this site (How Devbook works, Use Devbook day to day, Writing instructions) | [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) (SPDX: `CC-BY-4.0`) | Yes |
+| The bootstrap prompt (`prompt/`), the core block (`core/`), the catalog (`catalog/`), the site's code, the scripts and the evals (`evals/`) | MIT No Attribution (SPDX: `MIT-0`) | No |
 
 ## Guide text: CC BY 4.0
 
-- **You can:** copy, change, translate and redistribute the instructions, stack notes, skills and guides, in personal or commercial projects.
+- **You can:** copy, change, translate and redistribute the skills and guides, in personal or commercial projects.
 - **You must:** give credit, link to the license and say if you changed the text.
 - **No warranty:** the material is provided as is. Review instructions before relying on them, especially for security, legal or compliance decisions.
 
 ### How to give credit
 
-Using Devbook as intended already counts as credit. If you load it through the submodule or the copy command, keep `.devbook/` with its `LICENSE-CC-BY-4.0` file. That is enough, even if you edit the files there.
+Using Devbook as intended already counts as credit. Installed skills carry `license: CC-BY-4.0` and their source in their frontmatter; keep that, even if you edit them.
 
 When you reuse the text anywhere else, such as a blog post, a course or your own guide, add a line like this:
 
@@ -35,7 +35,9 @@ The full legal code is in the [LICENSE-CC-BY-4.0 file on GitHub](https://github.
 
 ## Templates and code: MIT-0
 
-Projects paste the templates into their own `AGENTS.md`, `CLAUDE.md` and Copilot files, so those files need no notice. The same applies to the enforcement kit's hooks and workflows, which projects copy into their own settings and CI, to the skills' scripts, and to the site's code: you can copy, change and sell it without credit.
+The bootstrap prompt writes the core block into your own `AGENTS.md`, and the hooks and settings it writes are yours too, so none of them need a notice. The same applies to the catalog, the scripts, the evals and the site's code: you can copy, change and sell them without credit.
+
+The vendor skills in the catalog keep their own licences, shown on each source; Trail of Bits' skills, for example, are CC BY-SA 4.0.
 
 <Code code={licenseText} lang="text" title="LICENSE" />
 

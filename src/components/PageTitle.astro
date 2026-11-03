@@ -4,7 +4,7 @@ import { Aside } from '@astrojs/starlight/components';
 import { STALE_AFTER_DAYS } from '../lib/site';
 
 const route = Astro.locals.starlightRoute;
-const { lastVerified, sources } = route.entry.data as { lastVerified?: Date; sources?: string[] };
+const { lastVerified } = route.entry.data as { lastVerified?: Date };
 const isStale = lastVerified ? Date.now() - lastVerified.getTime() > STALE_AFTER_DAYS * 864e5 : false;
 const verifiedIso = lastVerified?.toISOString().slice(0, 10);
 const verifiedLabel = lastVerified?.toLocaleDateString('en-GB', {
@@ -29,7 +29,6 @@ const mdHref = `${route.id ? `/${route.id}` : ''}/index.md`;
 		<Aside type="caution">This page covers fast-changing tools. Some details may be out of date.</Aside>
 	</div>
 )}
-{sources && sources.length > 0 && <p class="dvb-verified">Sources: {sources.join('; ')}.</p>}
 <div class="dvb-actions">
 	<button type="button" data-copy-md={mdHref}>
 		Copy page as Markdown

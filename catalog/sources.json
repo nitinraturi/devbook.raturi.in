@@ -1,0 +1,444 @@
+{
+  "$comment": "Devbook's allowlist: every upstream the bootstrap prompt may install, and the primary docs the core block and prompt are checked against. scripts/build-prompt.mjs renders `adopted` upstreams into prompt/bootstrap.md as the ALLOWLIST and `suggested` ones as suggest-only; `retired` ones stay listed with the reason so the decision is public. `ref` is a tag or full commit SHA, or `vendor-channel` for Anthropic's official marketplace, which pins third-party plugins itself and auto-updates. `counts` is false for hook-only and LSP plugins, which add no skill descriptions and so don't count toward the cap of three. scripts/drift.mjs checks refs weekly; `evalDelta` is the latest measured Δ from evals/, or null until measured.",
+  "maxOptional": 3,
+  "upstreams": [
+    {
+      "id": "security-guidance",
+      "title": "Security guidance",
+      "group": "always",
+      "use": "Pattern-based security warnings on edits, as hooks",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "anthropics/claude-plugins-official",
+      "ref": "vendor-channel",
+      "install": {
+        "claude-code": "claude plugin install security-guidance@claude-plugins-official --scope project"
+      },
+      "license": "Apache-2.0",
+      "counts": false,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "lsp",
+      "title": "Language server plugin",
+      "group": "always",
+      "use": "Diagnostics and code navigation for the main language, only when its language server binary is on PATH: pyright-lsp, typescript-lsp, swift-lsp, gopls-lsp or rust-analyzer-lsp",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "anthropics/claude-plugins-official",
+      "ref": "vendor-channel",
+      "install": {
+        "claude-code": "claude plugin install <language>-lsp@claude-plugins-official --scope project"
+      },
+      "license": "Apache-2.0",
+      "counts": false,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "superpowers",
+      "title": "Superpowers",
+      "group": "discipline",
+      "use": "Test-driven development, verification before completion, systematic debugging and planning; opt-in, because it is heavy for small edits",
+      "type": "plugin",
+      "hosts": ["claude-code", "other"],
+      "repo": "obra/superpowers",
+      "ref": "v7.0.1",
+      "install": {
+        "claude-code": "claude plugin install superpowers@claude-plugins-official --scope project",
+        "other": "gh skill install obra/superpowers test-driven-development --pin <ref> --agent <host>"
+      },
+      "license": "MIT",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "frontend-design",
+      "title": "Frontend design",
+      "group": "design",
+      "use": "Distinctive, production-grade UI",
+      "type": "plugin",
+      "hosts": ["claude-code", "other"],
+      "repo": "anthropics/skills",
+      "ref": "ca45fc496a3436251f191354091d557da31c15b5",
+      "install": {
+        "claude-code": "claude plugin install frontend-design@claude-plugins-official --scope project",
+        "other": "gh skill install anthropics/skills frontend-design --pin <ref> --agent <host>"
+      },
+      "license": "see repository",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "web-design-guidelines",
+      "title": "Web design guidelines",
+      "group": "design",
+      "use": "Accessibility and interface review against web guidelines",
+      "type": "skill",
+      "hosts": ["claude-code", "other"],
+      "repo": "vercel-labs/agent-skills",
+      "ref": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "install": {
+        "any": "gh skill install vercel-labs/agent-skills web-design-guidelines --pin <ref> --agent <host>"
+      },
+      "license": "see repository",
+      "counts": true,
+      "status": "retired",
+      "lastChecked": "2026-11-03",
+      "scan": "findings",
+      "evalDelta": null,
+      "reason": "At its pinned ref it fetches its rules at run time from an unpinned raw.githubusercontent.com URL on main, so pinning it pins nothing; the prompt rejects remote instructions"
+    },
+    {
+      "id": "cloudflare",
+      "title": "Cloudflare skills",
+      "group": "stack",
+      "detect": "wrangler.* or @cloudflare/* dependencies",
+      "use": "Workers, Durable Objects, Wrangler, web performance; bundles the Cloudflare docs MCP",
+      "type": "plugin",
+      "hosts": ["claude-code", "other"],
+      "repo": "cloudflare/skills",
+      "ref": "1a33048817d06df12882cb881dfc754e7039954a",
+      "install": {
+        "claude-code": "claude plugin install cloudflare@claude-plugins-official --scope project",
+        "other": "gh skill install cloudflare/skills workers-best-practices --pin <ref> --agent <host>"
+      },
+      "license": "Apache-2.0",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "react-best-practices",
+      "title": "React best practices",
+      "group": "stack",
+      "detect": "react or next in package.json",
+      "use": "React and Next.js performance and composition; keep any AGENTS.md block Next.js writes itself",
+      "type": "skill",
+      "hosts": ["claude-code", "other"],
+      "repo": "vercel-labs/agent-skills",
+      "ref": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "install": {
+        "any": "gh skill install vercel-labs/agent-skills react-best-practices --pin <ref> --agent <host>"
+      },
+      "license": "see repository",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "supabase",
+      "title": "Supabase skills",
+      "group": "stack",
+      "detect": "supabase/ directory or @supabase/* dependencies",
+      "use": "Supabase and Postgres best practices",
+      "type": "skill",
+      "hosts": ["claude-code", "other"],
+      "repo": "supabase/agent-skills",
+      "ref": "v0.1.9",
+      "install": {
+        "any": "gh skill install supabase/agent-skills supabase-postgres-best-practices --pin <ref> --agent <host>"
+      },
+      "license": "MIT",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "expo",
+      "title": "Expo skills",
+      "group": "stack",
+      "detect": "app.json or eas.json with expo",
+      "use": "Building, upgrading and debugging Expo and React Native apps",
+      "type": "plugin",
+      "hosts": ["claude-code", "other"],
+      "repo": "expo/skills",
+      "ref": "a9e5bd3fa00b4e61f632e43f85da73aee1942582",
+      "install": {
+        "claude-code": "claude plugin install expo@claude-plugins-official --scope project",
+        "other": "gh skill install expo/skills --all --pin <ref> --agent <host>"
+      },
+      "license": "MIT",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "stripe",
+      "title": "Stripe plugin",
+      "group": "stack",
+      "detect": "stripe dependency",
+      "use": "Stripe integration best practices",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "stripe/ai",
+      "ref": "vendor-channel",
+      "install": {
+        "claude-code": "claude plugin install stripe@claude-plugins-official --scope project"
+      },
+      "license": "MIT",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "astral",
+      "title": "Astral (uv, ruff)",
+      "group": "stack",
+      "detect": "pyproject.toml or uv.lock",
+      "use": "Python projects with uv and ruff",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "astral-sh/claude-code-plugins",
+      "ref": "f3ce88a7ba830f53afd6d944c1d0278ed318e142",
+      "install": {
+        "claude-code": "claude plugin marketplace add astral-sh/claude-code-plugins#<ref> && claude plugin install astral@astral-sh --scope project"
+      },
+      "license": "Apache-2.0",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "trailofbits",
+      "title": "Trail of Bits skills",
+      "group": "security",
+      "use": "Security audits on request (static analysis, differential review, insecure defaults); link to it, never vendor modified copies (CC BY-SA)",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "trailofbits/skills",
+      "ref": "711af095215ad4ecde5b90cd1d0124b3f1c4ca9e",
+      "install": {
+        "claude-code": "claude plugin marketplace add trailofbits/skills#<ref> && claude plugin install <plugin>@trailofbits --scope project"
+      },
+      "license": "CC-BY-SA-4.0",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "context7",
+      "title": "Context7 docs MCP",
+      "group": "docs",
+      "use": "Version-matched library docs when the vendor has no docs MCP of its own; ask first, because CLIs cost less context",
+      "type": "mcp",
+      "hosts": ["claude-code"],
+      "repo": "upstash/context7",
+      "ref": "vendor-channel",
+      "install": {
+        "claude-code": "claude plugin install context7@claude-plugins-official --scope project"
+      },
+      "license": "MIT",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "devbook-optional",
+      "title": "Devbook optional skills",
+      "group": "devbook",
+      "use": "Domain skills with no maintained equivalent: api-design, db-migration, feature-doc, licensing, llm-security",
+      "type": "plugin",
+      "hosts": ["claude-code", "other"],
+      "repo": "nitinraturi/devbook.raturi.in",
+      "ref": "main",
+      "install": {
+        "claude-code": "claude plugin marketplace add nitinraturi/devbook.raturi.in && claude plugin install <skill>@devbook --scope project",
+        "other": "gh skill install nitinraturi/devbook.raturi.in <skill> --agent <host>"
+      },
+      "license": "CC-BY-4.0",
+      "counts": true,
+      "status": "adopted",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "django-ai-plugins",
+      "title": "Django AI plugins (Vinta)",
+      "group": "stack",
+      "detect": "manage.py or django dependency",
+      "use": "Django expert, safe migrations and review agents",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "vintasoftware/django-ai-plugins",
+      "ref": "v1.1.0",
+      "install": {
+        "claude-code": "claude plugin marketplace add vintasoftware/django-ai-plugins#<ref> && claude plugin install django-safe-migration@django-ai-plugins --scope project"
+      },
+      "license": "none",
+      "counts": true,
+      "status": "suggested",
+      "reason": "The repository has no licence, and it is maintained by an agency, not the Django Software Foundation",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "astro-docs-mcp",
+      "title": "Astro docs MCP",
+      "group": "docs",
+      "detect": "astro.config.*",
+      "use": "Astro and Starlight docs at https://mcp.docs.astro.build/mcp",
+      "type": "mcp",
+      "hosts": ["claude-code"],
+      "repo": "withastro/docs-mcp",
+      "ref": "aa08802b05a85cadaa53875f98b592a3baed14e6",
+      "install": {
+        "claude-code": "claude mcp add --transport http astro-docs https://mcp.docs.astro.build/mcp --scope project"
+      },
+      "license": "none",
+      "counts": true,
+      "status": "suggested",
+      "reason": "Not updated since October 2025 and reported intermittent; no official Astro skill exists",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    },
+    {
+      "id": "vercel-plugin",
+      "title": "Vercel plugin",
+      "group": "stack",
+      "use": "Vercel deployments, build status and logs",
+      "type": "plugin",
+      "hosts": ["claude-code"],
+      "repo": "vercel/vercel-plugin",
+      "ref": "vendor-channel",
+      "install": {
+        "claude-code": "claude plugin install vercel@claude-plugins-official --scope project"
+      },
+      "license": "see repository",
+      "counts": true,
+      "status": "retired",
+      "reason": "It manages deployments, which Devbook stays out of; use react-best-practices for code quality",
+      "lastChecked": "2026-11-03",
+      "scan": "not-run",
+      "evalDelta": null
+    }
+  ],
+  "builtins": [
+    {
+      "command": "/code-review",
+      "use": "review the current diff for correctness bugs"
+    },
+    {
+      "command": "/security-review",
+      "use": "review the branch for vulnerabilities"
+    },
+    {
+      "command": "/verify",
+      "use": "build, run and observe a change in the real app"
+    },
+    {
+      "command": "/simplify",
+      "use": "clean up the changed code"
+    }
+  ],
+  "docs": [
+    {
+      "id": "claude-code-memory",
+      "title": "Claude Code: memory and AGENTS.md",
+      "url": "https://code.claude.com/docs/en/memory"
+    },
+    {
+      "id": "claude-code-best-practices",
+      "title": "Claude Code: best practices",
+      "url": "https://code.claude.com/docs/en/best-practices"
+    },
+    {
+      "id": "claude-code-hooks",
+      "title": "Claude Code: hooks",
+      "url": "https://code.claude.com/docs/en/hooks"
+    },
+    {
+      "id": "claude-code-plugins",
+      "title": "Claude Code: install plugins",
+      "url": "https://code.claude.com/docs/en/plugins/install"
+    },
+    {
+      "id": "claude-code-plugin-evals",
+      "title": "Claude Code: plugin evals",
+      "url": "https://code.claude.com/docs/en/plugin-evals"
+    },
+    {
+      "id": "agents-md",
+      "title": "AGENTS.md",
+      "url": "https://agents.md/"
+    },
+    {
+      "id": "agent-skills-spec",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification"
+    },
+    {
+      "id": "gh-skill",
+      "title": "GitHub CLI: gh skill",
+      "url": "https://cli.github.com/manual/gh_skill_install"
+    },
+    {
+      "id": "codex-skills",
+      "title": "OpenAI Codex: skills",
+      "url": "https://learn.chatgpt.com/docs/build-skills"
+    },
+    {
+      "id": "gemini-cli-context",
+      "title": "Gemini CLI: context files",
+      "url": "https://geminicli.com/docs/cli/gemini-md/"
+    },
+    {
+      "id": "copilot-agent-skills",
+      "title": "GitHub Copilot: agent skills",
+      "url": "https://docs.github.com/en/copilot/concepts/customizations/agent-skills"
+    },
+    {
+      "id": "owasp-llm-top-10",
+      "title": "OWASP Top 10 for LLM applications",
+      "url": "https://genai.owasp.org/llm-top-10/"
+    }
+  ],
+  "evidence": [
+    {
+      "title": "Evaluating AGENTS.md files (arXiv 2602.11988)",
+      "url": "https://arxiv.org/html/2602.11988v1"
+    },
+    {
+      "title": "SkillsBench (arXiv 2602.12670)",
+      "url": "https://arxiv.org/html/2602.12670v1"
+    },
+    {
+      "title": "Snyk: ToxicSkills",
+      "url": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/"
+    },
+    {
+      "title": "Vercel: AGENTS.md outperforms skills in our agent evals",
+      "url": "https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals"
+    }
+  ]
+}

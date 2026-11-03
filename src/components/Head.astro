@@ -2,7 +2,7 @@
 import Default from '@astrojs/starlight/components/Head.astro';
 import { buildGraph } from '../lib/schema';
 import { GA_ID, IS_PREVIEW } from '../lib/site';
-// The one webfont, preloaded so labels and code don't wait for the stylesheet (PERF-07).
+// The one webfont, preloaded so labels and code don't wait for the stylesheet.
 import plexMono from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
 
 const route = Astro.locals.starlightRoute;
@@ -10,7 +10,7 @@ const isHome = route.id === '';
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const jsonLd = JSON.stringify(buildGraph(route, pageUrl, isHome)).replace(/</g, '\\u003c');
 
-// Consent Mode v2 per stacks/ga4-consent.md: denied by default where consent is required
+// Consent Mode v2 (ADR-0003): denied by default where consent is required
 // (EEA, UK, CH), analytics-only elsewhere. A stored choice is applied before `config`.
 // prettier-ignore
 const CONSENT_REGIONS = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'];

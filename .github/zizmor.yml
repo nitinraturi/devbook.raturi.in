@@ -4,8 +4,8 @@ rules:
     config:
       policies:
         '*': hash-pin
-  # review.yml installs the claude CLI, pinned to an exact version, only for opt-in measured evals
+  # eval.yml installs the claude CLI, pinned to an exact version, and the sandbox packages, only for opt-in measured evals
   # (MEASURED_EVALS); evals/run.mjs needs it on the PATH.
   adhoc-packages:
     ignore:
-      - review.yml
+      - eval.yml

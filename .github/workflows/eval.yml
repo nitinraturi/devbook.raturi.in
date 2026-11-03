@@ -1,0 +1,78 @@
+# Monthly measured evals: `claude plugin eval` runs every suite (evals/ and optional/plugins/*/evals/) with and
+# without Devbook, three runs per arm, and opens a pull request that commits evals/results/<date>.json. It spends
+# subscription usage, so it runs only when the MEASURED_EVALS variable is 'true' and CLAUDE_CODE_OAUTH_TOKEN exists.
+# Rerun it by hand when a new Claude model is released.
+name: Evals
+
+on:
+  schedule:
+    - cron: '29 5 1 * *' # the 1st of each month
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Model under test
+        type: string
+        default: claude-sonnet-5-5
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evals
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    if: vars.MEASURED_EVALS == 'true' && vars.RELEASE_APP_CLIENT_ID != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: app
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      # The job pushes a branch with the App token, so it keeps the credential; it uploads no artifacts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ steps.app.outputs.token }} # zizmor: ignore[artipacked]
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # yaml for the eval validator; bubblewrap and socat for Claude Code's sandbox, which confines the cases' Bash.
+      - name: Install
+        run: |
+          npm ci
+          sudo apt-get install -y --no-install-recommends bubblewrap socat
+          npm i -g @anthropic-ai/claude-code@2.1.303
+
+      - name: Validate the cases
+        run: node evals/validate.mjs
+
+      - name: Measure
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          MODEL: ${{ inputs.model || 'claude-sonnet-5-5' }}
+        run: node evals/run.mjs --yes --model "$MODEL" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Open a pull request with the results
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          branch="evals/$(date -u +%F)"
+          git config user.name "devbook-release[bot]"
+          git config user.email "devbook-release[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add evals/results
+          git commit -qm "test(evals): measured results $(date -u +%F)"
+          git push -q origin "$branch"
+          gh pr create --head "$branch" --title "test(evals): measured results $(date -u +%F)" \
+            --body "Monthly measured eval. A core case with Δ < 0 blocks the next release (scripts/release-gate.mjs); retire a catalog source whose Δ stays at or below 0."

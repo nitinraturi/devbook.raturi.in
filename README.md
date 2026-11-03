@@ -1,41 +1,23 @@
 # Devbook
 
-A few short instruction files that make AI coding assistants (Claude, Copilot and others) build like a senior engineer. Site: https://devbook.raturi.in
+One bootstrap prompt that sets up a repository for careful agent coding. Paste it into Claude Code, Codex, Cursor, GitHub Copilot or Gemini CLI. The agent detects your stack, shows a plan, writes a 1 KB core block and your real commands into `AGENTS.md`, installs at most three pinned skills from the vendors who maintain them, and adds hooks where it can. It never touches CI or deploys, and it never commits. Site: https://devbook.raturi.in
 
-| File | Covers | Load when |
-|---|---|---|
-| `instructions/core.md` | verify before reporting, never weaken checks, approvals, stay current, simple design, structure, docs and decisions, git | always (mandatory) |
-| `instructions/security.md` | access control, validation, secrets, dependencies, injection, auth, privacy, LLM features | always (mandatory) |
-| `instructions/security-web.md` | CSP, CSRF, CORS, session cookies, passwords and account flows, HTTPS headers | pages or APIs for browsers, or its own sign-in |
-| `instructions/testing.md` | tests per criterion, failing test first, deterministic tests, real boundaries, flaky tests, CI gates | always (mandatory) |
-| `instructions/performance.md` | budgets, Core Web Vitals, back-end efficiency, caching, reliability | any app, site or service |
-| `instructions/api-data.md` | REST API design: contract first, resources and URLs, methods and status codes, payloads, problem-details errors, pagination, idempotency, ETags and caching, versioning and deprecation, OWASP API Top 10, webhooks | backend or API |
-| `instructions/database.md` | modelling, naming, keys, types, constraints, relationships, indexes, concurrency, migrations, backups | relational database |
-| `instructions/design.md` | design direction, avoiding the template look, layout, type, colour, tokens, states, forms, motion, WCAG 2.2 AA | the project has a UI |
-| `instructions/seo.md` | Google Search Central: crawling, indexing, titles, links, structured data, spam policies | public website |
-| `instructions/content.md` | voice, structure, facts, trust, AI editorial policy | public website or blog |
-| `instructions/mobile.md` | mobile-app rules | mobile app |
-| `instructions/licensing.md` | project licence, SPDX, dependency and asset licences, notices, copied code | published or distributed project, or third-party code and assets |
-| `instructions/feature-docs.md` | when to write a feature doc, where it lives, EARS rules with IDs, flow, file map, keeping it in sync | app or service with business rules |
-| `stacks/*.md` | Astro, Starlight, Cloudflare, TypeScript, Django, GA4, three.js, Swift (iOS and macOS) | you use that technology |
-| `skills/*/SKILL.md` | security review, release check, Devbook upgrade, feature doc, API endpoint, database migration, SEO audit, setup | the task needs it (loaded on demand) |
+## Use it
 
-Core, security and testing load in every chat. Web security, design, REST APIs, databases, SEO, content and mobile load only when the assistant opens a matching file, through links in `.claude/rules/` and `.github/instructions/`. The rest are listed in `AGENTS.md` to read when a task needs them.
+Copy the prompt from https://devbook.raturi.in/ (or [`prompt/bootstrap.md`](prompt/bootstrap.md)) and paste it into your agent in the repository. Re-run it to update: it reads `devbook.lock.json` and shows a diff. Projects on the old `.devbook/` submodule move over with the same prompt; see [Setup](https://devbook.raturi.in/start-here/setup/).
 
-## Use it in a project
+## What is in this repository
 
-Paste [`templates/setup-prompt.md`](templates/setup-prompt.md) into Claude Code or Copilot agent mode inside your project. The prompt walks the assistant through these steps:
+| Path | What it is |
+|---|---|
+| `core/AGENTS.core.md` | The core block: the only always-loaded part, at most 2 KB |
+| `catalog/sources.json` | The allowlist: every upstream skill, plugin and docs MCP the prompt may install, pinned, with its status |
+| `prompt/` | The prompt template and the generated `bootstrap.md` (`npm run prompt`) |
+| `optional/`, `.claude-plugin/` | Devbook's own opt-in skills, as a plugin marketplace: api-design, db-migration, feature-doc, licensing, llm-security |
+| `evals/` | Measured evals with `claude plugin eval`, with and without Devbook |
+| `src/` | The Starlight site |
 
-1. Add Devbook at `.devbook/`. The default is a submodule that tracks `main`. Set `Method: copy` to download plain files you commit instead. Either way, `.devbook/VERSION` records the version number.
-2. Create or merge a root `AGENTS.md`. It has your project section, then `@` lines for core, security and testing, and a list of the other files to read when a task needs them.
-3. Create a `CLAUDE.md` containing `@AGENTS.md`, and a `.github/copilot-instructions.md` that tells Copilot to read the files `AGENTS.md` lists.
-4. Link the path-scoped instructions into `.claude/rules/` and `.github/instructions/`, and the skills that fit into `.claude/skills/`.
-
-To upgrade, ask your assistant "Is Devbook up to date?". It compares `.devbook/VERSION` with `VERSION` on `main`, summarises the [changelog](CHANGELOG.md) and updates when you agree. By hand: `git -C .devbook fetch origin main && git -C .devbook checkout -q FETCH_HEAD && git add .devbook`, or rerun the copy command on the setup page. Project rules in `AGENTS.md` override Devbook only where they say so explicitly, and your direct request overrides both. See the [setup page](https://devbook.raturi.in/start-here/setup/) for manual steps.
-
-New to instruction files? Read [How Devbook works](https://devbook.raturi.in/start-here/how-it-works/) for the terms, loading, precedence, cost and limits. Then read [Use Devbook day to day](https://devbook.raturi.in/start-here/using-devbook/) for your own rules, checks, updates and troubleshooting, and [Writing instructions](https://devbook.raturi.in/start-here/writing-instructions/) for writing rules and prompts that models follow.
-
-## Develop the site
+## Develop
 
 Requires Node.js 22 or later; CI uses the version in `.nvmrc`.
 
@@ -45,11 +27,11 @@ npm run dev
 npm run check
 ```
 
-To measure whether a change to the instructions helps, use the evals in [`evals/`](evals/README.md). Contributor rules are in [`AGENTS.md`](AGENTS.md), and every instruction change follows the [writing guide](src/content/docs/start-here/writing-instructions.md). Deployment is in [`DEPLOY.md`](DEPLOY.md) and changes are in [`CHANGELOG.md`](CHANGELOG.md).
+Contributor rules are in [`AGENTS.md`](AGENTS.md), and every change to the core block or the prompt follows the [writing guide](src/content/docs/start-here/writing-instructions.md). Deployment and releases are in [`DEPLOY.md`](DEPLOY.md), and changes are in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## License
 
-- `instructions/`, `stacks/`, `skills/` and the site's guides in `src/content/docs/start-here/`: [CC BY 4.0](LICENSE-CC-BY-4.0). Reuse and change them with credit. Keeping `.devbook/` with its license file counts as credit.
-- `templates/`, the enforcement kit in `kit/`, the site code and the evals in `evals/`: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
+- The optional skills in `optional/` and the site's guides in `src/content/docs/start-here/`: [CC BY 4.0](LICENSE-CC-BY-4.0). Reuse and change them with credit.
+- The prompt, the core block, the catalog, the scripts, the evals and the site code: [MIT No Attribution (MIT-0)](LICENSE). No notice needed.
 
 See the [license page](https://devbook.raturi.in/license/) for how to give credit.

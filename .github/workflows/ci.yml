@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: false
 
-  # Workflow security for this repository's own workflows and the kit's starter CI.
+  # Workflow security for this repository's own workflows.
   workflows:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -44,7 +44,7 @@ jobs:
       - uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
         with:
           advanced-security: false
-          inputs: .github/workflows kit/ci
+          inputs: .github/workflows
           config: .github/zizmor.yml
 
   check:
@@ -77,22 +77,19 @@ jobs:
       - name: Titles and descriptions
         run: npm run check:descriptions
 
-      - name: Manifest and size budgets
-        run: npm run check:budget
-
-      - name: Rule IDs
-        run: npm run check:rule-ids
+      - name: Bootstrap prompt, catalog and core budget
+        run: npm run check:prompt
 
       - name: Version format
         run: npm run check:version
 
-      - name: Eval tasks
+      - name: Eval cases
         run: npm run evals:validate
 
       - name: Skills (Agent Skills validator, links)
         run: npm run check:skills
 
-      - name: Kit hooks and skill scripts
+      - name: Script, kit hook and eval tests
         run: npm run test:scripts
 
       - name: Accent contrast

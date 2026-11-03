@@ -1,0 +1,7 @@
+{
+  "name": "devbook-core-eval",
+  "description": "Eval harness only, never installed by users: at session start it gives the agent what the bootstrap prompt writes into AGENTS.md (the Devbook core block and the project's Commands), because plugin eval runs don't load project files.",
+  "author": { "name": "Nitin Raturi", "url": "https://devbook.raturi.in" },
+  "license": "MIT-0",
+  "experimental": { "evals": "cases" }
+}

@@ -1,7 +1,6 @@
 /** Site-wide constants shared by the config, components and JSON-LD. */
 export const SITE_URL = 'https://devbook.raturi.in/';
 export const SITE_NAME = 'Devbook';
-export const REPO_URL = 'https://github.com/nitinraturi/devbook.raturi.in';
 export const OG_IMAGE = { path: '/og-default.png', width: 1200, height: 630 };
 
 /** Same Person entity across every raturi.in site. */
